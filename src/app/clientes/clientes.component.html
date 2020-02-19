@@ -1,0 +1,44 @@
+<div class="card border-primary mb-3">
+    <div class="card-header">Clientes</div>
+    <div class="card-body text-primary">
+        <h5 class="card-title">Listado de Clientes</h5>
+        <div class="my-2 text-left">
+
+        </div>
+
+        <table class="table table-bordered table-sm table-striped table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Documento</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Numero de Telefono</th>
+                    <th>Dirección</th>
+                    <th>Correo</th>
+                    <th>Codigo Postal</th>
+                    <th>
+                        Editar
+                    </th>
+                    <th>
+                        Eliminar
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cliente of cliente">
+                    <td>{{cliente.id}}</td>
+                    <td>{{cliente.documento}}</td>
+                    <td>{{cliente.nombres}}</td>
+                    <td>{{cliente.apellidos}}</td>
+                    <td>{{cliente.numero_contacto}}</td>
+                    <td>{{cliente.direccion}}</td>
+                    <td>{{cliente.correo}}</td>
+                    <td>{{cliente.codigo_postal}}</td>
+
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

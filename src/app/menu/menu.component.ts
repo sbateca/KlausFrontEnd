@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ClientesComponent } from '../clientes/clientes.component';
+
 
 @Component({
   selector: 'app-menu',
