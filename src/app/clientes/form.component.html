@@ -1,0 +1,82 @@
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Formulario Cliente</h3>
+    </div>
+
+    <!-- Formulario -->
+    <form role="form">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="documento">Documento</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.documento" name="documento" id="documento" placeholder="Documento">
+            </div>
+            <div class="form-group">
+                <label for="nombres">Nombres</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.nombres" name="nombres" id="nombres" placeholder="Nombres">
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.apellidos" name="apellidos" id="apellidos" placeholder="Apellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="NumeroDeTelefono">Numero de Telefono</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.numero_contacto" name="NumeroDeTelefono" id="NumeroDeTelefono" placeholder="Numero De Telefono">
+            </div>
+
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Correo</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.correo" name="correo" id="correo" placeholder="Correo">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.direccion" name="direccion" id="direccion" placeholder="Dirección">
+            </div>
+
+            <div class="form-group" data-select2-id="27">
+                <label>Departamento</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+                  <option selected="selected" data-select2-id="11">Norte De Santander</option>
+                  <option data-select2-id="28">Santander</option>
+                  <option disabled="disabled" data-select2-id="29">Cesar (disabled)</option>
+                  <option data-select2-id="30">Cundinamarca</option>
+                  <option data-select2-id="31">Boyaca</option>
+                  <option data-select2-id="32">Arauca</option>
+                  <option data-select2-id="33">Yopal</option>
+                  <option data-select2-id="34">Antioquia</option>
+                </select>
+            </div>
+
+            <div class="form-group" data-select2-id="35">
+                <label>Ciudad</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+                  <option data-select2-id="11">Pamplona</option>
+                  <option data-select2-id="36">Cucuta</option>
+                  <option disabled="disabled" data-select2-id="37">Pamplonita (disabled)</option>
+                  <option data-select2-id="38">Toledo</option>
+                  <option data-select2-id="39">LaBateca</option>
+                  <option data-select2-id="40">Mutiscua</option>
+                  <option data-select2-id="41">Babega</option>
+                </select>
+            </div>
+
+            <div class="form-group row">
+                <label for="codigo_postal" class="col-sm-2 col-form-label">Codigo Postal</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.codigo_postal" name=codigo_postal>
+                </div>
+            </div>
+
+        </div>
+        <!-- Boton -->
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary" (click)='create()'>Crear</button>
+            <ng-template #elseBlock>
+                <button class="btn btn primary" role="button" (click)='update()'>Editar</button>
+            </ng-template>
+        </div>
+    </form>
+</div>

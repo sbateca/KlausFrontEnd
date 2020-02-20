@@ -1,5 +1,5 @@
 <div class="card-header">
-    <h3 class="card-title">DataTable with default features</h3>
+    <h3 class="card-title">Tabla Clientes</h3>
 </div>
 
 <div class="card-body">
@@ -10,6 +10,9 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <div id="example1_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example1"></label></div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-info pull-right" [routerLink]="['/clientes/form']">Crear Cliente</button>
             </div>
         </div>
         <div class="row">
@@ -25,6 +28,8 @@
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Dirrección</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Correo</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Codigo Postal</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Editar</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Eliminar</th>
                         </tr>
                     </thead>
 
@@ -39,8 +44,12 @@
                             <td>{{cliente.direccion}}</td>
                             <td>{{cliente.correo}}</td>
                             <td>{{cliente.codigo_postal}}</td>
-
-
+                            <td>
+                                <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]" class="btn btn-primary">editar</button>
+                            </td>
+                            <td>
+                                <button type="button" name="eliminar" class="btn btn-danger btn-sm">eliminar</button>
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -54,6 +63,8 @@
                             <th rowspan="1" colspan="1">Dirección</th>
                             <th rowspan="1" colspan="1">Correo</th>
                             <th rowspan="1" colspan="1">Codigo Postal</th>
+                            <th rowspan="1" colspan="1">Editar</th>
+                            <th rowspan="1" colspan="1">Borrar</th>
                         </tr>
                     </tfoot>
                 </table>
