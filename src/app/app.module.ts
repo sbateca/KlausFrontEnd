@@ -13,13 +13,14 @@ import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { FormComponent } from './clientes/form.component';
+import { ProveedoresComponent } from './proveedores/proveedores.component';
 
-const routes:Routes =[
-  //{path:'', redirecto: '/clientes', pathMatch:'full'},//home
-    {path: '',redirectTo: '/clientes', pathMatch: 'full'},
-    {path: 'clientes', component:ClientesComponent},
-    {path: 'clientes/form', component:FormComponent},
-    {path: 'clientes/form/:id', component:FormComponent}
+const routes: Routes =[
+    {path: '', redirectTo: '/clientes', pathMatch: 'full'},
+    {path: 'clientes', component: ClientesComponent},
+    {path: 'clientes/form', component: FormComponent},
+    {path: 'clientes/form/:id', component: FormComponent},
+    {path: 'proveedores', component: ProveedoresComponent}
 ];
 
 @NgModule({
@@ -29,7 +30,8 @@ const routes:Routes =[
     MenuComponent,
     FooterComponent,
     ClientesComponent,
-    FormComponent
+    FormComponent,
+    ProveedoresComponent
   ],
   imports: [
     BrowserModule,
