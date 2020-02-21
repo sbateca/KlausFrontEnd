@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs'; // throwError se usa para convetir el error en un Observable
 import { Proveedor } from './proveedor';
-import {alertasSweet} from 'sweetalert2';
+import alertasSweet from 'sweetalert2';
 
 // catchError se usa para interceptar el Observable en busca de fallas
 // En caso de existir un falla se puede obtener el objeto dentro del operador

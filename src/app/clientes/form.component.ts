@@ -8,7 +8,7 @@ import swal from 'sweetalert2';//implementamos
   selector: 'app-form',
   templateUrl: './form.component.html'
 })
-export class FormComponent implements OnInit {
+export class FormClientesComponent implements OnInit {
 
   private cliente:Cliente =new Cliente();
   private titulo:string = "Crear cliente";

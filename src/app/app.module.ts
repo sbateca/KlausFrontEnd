@@ -12,15 +12,18 @@ import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { ClientesComponent } from './clientes/clientes.component';
-import { FormComponent } from './clientes/form.component';
+import { FormClientesComponent } from './clientes/form.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
+import { FormProveedoresComponent } from './proveedores/form.component';
 
 const routes: Routes =[
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
     {path: 'clientes', component: ClientesComponent},
-    {path: 'clientes/form', component: FormComponent},
-    {path: 'clientes/form/:id', component: FormComponent},
-    {path: 'proveedores', component: ProveedoresComponent}
+    {path: 'clientes/form', component: FormClientesComponent},
+    {path: 'clientes/form/:id', component: FormClientesComponent},
+    {path: 'proveedores', component: ProveedoresComponent},
+    {path: 'proveedores/form', component: FormProveedoresComponent},
+    {path: 'proveedores/form/:id', component: FormProveedoresComponent}
 ];
 
 @NgModule({
@@ -30,8 +33,9 @@ const routes: Routes =[
     MenuComponent,
     FooterComponent,
     ClientesComponent,
-    FormComponent,
-    ProveedoresComponent
+    FormClientesComponent,
+    ProveedoresComponent,
+    FormProveedoresComponent
   ],
   imports: [
     BrowserModule,
