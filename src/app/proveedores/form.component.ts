@@ -15,7 +15,10 @@ import alertasSweet from 'sweetalert2';
 
 export class FormProveedoresComponent implements OnInit{
 
-    titulo: string = 'crear proveedor'; // título para el formulario
+    titulo: string = 'Proveedores'; // título para el grupo de funcionalidades
+    rutaFuncionalidades: string = 'Proveedores / Crear proveedor';
+    funcionalidad: string = 'Crear proveedor';
+    
     proveedor: Proveedor = new Proveedor(); // creamos un objeto proveedor donde se va a almecenar la información del formulario
     private proveedorService: ProveedorService; // Para efectuar las operaciones
     
@@ -59,11 +62,11 @@ export class FormProveedoresComponent implements OnInit{
         El método crearProveedor() ejecuta el método crearProveedor del ProveedorService y se suscribe en espera de una repuesta
         La respuesta se utiliza para mostrar un mensaje de confirmación con datos del proveedor creado
         Parámetros:
-            - El proveedor con la información diligenciada en el formulario
+            - Nada
         Retorna: Nada
     */
-    crearProveedor(proveedor: Proveedor): void {
-        this.proveedorService.crearProveedor(proveedor).subscribe(
+    crearProveedor(): void {
+        this.proveedorService.crearProveedor(this.proveedor).subscribe(
             respuesta => {
                  this.enrutador.navigate(['/proveedores']);
                  alertasSweet.fire('Nuevo proveedor', respuesta.mensaje);
@@ -75,15 +78,14 @@ export class FormProveedoresComponent implements OnInit{
 
 
     /*
-        El método actualizarProveedor(proveedor) ejecuta el método actualizarProveedor del ProveedorService
+        El método actualizarProveedor() ejecuta el método actualizarProveedor del ProveedorService
         y se suscribe en espera de una repuesta.
         La respuesta se utiliza para mostrar un mensaje de confirmación con datos del proveedor actualizado
-        Parámetros:
-            - El proveedor que va a ser modificado
+        Parámetros: Nada
         Retorna: Nada
     */
-    actualizarProveedor(proveedor: Proveedor): void {
-        this.proveedorService.actualizarProveedor(proveedor).subscribe(
+    actualizarProveedor(): void {
+        this.proveedorService.actualizarProveedor(this.proveedor).subscribe(
             respuesta => {
                 this.enrutador.navigate(['/proveedores']);
                 alertasSweet.fire('Confirmación', respuesta.mensaje, 'success');

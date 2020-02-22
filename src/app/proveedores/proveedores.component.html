@@ -1,8 +1,28 @@
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>{{titulo}}</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item active">{{rutaFuncionalidades}}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
 <section class="content">
 
-    <div class="card">
+    <div class="card card-danger">
         <div class="card-header">
             <h3 class="card-title">Listado de proveedores</h3>
+            <div class="col-sm-12 col-md-2 float-right">
+                <a type="button" class="btn btn-block btn-default btn-sm" [routerLink]="['/proveedores/form']"><i class="fas fa-plus text-black-50"></i></a>
+            </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -13,7 +33,9 @@
                         <div class="dataTables_length" id="example1_length"><label>Ver <select name="example1_length" aria-controls="example1" class="custom-select custom-select-sm form-control form-control-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> registros</label></div>
                     </div>
                     <div class="col-sm-12 col-md-6">
-                        <div id="example1_filter" class="dataTables_filter"><label>Buscar:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example1"></label></div>
+                        <div id="example1_filter" class="dataTables_filter">
+                            <label>Buscar:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example1"></label>
+                        </div>
                     </div>
                 </div>
 
@@ -31,10 +53,8 @@
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Nombres del proveedor">Nombres</th>
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Apellidos del proveedor">Apellidos</th>
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Número de identificación del proveedor">Documento</th>
-                                    <th class="sorting" rowspan="1" colspan="1" aria-label="NIT del proveedor">NIT</th>
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Número de contacto">Número contacto</th>
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Correo electrónico del proveedor">Correo electrónico</th>
-                                    <th class="sorting" rowspan="1" colspan="1" aria-label="Dirección de residencia del proveedor">Dirección</th>
                                     <th class="sorting" rowspan="1" colspan="1" aria-label="Acciones">Acciones</th>
                                 </tr>
                             </thead>
@@ -44,12 +64,11 @@
                                     <td>{{proveedor.nombres}}</td>
                                     <td>{{proveedor.apellidos}}</td>
                                     <td>{{proveedor.documento}}</td>
-                                    <td>{{proveedor.nit}}</td>
                                     <td>{{proveedor.numeroContacto}}</td>
                                     <td>{{proveedor.correoElectronico}}</td>
-                                    <td>{{proveedor.direccionResidencia}}</td>
-                                    <td>
-                                        <a [routerLink]="['/proveedores/form',proveedor.id]" class="btn btn-success"><i class="fas fa-pen"></i></a>
+                                    <td class="text-center">
+                                        <a [routerLink]="['/proveedores/form',proveedor.id]" class="btn btn-success btn-sm"><i class="fas fa-pen"></i></a>
+                                        <a (click)='eliminarProveedor(proveedor)' class="btn btn-danger btn-sm"><i class="fas fa-times text-white"></i></a>
                                     </td>
                                 </tr>
 
@@ -59,10 +78,9 @@
                                     <th rowspan="1" colspan="1">Nombres</th>
                                     <th rowspan="1" colspan="1">Apellidos</th>
                                     <th rowspan="1" colspan="1">Documento</th>
-                                    <th rowspan="1" colspan="1">NIT</th>
                                     <th rowspan="1" colspan="1">Número contacto</th>
                                     <th rowspan="1" colspan="1">Correo electrónico</th>
-                                    <th rowspan="1" colspan="1">Dirección</th>
+                                    <th rowspan="1" colspan="1">Acciones</th>
                                 </tr>
                             </tfoot>
 
