@@ -29,16 +29,17 @@ export class FormComponent implements OnInit {
   }
   public create():void {
     this.clienteService.create(this.cliente)
-    .subscribe(response=>{
-      this.router.navigate(['/clientes'])
+    .subscribe(response=>{//Sube a la base de datos
+      this.router.navigate(['/clientes'])//vamos a la clientes  muestra la tabla
        swal.fire('Nuevo cliente', `Cliente ${this.cliente.nombres} creado con exito!`, 'success')
-     }
+    }
     );
   }
   update():void{
+    //console.log("Metodo midificar");
     this.clienteService.update(this.cliente)
     .subscribe(cliente=>{
-      this.router.navigate(['/clientes'])
+      this.router.navigate(['/clientes'])//vamos a cualquier ruta
       swal.fire('Cliente Actializado', `Cliente ${this.cliente.nombres} actualizado con éxito!`,'success')
     })
   }

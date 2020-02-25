@@ -9,11 +9,18 @@ import { ClienteService } from './cliente.service';
 export class ClientesComponent implements OnInit {
 
   cliente: Cliente[];
-  constructor(private clienteService:ClienteService) { }
+  constructor(public clienteService:ClienteService) { }
 
   ngOnInit() {
     this.clienteService.getClientes().subscribe(
-      cliente=>this.cliente=cliente//Actializa listado
+      cliente=>this.cliente=cliente//Actualiza listado
     );
-  }
+  } 
+
+
+delete (cliente : Cliente) : void{
+
+  this.clienteService.delete(cliente.id).subscribe( respuesta => { //this.cliente = this.cliente.filter( cli => cli !== cliente )
+})
+} 
 }

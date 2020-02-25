@@ -4,8 +4,8 @@
     </div>
 
     <!-- Formulario -->
-    <form role="form">
-        <div class="card-body">
+    <form>
+        <div class="card-body col-sm-10 ">
             <div class="form-group">
                 <label for="documento">Documento</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.documento" name="documento" id="documento" placeholder="Documento">
@@ -70,13 +70,17 @@
                 </div>
             </div>
 
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary" (click)='create()' *ngIf="!cliente.id else boton_editar">Crear</button>
+                <ng-template #boton_editar>
+                    <button type="submit" class="btn btn primary btn-sm" (click)='update()'>Editar</button>
+                </ng-template>
+            </div>
+
+
         </div>
-        <!-- Boton -->
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary" (click)='create()'>Crear</button>
-            <ng-template #elseBlock>
-                <button class="btn btn primary" role="button" (click)='update()'>Editar</button>
-            </ng-template>
-        </div>
+
     </form>
+    <!-- Boton -->
+
 </div>
