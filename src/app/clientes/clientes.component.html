@@ -28,8 +28,8 @@
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Dirrección</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Correo</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Codigo Postal</th>
-                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Editar</th>
-                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Eliminar</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Acciones</th>
+
                         </tr>
                     </thead>
 
@@ -45,10 +45,9 @@
                             <td>{{cliente.correo}}</td>
                             <td>{{cliente.codigo_postal}}</td>
                             <td>
-                                <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]" class="btn btn-primary">Editar</button>
-                            </td>
-                            <td>
-                                <button type="button" name="eliminar" (click)="delete(cliente)" class="btn btn-danger btn-sm">Eliminar</button>
+                                <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]"><i _ngcontent-shw-c48="" class="nav-icon fas fa-pencil-alt"></i></button>
+
+                                <button type="button" name="eliminar" (click)="delete(cliente)"><i _ngcontent-shw-c48="" class="nav-icon fas fa-trash"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -62,8 +61,9 @@
                             <th rowspan="1" colspan="1">Dirección</th>
                             <th rowspan="1" colspan="1">Correo</th>
                             <th rowspan="1" colspan="1">Codigo Postal</th>
-                            <th rowspan="1" colspan="1">Editar</th>
-                            <th rowspan="1" colspan="1">Eliminar</th>
+                            <th rowspan="1" colspan="1">Acciones</th>
+
+
                         </tr>
                     </tfoot>
                 </table>
