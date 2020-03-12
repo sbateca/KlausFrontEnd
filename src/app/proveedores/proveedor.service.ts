@@ -48,6 +48,8 @@ export class ProveedorService{
 
 
 
+
+
     /*
         El método crearProveedor realiza la petición de tipo post al servidor backend
         
@@ -82,7 +84,7 @@ export class ProveedorService{
         Retorna: Un Observable de tipo Proveedor
 
         Este método implementa manejo de errores (para ello usa los operadores catchError y throwError)
-            - Muestra una alerta SweetAlert con el mensaje de error        
+            - Muestra una alerta SweetAlert con el mensaje de error
     */
     
     getProveedor(id: number): Observable<Proveedor> {

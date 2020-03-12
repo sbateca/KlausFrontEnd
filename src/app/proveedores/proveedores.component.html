@@ -1,17 +1,17 @@
 <section class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>{{titulo}}</h1>
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>{{titulo}}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{rutaFuncionalidades}}</li>
+                </ol>
+            </div>
         </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active">{{rutaFuncionalidades}}</li>
-          </ol>
-        </div>
-      </div>
     </div>
-  </section>
+</section>
 
 
 
@@ -86,8 +86,55 @@
 
                         </table>
 
+
+
+
+                        <div class="mat-elevation-z8">
+
+                            <table mat-table [dataSource]="datos" width="100%">
+
+                                <!-- Position Column -->
+                                <ng-container matColumnDef="nombres">
+                                    <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="apellidos">
+                                    <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
+                                </ng-container>
+
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="documento">
+                                    <th mat-header-cell *matHeaderCellDef>Documento</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="acciones">
+                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                    <td mat-cell *matCellDef="let boton">
+                                        <button mat-button>Editar</button>
+                                        <button mat-button>Eliminar</button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="columnasTabla"> </tr>
+                                <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+                            </table>
+
+
+
+
+                            <mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+                        </div>
+
                     </div>
                 </div>
+
+                <!--
+                
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">Viendo 1 de 10 de 57 registros</div>
@@ -107,7 +154,7 @@
                         </div>
                     </div>
                 </div>
-
+                -->
 
             </div>
         </div>
