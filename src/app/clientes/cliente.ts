@@ -4,6 +4,8 @@ export class Cliente {
 	nombres:string;
 	apellidos:string;
 	numero_contacto:string;
+	departamento:string;
+	ciudad:string;
 	direccion:string;
 	correo:string;
 	codigo_postal:string;

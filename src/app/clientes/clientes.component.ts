@@ -14,17 +14,22 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit() {
     this.clienteService.getClientes().subscribe(
-      cliente=>this.cliente=cliente//Actualiza listado
+      cliente=>{
+        this.cliente=cliente;//Actualiza listado
+        //console.log(this.cliente);
+      }
+      
     );
+    
   } 
 
-  /*
+  
   delete (cliente : Cliente) : void{
     this.clienteService.delete(cliente.id).subscribe( respuesta => {
       this.cliente = this.cliente.filter( cli => cli !== cliente )
      })
-  }*/ 
-
+  }
+/*
   delete (cliente: Cliente):void{
     const swalWithBootstrapButtons = swal.mixin({
     customClass: {
@@ -56,5 +61,5 @@ export class ClientesComponent implements OnInit {
                                                     )
                       }
     })
-    }
+    }*/
   }

@@ -24,7 +24,9 @@
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 219px;">Documento</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Nombres</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Apellidos</th>
-                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 219px;">Numero de Telefono</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Numero de Telefono</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Departamento</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Ciudad</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Dirrección</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Correo</th>
                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Codigo Postal</th>
@@ -41,9 +43,12 @@
                             <td>{{cliente.nombres}}</td>
                             <td>{{cliente.apellidos}}</td>
                             <td>{{cliente.numero_contacto}}</td>
+                            <td>{{cliente.departamento}}</td>
+                            <td>{{cliente.ciudad}}</td>
                             <td>{{cliente.direccion}}</td>
                             <td>{{cliente.correo}}</td>
                             <td>{{cliente.codigo_postal}}</td>
+
                             <td>
                                 <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]"><i _ngcontent-shw-c48="" class="nav-icon fas fa-pencil-alt"></i></button>
 

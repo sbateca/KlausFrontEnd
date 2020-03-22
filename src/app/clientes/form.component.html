@@ -31,42 +31,30 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="direccion">Dirección</label>
-                <input type="text" class="form-control" [(ngModel)]="cliente.direccion" name="direccion" id="direccion" placeholder="Dirección">
-            </div>
-
-            <div class="form-group" data-select2-id="27">
+            <div class="form-group" data-select2-id="35">
                 <label>Departamento</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-                  <option selected="selected" data-select2-id="11">Norte De Santander</option>
-                  <option data-select2-id="28">Santander</option>
-                  <option disabled="disabled" data-select2-id="29">Cesar (disabled)</option>
-                  <option data-select2-id="30">Cundinamarca</option>
-                  <option data-select2-id="31">Boyaca</option>
-                  <option data-select2-id="32">Arauca</option>
-                  <option data-select2-id="33">Yopal</option>
-                  <option data-select2-id="34">Antioquia</option>
+                <select [(ngModel)]="departamentoseleccionado" [ngModelOptions]="{standalone: true}" (change)="cargarCiudadDeptId(departamentoseleccionado);" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1"
+                    aria-hidden="true">
+                       <option *ngFor="let departa of departamento" [ngValue]="departa" >{{departa.nombre}}</option>   
                 </select>
             </div>
 
             <div class="form-group" data-select2-id="35">
                 <label>Ciudad</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-                  <option data-select2-id="11">Pamplona</option>
-                  <option data-select2-id="36">Cucuta</option>
-                  <option disabled="disabled" data-select2-id="37">Pamplonita (disabled)</option>
-                  <option data-select2-id="38">Toledo</option>
-                  <option data-select2-id="39">LaBateca</option>
-                  <option data-select2-id="40">Mutiscua</option>
-                  <option data-select2-id="41">Babega</option>
+                <select [(ngModel)]="cliente.ciudad" [ngModelOptions]="{standalone: true}" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+                  <option *ngFor="let ciudad of ciudad" [value]="ciudad.nombre" >{{ciudad.nombre}}</option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" class="form-control" [(ngModel)]="cliente.direccion" name="direccion" id="direccion" placeholder="Dirección">
             </div>
 
             <div class="form-group row">
                 <label for="codigo_postal" class="col-sm-2 col-form-label">Codigo Postal</label>
                 <div class="col-sm-10">
-                    <input type="texto" class="form-control" [(ngModel)]="cliente.codigo_postal" name=codigo_postal>
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.codigo_postal" name="codigo_postal" id="codigo_postal" placeholder="codigo_postal">
                 </div>
             </div>
 
