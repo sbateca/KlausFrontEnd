@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class DepartamentoService {
 
-  private url:string= 'http://localhost:9898/api/departamentos';
+  private url:string= 'http://localhost:8080/api/departamentos';
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'});
 
   

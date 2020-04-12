@@ -63,6 +63,8 @@
                             <th rowspan="1" colspan="1">Nombres</th>
                             <th rowspan="1" colspan="1">Apellidos</th>
                             <th rowspan="1" colspan="1">Numero de Telefono</th>
+                            <th>Departamento</th>
+                            <th>Ciudad</th>
                             <th rowspan="1" colspan="1">Dirección</th>
                             <th rowspan="1" colspan="1">Correo</th>
                             <th rowspan="1" colspan="1">Codigo Postal</th>
@@ -74,6 +76,82 @@
                 </table>
             </div>
         </div>
+        <div class="form-grup">
+            <label>Clientes Por Departamentos</label>
+            <select class="form-control" [(ngModel)]="departametoSelec" (change)="cargarCiudades(departametoSelec)">
+                <option *ngFor="let depar of deparatamentos" [ngValue]=depar>{{depar.nombre}}</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label>Clientes Por Ciudad</label>
+            <select class="form-control " [(ngModel)]="idSelec" [ngModelOptions]="{standalone: true}" (change)="cargarClientesPorciudadId(idSelec)">
+                <option *ngFor="let ciu of ciudad" value={{ciu.id}}>{{ciu.nombre}}</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                    <thead>
+                        <tr role="row">
+                            <th class="sorting_desc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="descending" style="width: 169px;">Id</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 219px;">Documento</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Nombres</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Apellidos</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Numero de Telefono</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Departamento</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 102px;">Ciudad</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 194px;">Dirrección</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 143px;">Correo</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Codigo Postal</th>
+                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 102px;">Acciones</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr *ngFor="let cliente of client">
+                            <td>{{cliente.id}}</td>
+                            <td>{{cliente.documento}}</td>
+                            <td>{{cliente.nombres}}</td>
+                            <td>{{cliente.apellidos}}</td>
+                            <td>{{cliente.numero_contacto}}</td>
+                            <td>{{cliente.departamento}}</td>
+                            <td>{{cliente.ciudad}}</td>
+                            <td>{{cliente.direccion}}</td>
+                            <td>{{cliente.correo}}</td>
+                            <td>{{cliente.codigo_postal}}</td>
+
+                            <td>
+                                <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]"><i _ngcontent-shw-c48="" class="nav-icon fas fa-pencil-alt"></i></button>
+
+                                <button type="button" name="eliminar" (click)="delete(cliente)"><i _ngcontent-shw-c48="" class="nav-icon fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th rowspan="1" colspan="1">ID</th>
+                            <th rowspan="1" colspan="1">Documento</th>
+                            <th rowspan="1" colspan="1">Nombres</th>
+                            <th rowspan="1" colspan="1">Apellidos</th>
+                            <th rowspan="1" colspan="1">Numero de Telefono</th>
+                            <th>Departamento</th>
+                            <th>Ciudad</th>
+                            <th rowspan="1" colspan="1">Dirección</th>
+                            <th rowspan="1" colspan="1">Correo</th>
+                            <th rowspan="1" colspan="1">Codigo Postal</th>
+                            <th rowspan="1" colspan="1">Acciones</th>
+
+
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-12 col-md-5">
                 <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>

@@ -1,3 +1,6 @@
+import { Ciudad } from '../ciudades/ciudad';
+
+
 export class Cliente {
   id:number;
   documento:string;

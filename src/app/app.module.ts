@@ -13,6 +13,7 @@ import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { FormComponent } from './clientes/form.component';
+import { ClientesPorCiudadComponent } from './clientes/clientes-por-ciudad.component';
 
 const routes:Routes =[
   //{path:'', redirecto: '/clientes', pathMatch:'full'},//home
@@ -29,7 +30,8 @@ const routes:Routes =[
     MenuComponent,
     FooterComponent,
     ClientesComponent,
-    FormComponent
+    FormComponent,
+    ClientesPorCiudadComponent
   ],
   imports: [
     BrowserModule,

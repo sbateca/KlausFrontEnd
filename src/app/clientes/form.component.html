@@ -35,15 +35,16 @@
                 <label>Departamento</label>
                 <select [(ngModel)]="departamentoseleccionado" [ngModelOptions]="{standalone: true}" (change)="cargarCiudadDeptId(departamentoseleccionado);" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1"
                     aria-hidden="true">
-                       <option *ngFor="let departa of departamento" [ngValue]="departa" >{{departa.nombre}}</option>   
+                       <option *ngFor="let departamento of listaDepartamentos" name="departamento" placeholder="Departamento" [ngValue]="departamento" >{{departamento.nombre}}</option>       
                 </select>
             </div>
 
             <div class="form-group" data-select2-id="35">
                 <label>Ciudad</label>
-                <select [(ngModel)]="cliente.ciudad" [ngModelOptions]="{standalone: true}" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-                  <option *ngFor="let ciudad of ciudad" [value]="ciudad.nombre" >{{ciudad.nombre}}</option>
+                <select [(ngModel)]="CiudadSelec" [ngModelOptions]="{standalone: true}" (change)="asignarCiudadSeleccionada(CiudadSelec)" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+                  <option *ngFor="let ciudad of listaCiudades" [ngValue]="ciudad">{{ciudad.nombre}}</option>
                 </select>
+
             </div>
 
             <div class="form-group">
@@ -54,7 +55,7 @@
             <div class="form-group row">
                 <label for="codigo_postal" class="col-sm-2 col-form-label">Codigo Postal</label>
                 <div class="col-sm-10">
-                    <input type="texto" class="form-control" [(ngModel)]="cliente.codigo_postal" name="codigo_postal" id="codigo_postal" placeholder="codigo_postal">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.codigo_postal" name="codigo_postal" placeholder="Codigo Postal">
                 </div>
             </div>
 
