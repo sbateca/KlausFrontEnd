@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs'; // throwError se usa para convetir el error en un Observable
@@ -47,8 +47,22 @@ export class ProveedorService{
 
 
 
+    /*
+        El método getProveedoresPaginado realiza una petición de tipo get al servidor backend
 
-
+        Parámetros:
+            - page: string --> Número de página inicial
+            - size: string --> Tamaño de la página
+        Retorna:
+            - Un observable de tipo genérico <any>. Debe ser genérico porque el json que retorna
+              además del contenido (Proveedor) tiene también información del paginador
+    */
+    listarProveedoresPaginado(pagina: string, tamanoPagina: string): Observable<any> {
+        const params = new HttpParams() // debe llamarse "params"
+        .set('page', pagina)
+        .set('size', tamanoPagina);
+        return this.httpCliente.get<any>(`${this.rutaEndPoint}/pagina`, { params:params });
+    }
 
     /*
         El método crearProveedor realiza la petición de tipo post al servidor backend
