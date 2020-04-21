@@ -6,8 +6,7 @@ import { Ciudad } from '../ciudades/ciudad';
 import { CiudadService } from '../ciudades/ciudad.service';
 import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
-
-
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html'
@@ -20,6 +19,11 @@ export class ClientesComponent implements OnInit {
   public client: Cliente[];
   public idSelec: Number;
   public departametoSelec: Departamento;
+
+  totalRegistros = 0;
+  totalPorPaginas = 5;
+  paginaActual = 0;
+  pageSizeOptions : number[] = [5, 10, 20, 30, 50, 100];
   constructor(public clienteService:ClienteService,
               public ciudadService:CiudadService,
               public departamentoservice:DepartamentoService ) { }
@@ -31,10 +35,25 @@ export class ClientesComponent implements OnInit {
         console.log(this.cliente);
       }
     );
-   //this.cargarCiudades(5);  
+   this.listarPaginado();
    this.cargarDepartamentos();
-  } 
+
   
+  } 
+  listarPaginado(){
+    const paginaActual = this.paginaActual+'';
+    const totalPorPaginas = this.totalPorPaginas+'';
+    this.clienteService.listarClientesPaginado(paginaActual, totalPorPaginas)
+    .subscribe(paginacion =>{
+      this.cliente = paginacion.content as Cliente[];
+      this.totalRegistros = paginacion.totalElements as number;
+    });
+  }
+  paginar(event:PageEvent):void{
+    this.paginaActual = event.pageIndex;
+    this.totalPorPaginas = event.pageSize;
+    this.listarPaginado();
+  }
   cargarDepartamentos():void{
     this.departamentoservice.obtenerDepartamentos().subscribe(departa=>{
       this.deparatamentos=departa;
@@ -59,8 +78,9 @@ export class ClientesComponent implements OnInit {
   
   delete (cliente : Cliente) : void{
     this.clienteService.delete(cliente.id).subscribe( respuesta => {
-      this.cliente = this.cliente.filter( cli => cli !== cliente )
-     })
+      //this.cliente = this.cliente.filter( cli => cli !== cliente )
+      this.listarPaginado();
+    })
   }
 /*
   delete (cliente: Cliente):void{
