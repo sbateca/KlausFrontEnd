@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import swal from 'sweetalert2';
@@ -24,6 +24,8 @@ export class ClientesComponent implements OnInit {
   totalPorPaginas = 5;
   paginaActual = 0;
   pageSizeOptions : number[] = [5, 10, 20, 30, 50, 100];
+  @ViewChild(MatPaginator) paginator:MatPaginator;
+
   constructor(public clienteService:ClienteService,
               public ciudadService:CiudadService,
               public departamentoservice:DepartamentoService ) { }
@@ -41,12 +43,13 @@ export class ClientesComponent implements OnInit {
   
   } 
   listarPaginado(){
-    const paginaActual = this.paginaActual+'';
-    const totalPorPaginas = this.totalPorPaginas+'';
-    this.clienteService.listarClientesPaginado(paginaActual, totalPorPaginas)
+    //const paginaActual = this.paginaActual+'';
+    //const totalPorPaginas = this.totalPorPaginas+'';
+    this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion =>{
       this.cliente = paginacion.content as Cliente[];
       this.totalRegistros = paginacion.totalElements as number;
+      this.paginator._intl.itemsPerPageLabel= 'Registros por página:'
     });
   }
   paginar(event:PageEvent):void{
