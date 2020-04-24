@@ -5,10 +5,11 @@ import alertasSweet from 'sweetalert2';
 
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+// import {MatSort} from '@angular/material/sort';
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-
+import {MatButtonModule} from '@angular/material/button';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class ProveedoresComponent implements OnInit {
   columnasTabla: string[] = ['nombres', 'apellidos', 'documento', 'acciones']; // contiene los ID de cada una de las columnas de la tabla
   datos: MatTableDataSource<Proveedor>;
   @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
+  // @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
 
 
 
@@ -101,6 +103,9 @@ paginar(evento: PageEvent): void {
           // se organiza la información en un MatTableDataSource para usar los componentes de Angular Material
           this.datos = new MatTableDataSource<Proveedor>(this.proveedores);
           this.datos.paginator = this.paginador;
+
+          // asigna el sorting al MatTableDataSource
+         // this.datos.sort = this.ordenadorRegistros;
       }
   );
   }

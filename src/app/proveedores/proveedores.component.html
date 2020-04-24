@@ -119,9 +119,9 @@
 
                                 <ng-container matColumnDef="acciones">
                                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                    <td mat-cell *matCellDef="let boton">
-                                        <button mat-button>Editar</button>
-                                        <button mat-button>Eliminar</button>
+                                    <td mat-cell *matCellDef="let proveedor">
+                                        <button mat-icon-button color="basic" [routerLink]="['/proveedores/form',proveedor.id]"><mat-icon class="verde">edit</mat-icon></button>
+                                        <button mat-icon-button color="basic" (click)="eliminarProveedor(proveedor)"><mat-icon>delete</mat-icon></button>
                                     </td>
                                 </ng-container>
 
