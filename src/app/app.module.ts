@@ -15,6 +15,10 @@ import { FormComponent } from './clientes/form.component';
 import { ClientesPorCiudadComponent } from './clientes/clientes-por-ciudad.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatTableDataSource , MatTableModule } from '@angular/material/table';
+
+
+
 
 const routes:Routes =[
   //{path:'', redirecto: '/clientes', pathMatch:'full'},//home
@@ -40,7 +44,8 @@ const routes:Routes =[
     FormsModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

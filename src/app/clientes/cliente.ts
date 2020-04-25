@@ -9,7 +9,7 @@ export class Cliente {
 	numero_contacto:string;
 	departamento:string;
 	ciudad:string;
-	direccion:string;
-	correo:string;
-	codigo_postal:string;
+	direccion: string;
+	correo: string;
+	codigo_postal: string;
 }

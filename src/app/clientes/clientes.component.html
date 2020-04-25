@@ -150,8 +150,28 @@
             </div>
         </div>
 
-        <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
 
+
+
+        <!--Tabla Angular Material-->
+        <!-- -->
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="datos" width="100%">
+
+                <ng-container *ngFor='let columna of columnas' matColumnDef="{{columna.value}}">
+                    <th mat-header-cell *matHeaderCellDef>{{columna.titulo}}</th>
+                    <td mat-cell *matCellDef="let element">{{element[columna.value]}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnasTable"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnasTable;"></tr>
+
+            </table>
+
+
+        </div>
+        <br>
+        <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
         </mat-paginator>
     </div>
 </div>

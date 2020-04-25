@@ -7,6 +7,8 @@ import { CiudadService } from '../ciudades/ciudad.service';
 import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html'
@@ -24,7 +26,28 @@ export class ClientesComponent implements OnInit {
   totalPorPaginas = 5;
   paginaActual = 0;
   pageSizeOptions : number[] = [5, 10, 20, 30, 50, 100];
-  @ViewChild(MatPaginator) paginator:MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator:MatPaginator;
+
+  // Titulos de cada Columna
+  columnasTable: string[] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones' ];
+  datos: MatTableDataSource<Cliente>;
+  
+  // Definir Variable columnas
+  columnas = [
+    {titulo: 'Id', value: 'id'},
+    {titulo: 'Documento', value: 'documento'},
+    {titulo: 'Nombres', value: 'nombres'},
+    {titulo: 'Apellidos', value: 'apellidos'},
+    {titulo: 'Numero de Telefono', value: 'numero_contacto'},
+    {titulo: 'Departamento', value: 'departamento'},
+    {titulo: 'Ciudad', value: 'ciudad'},
+    {titulo: 'Dirección', value: 'direccion'},
+    {titulo: 'Correo', value: 'correo'},
+    {titulo: 'Codigo Postal', value: 'codigo_postal'},
+    {titulo: 'Acciones', value: 'acciones'}
+     
+  ];
+
 
   constructor(public clienteService:ClienteService,
               public ciudadService:CiudadService,
@@ -37,19 +60,24 @@ export class ClientesComponent implements OnInit {
         console.log(this.cliente);
       }
     );
+    //this.dateSource.sort= this.sort;
    this.listarPaginado();
    this.cargarDepartamentos();
 
   
   } 
   listarPaginado(){
-    //const paginaActual = this.paginaActual+'';
-    //const totalPorPaginas = this.totalPorPaginas+'';
+    // const paginaActual = this.paginaActual+'';
+    // const totalPorPaginas = this.totalPorPaginas+'';
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion =>{
       this.cliente = paginacion.content as Cliente[];
       this.totalRegistros = paginacion.totalElements as number;
-      this.paginator._intl.itemsPerPageLabel= 'Registros por página:'
+      this.paginator._intl.itemsPerPageLabel = 'Registros por página:';
+
+      // Para utilizar la Tabla en Angular Material
+      this.datos = new MatTableDataSource<Cliente>(this.cliente);
+      this.datos.paginator = this.paginator;
     });
   }
   paginar(event:PageEvent):void{
