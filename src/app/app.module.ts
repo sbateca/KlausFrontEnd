@@ -20,7 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
-// import {MatSort} from '@angular/material/sort';
+import {MatSortModule} from '@angular/material/sort';
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -57,7 +57,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
-    // MatSort,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

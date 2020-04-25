@@ -43,24 +43,25 @@
 
                         <div>
 
-                            <table mat-table [dataSource]="datos" width="100%">
+                            <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
-                                <!-- Position Column -->
+
+                                <!-- Columna documento -->
+                                <ng-container matColumnDef="documento">
+                                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                                </ng-container>
+
+                                <!-- Columna nombres -->
                                 <ng-container matColumnDef="nombres">
-                                    <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombres</th>
                                     <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
                                 </ng-container>
 
-                                <!-- Name Column -->
+                                <!-- Columna apellidos -->
                                 <ng-container matColumnDef="apellidos">
-                                    <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+                                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Apellidos</th>
                                     <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
-                                </ng-container>
-
-                                <!-- Weight Column -->
-                                <ng-container matColumnDef="documento">
-                                    <th mat-header-cell *matHeaderCellDef>Documento</th>
-                                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="acciones">

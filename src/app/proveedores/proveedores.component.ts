@@ -5,7 +5,7 @@ import alertasSweet from 'sweetalert2';
 
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-// import {MatSort} from '@angular/material/sort';
+import {MatSort, Sort} from '@angular/material/sort';
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -47,14 +47,12 @@ export class ProveedoresComponent implements OnInit {
   paginaActual = 0;
   elementosPorPagina: number[] = [5, 10, 20, 30, 50, 100];
 
-  columnasTabla: string[] = ['nombres', 'apellidos', 'documento', 'acciones']; // contiene los ID de cada una de las columnas de la tabla
+  columnasTabla: string[] = ['documento', 'nombres', 'apellidos', 'acciones']; // contiene los ID de cada una de las columnas de la tabla
   datos: MatTableDataSource<Proveedor>;
+
   @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
-  // @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
-
-
-
-
+  @ViewChild(MatSort,{static: true}) ordenadorRegistros: MatSort;
+   
 
   /*
     Al inicializar el componente se mostrará el listado de proveedores paginado,
@@ -63,6 +61,7 @@ export class ProveedoresComponent implements OnInit {
   ngOnInit(): void {
     this.listaPaginado();
   }
+
 
 
 
@@ -105,7 +104,9 @@ paginar(evento: PageEvent): void {
           this.datos.paginator = this.paginador;
 
           // asigna el sorting al MatTableDataSource
-         // this.datos.sort = this.ordenadorRegistros;
+          this.datos.sort = this.ordenadorRegistros;
+          this.datos.sort.active = 'nombres';
+          this.datos.sort.direction = 'asc';
       }
   );
   }
@@ -122,11 +123,46 @@ paginar(evento: PageEvent): void {
       - Retorna: nada
 */
 
-aplicarFiltro(event: Event) {
+ aplicarFiltro(event: Event) {
   const textoFiltro = (event.target as HTMLInputElement).value;
   this.datos.filter = textoFiltro.trim().toLowerCase();
 }
 
+
+
+
+reordenar(sort: Sort){
+  
+  const listProveedores = this.proveedores.slice(); // obtenemos el array
+
+  /* 
+    Si no está activo el sorting o no se ha establecido la dirección del sorting (asc ó desc)
+    se asigna los mismos datos (sin ordenar)
+  */
+  if(!sort.active || sort.direction === "" ){
+      //this.datos = new MatTableDataSource<Proveedor>(this.proveedores);
+      return;
+  }
+
+  this.datos = new MatTableDataSource<Proveedor>(
+      this.proveedores = listProveedores.sort( (a, b) => {
+        const esAscendente = sort.direction === 'asc'; // se determina si es ascendente
+        switch(sort.active){ // sort.active obtiene el id (string) de la columna seleccionada
+          case 'nombres': return this.comparar( a.nombres, b.nombres, esAscendente);
+          case 'apellidos': return this.comparar(a.apellidos, b.apellidos, esAscendente);
+          case 'documento': return this.comparar( a.documento, b.documento, esAscendente);
+        }
+      }))
+
+  // cada vez que se haga clic en un botón para reordenar es necesario paginar de nuevo
+   
+
+}
+
+// Esta función compara dos String junto con el valor de la variable isAsc y retorna:
+comparar(a: number | string, b: number | string, esAscendente: boolean){
+  return (a < b ? -1 : 1) * (esAscendente ? 1 : -1);
+}
 
 
   /*
@@ -143,6 +179,10 @@ aplicarFiltro(event: Event) {
      }
    )
   }
+
+
+  
+
 
 
 }
