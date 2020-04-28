@@ -8,6 +8,7 @@ import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-clientes',
@@ -33,7 +34,7 @@ export class ClientesComponent implements OnInit {
   datos: MatTableDataSource<Cliente>;
   
   // Definir Variable columnas
-  columnas = [
+  /*columnas = [
     {titulo: 'Id', value: 'id'},
     {titulo: 'Documento', value: 'documento'},
     {titulo: 'Nombres', value: 'nombres'},
@@ -46,7 +47,7 @@ export class ClientesComponent implements OnInit {
     {titulo: 'Codigo Postal', value: 'codigo_postal'},
     {titulo: 'Acciones', value: 'acciones'}
      
-  ];
+  ];*/
 
 
   constructor(public clienteService:ClienteService,

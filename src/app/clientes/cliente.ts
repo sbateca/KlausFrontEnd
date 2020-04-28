@@ -12,4 +12,5 @@ export class Cliente {
 	direccion: string;
 	correo: string;
 	codigo_postal: string;
+	
 }
