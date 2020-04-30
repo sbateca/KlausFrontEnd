@@ -8,6 +8,7 @@ import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
 @Component({
@@ -23,6 +24,7 @@ export class ClientesComponent implements OnInit {
   public idSelec: Number;
   public departametoSelec: Departamento;
 
+  // Variables con valores iniciales para el paginador
   totalRegistros = 0;
   totalPorPaginas = 5;
   paginaActual = 0;
@@ -30,9 +32,8 @@ export class ClientesComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator:MatPaginator;
 
   // Titulos de cada Columna
-  columnasTable: string[] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones' ];
+  columnasTable: string[] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones'];
   datos: MatTableDataSource<Cliente>;
-  
   // Definir Variable columnas
   /*columnas = [
     {titulo: 'Id', value: 'id'},
@@ -46,71 +47,101 @@ export class ClientesComponent implements OnInit {
     {titulo: 'Correo', value: 'correo'},
     {titulo: 'Codigo Postal', value: 'codigo_postal'},
     {titulo: 'Acciones', value: 'acciones'}
-     
   ];*/
 
+// Intanciamos
+  constructor(public clienteService: ClienteService,
+              public ciudadService: CiudadService,
+              public departamentoservice: DepartamentoService ) { }
 
-  constructor(public clienteService:ClienteService,
-              public ciudadService:CiudadService,
-              public departamentoservice:DepartamentoService ) { }
-
+// Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos        
   ngOnInit() {
     this.clienteService.getClientes().subscribe(
-      cliente=>{
-        this.cliente=cliente;//Actualiza listado
+      cliente => {
+        this.cliente = cliente; // Actualiza listado
         console.log(this.cliente);
       }
     );
-    //this.dateSource.sort= this.sort;
-   this.listarPaginado();
-   this.cargarDepartamentos();
-
-  
+    this.listarPaginado();
+    this.cargarDepartamentos();
   } 
-  listarPaginado(){
-    // const paginaActual = this.paginaActual+'';
-    // const totalPorPaginas = this.totalPorPaginas+'';
+
+
+
+
+/*
+  El método aplicarFiltro permite realizar proceso de filtrado de datos
+  Parámetros:
+      - El evento generado
+      - Retorna: nada
+*/
+
+aplicarFiltro(event: Event) {
+  const textoFiltro = (event.target as HTMLInputElement).value;
+  this.datos.filter = textoFiltro.trim().toLowerCase();
+}
+
+
+// Listar paginado : Realiza el get deacuerdo alos valores actualizados
+
+listarPaginado() {
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion =>{
-      this.cliente = paginacion.content as Cliente[];
-      this.totalRegistros = paginacion.totalElements as number;
+      // Se extrae el contenido Json paginador
+     // this.cliente = paginacion.content as Cliente[]; // Arreglo de cliente
+      this.totalRegistros = paginacion.totalElements as number; // Cantidad de registros
       this.paginator._intl.itemsPerPageLabel = 'Registros por página:';
+      console.log(this.paginator._intl);
 
       // Para utilizar la Tabla en Angular Material
+      // Organiza la la informacion en MatTableDataSource para usar los componentes de Angular
       this.datos = new MatTableDataSource<Cliente>(this.cliente);
       this.datos.paginator = this.paginator;
     });
   }
-  paginar(event:PageEvent):void{
+
+  // Realiza el control de la paginacion.
+  // Cada vez que se seleccione un boton del paginador se actualizan los valores
+  // PageEvent--> El evento de tipo PageEvent
+  paginar(event: PageEvent): void {
     this.paginaActual = event.pageIndex;
     this.totalPorPaginas = event.pageSize;
+    this.totalRegistros = event.length;
+    console.log(event);
     this.listarPaginado();
   }
-  cargarDepartamentos():void{
-    this.departamentoservice.obtenerDepartamentos().subscribe(departa=>{
-      this.deparatamentos=departa;
-    })
 
+  // Cargar Departamento, carga los Departamentos para el select. 
+  cargarDepartamentos(): void {
+    this.departamentoservice.obtenerDepartamentos().subscribe(departa => {
+      this.deparatamentos = departa; //
+    });
   }
 
-  cargarCiudades(departamentoSeleccionado):void{
-    //this.ciudadService.listaCiudades().subscribe(ciuda=>{
-      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciuda=>{
-      this.ciudad=ciuda;
+  // Cargar Ciudades por Departamentos. 
+  // Toma la id del Departamento seleccionado y hace la lista de sus Ciudades para el select
+  cargarCiudades(departamentoSeleccionado): void {
+    // this.ciudadService.listaCiudades().subscribe(ciuda=>{
+      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciuda => {
+      this.ciudad = ciuda;
      });
   }
-  
- cargarClientesPorciudadId(id){
-   console.log(id);
-   this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad=>{
-     this.client=clienteciudad;
-     //console.log(this.client);
+
+// Carga Clientes por Ciudad: con la id de la Ciudad obtengo todos los clientes de la ciudad seleccionada y la dibijo en una tabla.
+ cargarClientesPorciudadId(id) {
+   // console.log(id);
+   this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad => {
+     this.client = clienteciudad; // Dibuja ciudad en la tabla
+     // console.log(this.client);
    });
  }
-  
-  delete (cliente : Cliente) : void{
+
+
+
+ // Ejecuta el metodo eliminar cliente, retorna- nada
+  delete(cliente: Cliente): void {
     this.clienteService.delete(cliente.id).subscribe( respuesta => {
-      //this.cliente = this.cliente.filter( cli => cli !== cliente )
+      //  this.cliente = this.cliente.filter( cli => cli !== cliente )
       this.listarPaginado();
     })
   }

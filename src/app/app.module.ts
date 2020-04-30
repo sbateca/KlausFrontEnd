@@ -19,6 +19,7 @@ import { MatTableDataSource , MatTableModule } from '@angular/material/table';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
 
 
 const routes:Routes =[
@@ -48,7 +49,8 @@ const routes:Routes =[
     MatPaginatorModule,
     MatTableModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
