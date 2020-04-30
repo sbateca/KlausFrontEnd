@@ -64,6 +64,19 @@ export class ProveedoresComponent implements OnInit {
 
 
 
+/*
+    El método listarProveedores() obtiene el listado de proveedores registrados
+*/
+
+listarProveedores():void{
+  this.proveedorService.getProveedores().subscribe(
+    proveedores => {
+      this.proveedores = proveedores;
+      console.log(this.proveedores);
+    }
+  );
+}
+
 
 
 
@@ -96,8 +109,8 @@ paginar(evento: PageEvent): void {
       paginadorProveedor => {
 
         // se extrae el contenido del JSON paginador
-          this.proveedores = paginadorProveedor.content as Proveedor[]; // Arreglo de Proveedor
-          this.totalRegistros = paginadorProveedor.totalElements as number; // cantidad de registros
+           this.proveedores = paginadorProveedor.content as Proveedor[]; // Arreglo de Proveedor 
+           this.totalRegistros = paginadorProveedor.totalElements as number; // cantidad de registros
         
           // se organiza la información en un MatTableDataSource para usar los componentes de Angular Material
           this.datos = new MatTableDataSource<Proveedor>(this.proveedores);
