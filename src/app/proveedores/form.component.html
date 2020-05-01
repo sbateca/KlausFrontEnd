@@ -16,10 +16,13 @@
 
 <div class="card card-danger">
     <div class="card-header">
-      <h3 class="card-title">{{funcionalidad}}</h3>
+      <h3 class="card-title" mat-dialog-title>{{funcionalidad}}</h3>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
+
+    <div mat-dialog-content>
+
     <form class="form-horizontal">
       <div class="card-body">
         <div class="form-group row">
@@ -73,14 +76,25 @@
           </div>           
           
       </div>
+      
       <!-- botones de acciones -->
-      <div class="card-footer" *ngIf="!proveedor.id">
-        <button class="btn btn-danger" role="button" (click)='crearProveedor()' >Guardar</button>
-      </div>
+      <mat-dialog-actions>
 
-      <div class="card-footer" *ngIf="proveedor.id">
-        <button class="btn btn-danger" role="button" (click)='actualizarProveedor()' >Actualizar</button>
-      </div>      
+        <div class="card-footer" *ngIf="!proveedor.id">
+          <button class="btn btn-danger" role="button" (click)='crearProveedor()' >Guardar</button>
+        </div>
+  
+        <div class="card-footer" *ngIf="proveedor.id">
+          <button class="btn btn-danger" role="button" (click)='actualizarProveedor()' >Actualizar</button>
+        </div>    
+
+      </mat-dialog-actions>
+
+  
       <!-- /fin botones de acciones -->
     </form>
+
+  </div>
+
+
   </div>

@@ -1,10 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import { Proveedor } from './proveedor';
 import { ProveedorService } from './proveedor.service';
 
-// Para trabajar con enrutador 
+// Para trabajar con enrutador
 import { Router, ActivatedRoute } from '@angular/router';
 import alertasSweet from 'sweetalert2';
+
+// librerías relacionadas con ventanas modales
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
 
 
 @Component({
@@ -13,23 +18,44 @@ import alertasSweet from 'sweetalert2';
 
 })
 
-export class FormProveedoresComponent implements OnInit{
 
-    titulo: string = 'Proveedores'; // título para el grupo de funcionalidades
-    rutaFuncionalidades: string = 'Proveedores / Crear proveedor';
-    funcionalidad: string = 'Crear proveedor';
-    
+
+
+export class FormProveedoresComponent implements OnInit {
+
+    titulo = 'Proveedores'; // título para el grupo de funcionalidades
+    rutaFuncionalidades  = 'Proveedores / Crear proveedor';
+    funcionalidad = 'Crear proveedor';
+
     proveedor: Proveedor = new Proveedor(); // creamos un objeto proveedor donde se va a almecenar la información del formulario
     private proveedorService: ProveedorService; // Para efectuar las operaciones
-    
+
     private enrutador: Router; // se usa para acceder a funciones de redirección
     private activatedRoute: ActivatedRoute; // se usa para extraer información de la ruta
 
+
+    // ------ Variables para la ventana modal
+
+    // variable de referencia a la ventana modal
+    public referenciaVentanaModal: MatDialogRef<FormProveedoresComponent>;
+
+    // Se inyecta un MAT_DIALOG_DATA
+    
+
+
+
     // instanciamos las variables (las private)
-    constructor(proveedorService: ProveedorService, enrutador: Router, activatedRoute: ActivatedRoute){
+    constructor(proveedorService: ProveedorService,
+                enrutador: Router,
+                activatedRoute: ActivatedRoute,
+                referenciaVentanaModal: MatDialogRef<FormProveedoresComponent>,
+                @Inject(MAT_DIALOG_DATA) public datosProveedor: Proveedor) {
+
         this.proveedorService = proveedorService;
         this.enrutador = enrutador;
         this.activatedRoute = activatedRoute;
+
+        this.referenciaVentanaModal = referenciaVentanaModal;
     }
 
 
@@ -91,6 +117,16 @@ export class FormProveedoresComponent implements OnInit{
                 alertasSweet.fire('Confirmación', respuesta.mensaje, 'success');
             }
         );
+    }
+
+
+
+
+    /*
+        El método cancelarOperacion() cierra la ventana modal
+    */
+    cancelarOperacion(): void {
+        this.referenciaVentanaModal.close();
     }
 
 

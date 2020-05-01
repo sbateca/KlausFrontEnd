@@ -26,6 +26,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogConfig} from '@angular/material/dialog';
 
 
 const routes: Routes = [
@@ -46,8 +48,8 @@ const routes: Routes = [
     FooterComponent,
     ClientesComponent,
     FormClientesComponent,
-    ProveedoresComponent,
-    FormProveedoresComponent
+    FormProveedoresComponent,
+    ProveedoresComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +63,10 @@ const routes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
     ],
+  entryComponents: [ FormProveedoresComponent ],
   providers: [],
   bootstrap: [AppComponent]
 })
