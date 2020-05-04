@@ -22,7 +22,7 @@ export class FormComponent implements OnInit {
   public listaCiudades:Ciudad[]; 
   public IdCiudadSelecc: Number;
   public CiudadSelec:Ciudad;
-  private titulo:string = "Crear cliente";
+  titulo:string = "Crear cliente";
 
   // constructor de la clase. Acá se instancian variables
   constructor(private clienteService:ClienteService,

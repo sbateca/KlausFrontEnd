@@ -152,6 +152,7 @@
 <div class="box-footer">
     <button type="submit" class="btn btn-info pull-right" [routerLink]="['/clientes/form']">Crear Cliente</button>
 </div>
+
 <!--Bucador-->
 <div class="col-sm-12">
     <mat-form-field>
@@ -166,7 +167,7 @@
         <!--Tabla Angular Material-->
         <!-- -->
         <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="datos" width="100%">
+            <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
                 <!--<ng-container *ngFor='let columna of columnas' matColumnDef="{{columna.value}}">
                     <th mat-header-cell *matHeaderCellDef>{{columna.titulo}}</th>
@@ -223,7 +224,9 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Codigo Postal</th>
                     <td mat-cell *matCellDef="let element"> {{element.codigo_postal}} </td>
                 </ng-container>
+
                 <ng-container matColumnDef="acciones">
+
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let cliente">
                         <button mat-icon-button color="basic" [routerLink]="['/clientes/form',cliente.id]"><mat-icon>edit</mat-icon></button>
@@ -236,10 +239,13 @@
 
             </table>
 
-
         </div>
         <br>
         <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
         </mat-paginator>
-    </div>
-</div>
+
+
+
+
+        <!--</div>
+</div>-->

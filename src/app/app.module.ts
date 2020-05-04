@@ -14,20 +14,21 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { FormComponent } from './clientes/form.component';
 import { ClientesPorCiudadComponent } from './clientes/clientes-por-ciudad.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource , MatTableModule } from '@angular/material/table';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatSortModule} from '@angular/material/sort';
 
 
-const routes:Routes =[
-  //{path:'', redirecto: '/clientes', pathMatch:'full'},//home
-    {path: '',redirectTo: '/clientes', pathMatch: 'full'},
-    {path: 'clientes', component:ClientesComponent},
-    {path: 'clientes/form', component:FormComponent},
-    {path: 'clientes/form/:id', component:FormComponent}
+const routes: Routes =[
+  // {path:'', redirecto: '/clientes', pathMatch:'full'},//home
+    {path: '', redirectTo: '/clientes', pathMatch: 'full'},
+    {path: 'clientes', component: ClientesComponent},
+    {path: 'clientes/form', component: FormComponent},
+    {path: 'clientes/form/:id', component: FormComponent}
 ];
 
 @NgModule({
@@ -50,7 +51,8 @@ const routes:Routes =[
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]
