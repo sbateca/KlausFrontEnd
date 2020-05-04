@@ -11,6 +11,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
+// para trabajar con rutas
+import { Router, ActivatedRoute } from '@angular/router';
+
+
 /*
   Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog)
 */
@@ -44,12 +48,24 @@ export class ProveedoresComponent implements OnInit {
   // se declara una variable de tipo MatDialog. Debe ser pública
   public ventanaModal: MatDialog;
 
-  // se declara un proveedor donde quedará la información del formulario
-  public proveedorForm: Proveedor;
+  // se declara un proveedor donde quedará la información del resultado obtenido al cerrar la ventana
+  // es decir, al cerrar la ventana se asigna el proveedor que se llenó en el formulario en esta variable
+  public proveedor: Proveedor;
+
+  // creramos un enrutador
+  private enrutador: Router; // se usa para acceder a funciones de redirección
+  private activatedRoute: ActivatedRoute; // se usa para extraer información de la ruta
+
 
   // instanciamos el ProveedorService y la ventana modal
-  constructor(proveedorService: ProveedorService, ventanaModal: MatDialog) {
+  constructor(proveedorService: ProveedorService,
+              enrutador: Router,
+              activatedRoute: ActivatedRoute,
+              ventanaModal: MatDialog) {
+
       this.proveedorService = proveedorService;
+      this.enrutador = enrutador;
+      this.activatedRoute = activatedRoute;
       this.ventanaModal = ventanaModal;
     }
 
@@ -86,7 +102,6 @@ listarProveedores(): void {
   this.proveedorService.getProveedores().subscribe(
     proveedores => {
       this.proveedores = proveedores;
-      console.log(this.proveedores);
     }
   );
 }
@@ -214,27 +229,110 @@ comparar(a: number | string, b: number | string, esAscendente: boolean) {
   /*
     El método abrirVentana implementa acciones sobre la ventana modal:
       - open: Abre una ventana con los parámetros que se envían:
-              - el componente html
+              - el componente que implementa la vista de la ventana modal
               - datos adicionales:
-                  - el ancho
-                  - el objeto:  En este caso se envía un proveedor. Sobre ese objeto se 
-                                almacena la información del formulario
+                  - Un JSON con configuraciones para la ventana
+                  - data: acá se puede enviar información a la ventana modal (componente).
+                          En este caso se envía el ID del proveedor
       - afterClosed: Al cerrarse la ventana se asigna el proveedor con la información del formulario (resultado).
   */
 abrirVentana(): void {
-  
+
   // se declara una constante
   const referenciaVentanaModal = this.ventanaModal.open(FormProveedoresComponent,
     {
-      width: '80%',
-
+      width: '60%',
+      height: '85%',
+      position: {left: '30%', top: '60px'}
     });
 
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
-      this.proveedorForm = resultado;
+
+      // no hay resultados cuando se cancela la operación (se cierra la ventana modal)
+      if (resultado != null) {
+          // el resultado es el proveedor que se ha llenado en el formulario
+          this.proveedor = resultado;
+          this.crearProveedor();
+      }
     });
 
+
 }
+
+
+
+
+
+
+
+/* editar proveedor*/
+
+abrirVentanaEditarProveedor(idProveedor): void {
+
+  const referenciaVentanaModal = this.ventanaModal.open(FormProveedoresComponent,{
+    width: '60%',
+    height: '85%',
+    position: {left: '30%', top: '60px'},
+    data: idProveedor
+  });
+
+  referenciaVentanaModal.afterClosed().subscribe( resultado => {
+    this.proveedor = resultado;
+    this.actualizarProveedor();
+  });
+
+
+}
+
+
+
+
+
+
+
+
+    /*
+        El método crearProveedor() ejecuta el método crearProveedor del ProveedorService y se suscribe en espera de una repuesta
+        La respuesta se utiliza para mostrar un mensaje de confirmación con datos del proveedor creado
+        Parámetros:
+            - Nada
+        Retorna: Nada
+    */
+
+crearProveedor(): void {
+  this.proveedorService.crearProveedor(this.proveedor).subscribe(
+      respuesta => {
+          this.listaPaginado();
+          alertasSweet.fire('Nuevo proveedor', respuesta.mensaje);
+      }
+  );
+}
+
+
+
+
+
+    /*
+        El método actualizarProveedor() ejecuta el método actualizarProveedor del ProveedorService
+        y se suscribe en espera de una repuesta.
+        La respuesta se utiliza para mostrar un mensaje de confirmación con datos del proveedor actualizado
+        Parámetros: Nada
+        Retorna: Nada
+    */
+   actualizarProveedor(): void {
+    console.log("proveedor actualizado");
+    console.log(this.proveedor);
+    this.proveedorService.actualizarProveedor(this.proveedor).subscribe(
+        respuesta => {
+            this.listaPaginado();
+            // this.enrutador.navigate(['/proveedores']);
+            alertasSweet.fire('Confirmación', respuesta.mensaje, 'success');
+        }
+    );
+}
+
+
+
 
 
 
