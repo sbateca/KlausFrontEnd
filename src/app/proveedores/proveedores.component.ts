@@ -20,6 +20,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 */
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormProveedoresComponent } from './form.component';
+import { DetalleComponent } from './detalle/detalle.component';
 
 
 
@@ -331,6 +332,23 @@ crearProveedor(): void {
     );
 }
 
+
+
+
+
+/*
+  La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
+  donde se observa el detalle del proveedor seleccionado
+*/
+
+abrirVentanaVer(idProveedor): void {
+  this.ventanaModal.open(DetalleComponent, {
+    width: '60%',
+    height: '85%',
+    position: {left: '30%', top: '60px'},
+    data: idProveedor
+  });
+}
 
 
 

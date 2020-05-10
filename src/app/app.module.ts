@@ -28,6 +28,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
+import { DetalleComponent } from './proveedores/detalle/detalle.component';
 
 
 const routes: Routes = [
@@ -49,7 +50,8 @@ const routes: Routes = [
     ClientesComponent,
     FormClientesComponent,
     FormProveedoresComponent,
-    ProveedoresComponent
+    ProveedoresComponent,
+    DetalleComponent
   ],
   imports: [
     BrowserModule,
