@@ -10,14 +10,14 @@ import { Ciudad } from '../ciudades/ciudad';
   providedIn: 'root'
 })
 export class ClienteService {
-  private urlEndPoint:string ='http://localhost:8080/api/clientes';
-  private urlporciudad:string ='http://localhost:8080/api/clientesciud';
+  private urlEndPoint: string = 'http://localhost:8080/api/clientes';
+  private urlporciudad: string = 'http://localhost:8080/api/clientesciud';
 
-  private httpHeaders=new HttpHeaders({'Content-Type':'application/json'});
+  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor( private http:HttpClient ) { }
+  constructor( private http: HttpClient ) { }
 
-  getClientes():Observable<Cliente[]>{
+  getClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.urlEndPoint);
   }
 
@@ -35,21 +35,25 @@ export class ClienteService {
     const params = new HttpParams() // debe llamarse "params"
     .set('page', pagina)
     .set('size', tamanoPagina);
-    return this.http.get<any>(`${this.urlEndPoint}/pagina`, { params:params });
+    return this.http.get<any>(`${this.urlEndPoint}/pagina`, { params: params });
   }
-  create(cliente:Cliente, IdCiudadSelecc:Number):Observable<Cliente>{//recibe el onjeto cliente en json
-    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers:this.httpHeaders});
+  create(cliente: Cliente, IdCiudadSelecc: Number): Observable<Cliente> {// recibe el onjeto cliente en json
+    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders});
   }
-  getCliente(id): Observable<Cliente>{//cargamos los datos al formulario
+  crearCliente(cliente: Cliente): Observable<Cliente> {// recibe el onjeto cliente en json
+    return this.http.post<Cliente>(`${this.urlEndPoint}`, cliente, {headers: this.httpHeaders});
+  }
+  getCliente(id): Observable<Cliente> {// cargamos los datos al formulario
     return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`);
   }
-  obtenerClentesCiudadId(id):Observable<Cliente[]>{
+  obtenerClentesCiudadId(id): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.urlporciudad}/${id}`);
   }
-  update(cliente:Cliente):Observable<Cliente>{
-        return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers:this.httpHeaders});
+  update(cliente: Cliente): Observable<Cliente> {
+        return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders});
   }
-  delete(id:number):Observable<Cliente>{
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers:this.httpHeaders});
+  delete(id: number): Observable<Cliente> {
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders});
   }
 }
+

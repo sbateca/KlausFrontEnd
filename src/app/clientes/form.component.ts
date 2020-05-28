@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import swal from 'sweetalert2';//implementamos
+import swal from 'sweetalert2'; // implementamos
 import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
 import { Ciudad } from '../ciudades/ciudad';
 import { CiudadService } from '../ciudades/ciudad.service';
 import { FormsModule } from '@angular/forms';
+
+
+
+// librerías relacionadas con ventanas modales
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ClientesComponent } from './clientes.component';
+
 
 
 @Component({
@@ -16,20 +23,22 @@ import { FormsModule } from '@angular/forms';
 })
 export class FormClientesComponent implements OnInit {
 
-  public listaDepartamentos:Departamento[];
-  public cliente:Cliente =new Cliente();
-  public departamentoseleccionado:Departamento;
-  public listaCiudades:Ciudad[]; 
+  public listaDepartamentos: Departamento[];
+  public cliente: Cliente = new Cliente();
+  public departamentoseleccionado: Departamento;
+  public listaCiudades: Ciudad[];
   public IdCiudadSelecc: Number;
-  public CiudadSelec:Ciudad;
-  titulo:string = "Crear cliente";
+  public CiudadSelec: Ciudad;
+  titulo: string = " Crear cliente";
+
 
   // constructor de la clase. Acá se instancian variables
-  constructor(private clienteService:ClienteService,
-              private router:Router,
-              private activatedRoute: ActivatedRoute,
-              private departamentoService:DepartamentoService,
-              private ciudadSrvice:CiudadService) { }
+  constructor(private clienteService: ClienteService,
+              private departamentoService: DepartamentoService,
+              private ciudadSrvice: CiudadService,
+              private referenciaVentanaModal: MatDialogRef<FormClientesComponent>, // variable de referencia a la ventana modal
+              @Inject(MAT_DIALOG_DATA) private idCliente: number)// Se inyecta un MAT_DIALOG_DATA idCliente al formulario
+              { }
 
 
 /*
@@ -42,6 +51,12 @@ export class FormClientesComponent implements OnInit {
     this.getDept();
    }
 
+    /*
+        El método cancelarOperacion() cierra la ventana modal
+    */
+   cancelarOperacion(): void {
+    this.referenciaVentanaModal.close();
+  }
 
 
 /*
@@ -50,11 +65,11 @@ export class FormClientesComponent implements OnInit {
       - Parámetros: ninguno
       - Retorna: nada
 */
- getDept():void{
-    this.departamentoService.obtenerDepartamentos().subscribe(dpto=>{
-      this.listaDepartamentos=dpto;//Actualiza listado
+ getDept(): void {
+    this.departamentoService.obtenerDepartamentos().subscribe(dpto => {
+      this.listaDepartamentos = dpto; //  Actualiza listado
     },
-    error=>{
+    error => {
       console.log('Error al listar los usuarios desde el servidor')
     }
   );
@@ -65,9 +80,9 @@ export class FormClientesComponent implements OnInit {
   Este método asigna a la variable de clase CiudadSelecc el objeto de la ciudad seleccionada, 
   en el formulario
 */
- asignarCiudadSeleccionada(CiudadSelecc):void{
-   this.IdCiudadSelecc=this.CiudadSelec.id;
-   this.cliente.ciudad=this.CiudadSelec.nombre;
+ asignarCiudadSeleccionada(CiudadSelecc): void {
+   this.IdCiudadSelecc = this.CiudadSelec.id;
+   this.cliente.ciudad = this.CiudadSelec.nombre;
  }
 /*
   Este método obtiene las ciudades pertenecientes al departamento seleccionado
@@ -75,13 +90,12 @@ export class FormClientesComponent implements OnInit {
     - Parámetros: El departamento seleccionado
     - Retorna: nada
 */
- cargarCiudadDeptId(departamentoseleccionado):void{
-    this.ciudadSrvice.obtenerCiudadId(departamentoseleccionado.id).subscribe(ciud=>{
-      this.cliente.departamento=departamentoseleccionado.nombre;
+ cargarCiudadDeptId(departamentoseleccionado): void {
+    this.ciudadSrvice.obtenerCiudadId(departamentoseleccionado.id).subscribe(ciud => {
+      this.cliente.departamento = departamentoseleccionado.nombre;
       this.listaCiudades = ciud;
     });
   }
-  
 
 /*
   Este método revisa los parámetros de la URL y extrae el ID del cliente.
@@ -89,48 +103,10 @@ export class FormClientesComponent implements OnInit {
   - Parámetros: ninguno
   - Retorna: nada
 */
-  cargarCliente():void{
-    this.activatedRoute.params.subscribe(params=>{
-      let id = params['id']
-      if(id){
-        this.clienteService.getCliente(id).subscribe((cliente)=>this.cliente=cliente)
-    }
-    })
-  }
+  cargarCliente(): void {
 
-
-/*
-  Este método ejecuta el service que inserta un cliente (el que se ha llenado en el formulario)
-  y redirecciona a la lista de clientes. Finalmente lanza una alerta (usando SweetAlert)
-  - Parámetros: ninguno
-  - Retorna: nada
-*/
-  public create():void {
-
-    console.log(this.cliente);
-    console.log(this.IdCiudadSelecc);
-
-    this.clienteService.create(this.cliente, this.IdCiudadSelecc)
-    .subscribe(response=>{//Sube a la base de datos
-      this.router.navigate(['/clientes'])//vamos a la clientes  muestra la tabla
-       swal.fire('Nuevo cliente', `Cliente ${this.cliente.nombres} creado con exito!`, 'success')
-    }
-    );
-  }
-
-
-
-  /*
-      Este método ejecuta el service que actualiza el cliente (no nulo) y luego redirecciona
-      al listado de clientes. Finalmente lanza una alerta (usando SweetAlert)
-      - Parámetros: ninguno
-      - Retorna: nada
-  */
-  update():void{
-    this.clienteService.update(this.cliente)
-    .subscribe(cliente=>{
-      this.router.navigate(['/clientes'])//vamos a cualquier ruta
-      swal.fire('Cliente Actializado', `Cliente ${this.cliente.nombres} actualizado con éxito!`,'success')
-    })
+    if (this.idCliente) {
+          this.clienteService.getCliente(this.idCliente).subscribe((cliente) => this.cliente = cliente);
+        }
   }
 }

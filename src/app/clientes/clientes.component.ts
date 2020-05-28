@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
+import swal from 'sweetalert2'; // implementamos
+import alertasSweet from 'sweetalert2';
 import { Ciudad } from '../ciudades/ciudad';
 import { CiudadService } from '../ciudades/ciudad.service';
 import { DepartamentoService } from '../departamentos/departamento.service';
@@ -12,6 +14,12 @@ import { MatSort, Sort} from '@angular/material/sort';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+
+/*
+  Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog)
+*/
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormClientesComponent } from './form.component';
 
 @Component({
   selector: 'app-clientes',
@@ -26,7 +34,11 @@ export class ClientesComponent implements OnInit {
   public idSelec: number;
   public departametoSelec: Departamento;
 
-  // Variables con valores iniciales para el paginador
+  // se declara donde quedará la información del resultado obtenido al cerrar la ventana
+  // es decir, al cerrar la ventana se asigna el proveedor que se llenó en el formulario en esta variable
+  public cli: Cliente;
+
+ // Variables con valores iniciales para el paginador
   totalRegistros = 0;
   paginaActual = 0;
   totalPorPaginas = 3;
@@ -56,10 +68,11 @@ export class ClientesComponent implements OnInit {
     {titulo: 'Acciones', value: 'acciones'}
   ];*/
 
-// Intanciamos
+// Instanciamos
   constructor(public clienteService: ClienteService,
               public ciudadService: CiudadService,
-              public departamentoservice: DepartamentoService ) { }
+              public departamentoservice: DepartamentoService,
+              public ventanaModal: MatDialog) { }
 
 
 
@@ -119,6 +132,7 @@ private listarPaginado() {
       // Para utilizar la Tabla en Angular Material
       // Organiza la la informacion en MatTableDataSource para usar los componentes de Angular
       this.datos = new MatTableDataSource<Cliente>(this.cliente);
+     // console.log("datos: ", JSON.stringify(this.datos));
      // this.datos.paginator = this.paginador;
 
       // asigna el sorting al MatTableDataSource
@@ -183,7 +197,7 @@ reordenar(sort: Sort) {
 
 
 
-  // Cargar Ciudades por Departamentos. 
+  // Cargar Ciudades por Departamentos.
   // Toma la id del Departamento seleccionado y hace la lista de sus Ciudades para el select
   cargarCiudades(departamentoSeleccionado): void {
     // this.ciudadService.listaCiudades().subscribe(ciuda=>{
@@ -196,10 +210,8 @@ reordenar(sort: Sort) {
 
 // Carga Clientes por Ciudad: con la id de la Ciudad obtengo todos los clientes de la ciudad seleccionada y la dibijo en una tabla.
  cargarClientesPorciudadId(id) {
-   // console.log(id);
    this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad => {
      this.client = clienteciudad; // Dibuja ciudad en la tabla
-     // console.log(this.client);
    });
  }
 
@@ -246,4 +258,96 @@ reordenar(sort: Sort) {
                       }
     })
     }*/
+
+
+    /*
+    El método abrirVentana implementa acciones sobre la ventana modal:
+      - open: Abre una ventana con los parámetros que se envían:
+              - el componente que implementa la vista de la ventana modal
+              - datos adicionales:
+                  - Un JSON con configuraciones para la ventana
+                  - data: acá se puede enviar información a la ventana modal (componente).
+                          En este caso se envía el ID del proveedor
+      - afterClosed: Al cerrarse la ventana se asigna el proveedor con la información del formulario (resultado).
+  */
+abrirVentana(): void {
+// se declara una constante
+  const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent,
+    {
+      width: '60%',
+      height: '85%',
+      position: {left: '30%', top: '60px'}
+    });
+  referenciaVentanaModal.afterClosed().subscribe( resultado => {
+      // no hay resultados cuando se cancela la operación (se cierra la ventana modal)
+      if (resultado != null) {
+          // el resultado es el cliente que se ha llenado en el formulario
+          this.cli = resultado;
+          this.crearCliente();
+      }
+    });
   }
+
+/*
+  Este método ejecuta el service que inserta un cliente (el que se ha llenado en el formulario)
+  y redirecciona a la lista de clientes. Finalmente lanza una alerta (usando SweetAlert)
+  - Parámetros: ninguno
+  - Retorna: nada
+*/
+  public crearCliente(): void {
+
+    this.clienteService.crearCliente(this.cli)
+    .subscribe(response => {// Sube a la base de datos
+      swal.fire('Nuevo cliente', `Cliente ${this.cli.nombres} creado con exito!`, 'success');
+      this.paginaActual = 0;
+      this.listarPaginado();
+    }
+    );
+  }
+
+  /* editar proveedor*/
+
+abrirVentanaEditarCliente(idCliente): void {
+
+  const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent, {
+    width: '60%',
+    height: '85%',
+    position: {left: '30%', top: '60px'},
+    data: idCliente
+  });
+
+  referenciaVentanaModal.afterClosed().subscribe( resultado => {
+    this.cli = resultado;
+    this.actualizarCliente();
+  });
+}
+
+/*
+      Este método ejecuta el service que actualiza el cliente (no nulo) y luego redirecciona
+      al listado de clientes. Finalmente lanza una alerta (usando SweetAlert)
+      - Parámetros: ninguno
+      - Retorna: nada
+*/
+  actualizarCliente(): void {
+    this.clienteService.update(this.cli)
+    .subscribe(respuesta => {
+      this.listarPaginado();
+      swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success')
+    });
+  }
+
+/*
+  La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
+  donde se observa el detalle del proveedor seleccionado
+*/
+/*
+abrirVentanaVer(idCliente): void {
+  this.ventanaModal.open(DetalleComponent, {
+    width: '60%',
+    height: '85%',
+    position: {left: '30%', top: '60px'},
+    data: idCliente
+  });*/
+}
+
+  

@@ -1,6 +1,23 @@
-<div class="card-header">
-    <h3 class="card-title">Tabla Clientes</h3>
-</div>
+<!--<div class="card-header">
+    <h1 class="float-left pr-3">Clientes</h1>
+        <button mat-mat-mini-fab color="primary" (click)="abrirVentana()"><mat-icon>person_add</mat-icon>
+    </ng-template>
+</div>-->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="float-left pr-3">Clientes</h1>
+                <button mat-mini-fab color="primary" (click)="abrirVentana()"><mat-icon>person_add</mat-icon></button>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">Clientes/Listar Clientes</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!--
 <div class="card-body">
@@ -148,10 +165,10 @@
         -->
 
 
-<!--Boton Crear clientes-->
+<!--Boton Crear clientes
 <div class="box-footer">
     <button type="submit" class="btn btn-info pull-right" [routerLink]="['/clientes/form']">Crear Cliente</button>
-</div>
+</div>-->
 
 <!--Bucador-->
 <div class="col-sm-12">
@@ -161,11 +178,7 @@
     </mat-form-field>
     <div>
 
-
-
-
         <!--Tabla Angular Material-->
-        <!-- -->
         <div class="mat-elevation-z8">
             <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
@@ -177,59 +190,58 @@
                 <!-- Columna documento -->
                 <ng-container matColumnDef="id">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
-                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.id}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="documento">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
-                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.documento}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="nombres">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombres</th>
-                    <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.nombres}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="apellidos">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Apellidos</th>
-                    <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.apellidos}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="numero_contacto">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Numero De contacto</th>
-                    <td mat-cell *matCellDef="let element"> {{element.numero_contacto}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.numero_contacto}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="departamento">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Departamento</th>
-                    <td mat-cell *matCellDef="let element"> {{element.departamento}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.departamento}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="ciudad">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Ciudad</th>
-                    <td mat-cell *matCellDef="let element"> {{element.ciudad}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.ciudad}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="direccion">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Dirección</th>
-                    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.direccion}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="correo">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Correo</th>
-                    <td mat-cell *matCellDef="let element"> {{element.correo}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.correo}} </td>
                 </ng-container>
                 <!-- Columna documento -->
                 <ng-container matColumnDef="codigo_postal">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Codigo Postal</th>
-                    <td mat-cell *matCellDef="let element"> {{element.codigo_postal}} </td>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.codigo_postal}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="acciones">
-
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let cliente">
-                        <button mat-icon-button color="basic" [routerLink]="['/clientes/form',cliente.id]"><mat-icon>edit</mat-icon></button>
+                        <button mat-icon-button color="basic" (click)="abrirVentanaEditarCliente(cliente.id)"><mat-icon>edit</mat-icon></button>
                         <button mat-icon-button color="basic" (click)="delete(cliente)"><mat-icon>delete</mat-icon></button>
                     </td>
                 </ng-container>
@@ -243,9 +255,3 @@
         <br>
         <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
         </mat-paginator>
-
-
-
-
-        <!--</div>
-</div>-->
