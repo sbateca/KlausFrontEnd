@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 // librerías relacionadas con ventanas modales
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClientesComponent } from './clientes.component';
+import { ɵBROWSER_SANITIZATION_PROVIDERS } from '@angular/platform-browser';
 
 
 
@@ -48,6 +49,8 @@ export class FormClientesComponent implements OnInit {
 */
   ngOnInit() {
     this.cargarCliente();
+   // this.departamentoseleccionado.id = 54;
+   // this.departamentoseleccionado.nombre = "NORTE DE SANTANDER";
     this.getDept();
    }
 
@@ -70,7 +73,7 @@ export class FormClientesComponent implements OnInit {
       this.listaDepartamentos = dpto; //  Actualiza listado
     },
     error => {
-      console.log('Error al listar los usuarios desde el servidor')
+      console.log('Error al listar los usuarios desde el servidor');
     }
   );
 }
@@ -95,6 +98,22 @@ export class FormClientesComponent implements OnInit {
       this.cliente.departamento = departamentoseleccionado.nombre;
       this.listaCiudades = ciud;
     });
+  }
+
+  compararAsignatura( a1: Departamento, a2: Departamento): boolean {
+    if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
+      return true;
+    }
+    /*
+    if ( a1 === null || a2 === null || a1 === undefined || a2 === undefined ) {
+      return false;
+    }
+    if (a1.id === a2.id) {// si los ids son iguales significa que son iguales
+      return true;
+    }*/
+
+    return ( a1 === null || a2 === null || a1 === undefined || a2 === undefined )
+    ? false : a1.id === a2.id;
   }
 
 /*

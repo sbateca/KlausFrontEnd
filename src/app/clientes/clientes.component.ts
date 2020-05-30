@@ -306,16 +306,13 @@ abrirVentana(): void {
   }
 
   /* editar proveedor*/
-
 abrirVentanaEditarCliente(idCliente): void {
-
   const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent, {
     width: '60%',
     height: '85%',
     position: {left: '30%', top: '60px'},
     data: idCliente
   });
-
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     this.cli = resultado;
     this.actualizarCliente();
