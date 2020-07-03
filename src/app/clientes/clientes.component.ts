@@ -12,6 +12,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
 
+
+
+
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -20,6 +23,7 @@ import {MatButtonModule} from '@angular/material/button';
 */
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
+import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
 
 @Component({
   selector: 'app-clientes',
@@ -48,7 +52,8 @@ export class ClientesComponent implements OnInit {
 
 
   // Titulos de cada Columna
-  columnasTable: string [] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones'];
+  // columnasTable: string [] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones'];
+  columnasTable: string [] = ['documento', 'nombres', 'apellidos', 'acciones'];
   datos: MatTableDataSource<Cliente>;
 
 
@@ -337,14 +342,14 @@ abrirVentanaEditarCliente(idCliente): void {
   La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
   donde se observa el detalle del proveedor seleccionado
 */
-/*
+
 abrirVentanaVer(idCliente): void {
-  this.ventanaModal.open(DetalleComponent, {
+  this.ventanaModal.open(DetalleClienteComponent, {
     width: '60%',
-    height: '85%',
+    height: '86%',
     position: {left: '30%', top: '60px'},
     data: idCliente
-  });*/
+  });
 }
 
-  
+}

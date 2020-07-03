@@ -1,0 +1,51 @@
+<!--Tabla Angular Material-->
+<div mat-dialog-title>
+    <h1 mat-mini-fab color="primary">Cliente</h1>
+</div>
+<div mat-dialog-content>
+
+    <div>
+        <table class="table">
+            <tr>
+                <th class="text-secondary font-weight-normal">Documento:</th>
+                <th class="text-dark"><small>{{cliente.documento}}</small></th>
+
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Nombres:</th>
+                <th class="text-dark"><small>{{cliente.nombres}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Apellidos:</th>
+                <th class="text-dark"><small>{{cliente.apellidos}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Numero De Contacto:</th>
+                <th class="text-dark"><small>{{cliente.numero_contacto}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Departamento:</th>
+                <th class="text-dark"><small>{{cliente.departamento}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Ciudad:</th>
+                <th class="text-dark"><small>{{cliente.ciudad}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Dirección:</th>
+                <th class="text-dark"><small>{{cliente.direccion}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Correo:</th>
+                <th class="text-dark"><small>{{cliente.correo}}</small></th>
+            </tr>
+            <tr>
+                <th class="text-secondary font-weight-normal">Codigo Postal:</th>
+                <th class="text-dark"><small>{{cliente.codigo_postal}}</small></th>
+            </tr>
+        </table>
+    </div>
+</div>
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" (click)="cerrarVentana()">Cerrar</button>
+</mat-dialog-actions>

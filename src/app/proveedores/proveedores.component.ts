@@ -321,8 +321,7 @@ crearProveedor(): void {
         Retorna: Nada
     */
    actualizarProveedor(): void {
-    console.log("proveedor actualizado");
-    console.log(this.proveedor);
+ 
     this.proveedorService.actualizarProveedor(this.proveedor).subscribe(
         respuesta => {
             this.listaPaginado();

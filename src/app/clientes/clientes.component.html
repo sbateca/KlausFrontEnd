@@ -187,11 +187,11 @@
                     <td mat-cell *matCellDef="let element">{{element[columna.value]}}</td>
                 </ng-container>-->
 
-                <!-- Columna documento -->
+                <!-- Columna documento 
                 <ng-container matColumnDef="id">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.id}} </td>
-                </ng-container>
+                </ng-container>-->
                 <!-- Columna documento -->
                 <ng-container matColumnDef="documento">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
@@ -207,45 +207,46 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Apellidos</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.apellidos}} </td>
                 </ng-container>
-                <!-- Columna documento -->
+                <!-- Columna  
                 <ng-container matColumnDef="numero_contacto">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Numero De contacto</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.numero_contacto}} </td>
-                </ng-container>
-                <!-- Columna documento -->
+                </ng-container>-->
+                <!-- Columna 
                 <ng-container matColumnDef="departamento">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Departamento</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.departamento}} </td>
-                </ng-container>
-                <!-- Columna documento -->
+                </ng-container>-->
+                <!-- Columna 
                 <ng-container matColumnDef="ciudad">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Ciudad</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.ciudad}} </td>
-                </ng-container>
-                <!-- Columna documento -->
+                </ng-container>-->
+                <!-- Columna 
                 <ng-container matColumnDef="direccion">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Dirección</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.direccion}} </td>
-                </ng-container>
-                <!-- Columna documento -->
+                </ng-container>-->
+                <!-- Columna  
                 <ng-container matColumnDef="correo">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Correo</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.correo}} </td>
-                </ng-container>
-                <!-- Columna documento -->
+                </ng-container>-->
+                <!-- Columna 
                 <ng-container matColumnDef="codigo_postal">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Codigo Postal</th>
                     <td mat-cell *matCellDef="let cliente"> {{cliente.codigo_postal}} </td>
-                </ng-container>
+                </ng-container>-->
 
                 <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let cliente">
+                        <button mat-icon-button color="basic" (click)="abrirVentanaVer(cliente.id)"><mat-icon class="verde">loupe</mat-icon></button>
                         <button mat-icon-button color="basic" (click)="abrirVentanaEditarCliente(cliente.id)"><mat-icon>edit</mat-icon></button>
                         <button mat-icon-button color="basic" (click)="delete(cliente)"><mat-icon>delete</mat-icon></button>
                     </td>
                 </ng-container>
-
+                >
                 <tr mat-header-row *matHeaderRowDef="columnasTable"></tr>
                 <tr mat-row *matRowDef="let row; columns: columnasTable;"></tr>
 

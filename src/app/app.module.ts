@@ -17,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { FormClientesComponent } from './clientes/form.component';
-import { ClientesPorCiudadComponent } from './clientes/clientes-por-ciudad.component';
+
 
 
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -31,6 +31,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
+import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
 
 
 const routes: Routes = [
@@ -54,7 +55,7 @@ const routes: Routes = [
     ProveedoresComponent,
     DetalleComponent,
     FormClientesComponent,
-    ClientesPorCiudadComponent
+    DetalleClienteComponent
   ],
   imports: [
     BrowserModule,
