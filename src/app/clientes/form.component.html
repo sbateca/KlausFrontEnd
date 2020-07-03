@@ -1,38 +1,65 @@
-<div class="card card-primary">
-    <div class="card-header">
-        <h3 class="card-title">Formulario Cliente</h3>
-    </div>
+<h3 mat-dialog-title *ngIf="!cliente.id else EditarCliente">Crear Cliente</h3>
+<ng-template #EditarCliente>
+    <h3 matdialog-title>Editar Cliente</h3>
+</ng-template>
 
 
-    <!-- Formulario -->
-    <form>
+
+<!-- Formulario -->
+
+<div mat-dialog-content>
+    <form class="form-horizontal">
         <div class="card-body col-sm-12 ">
+            <!--
             <div class="form-group">
                 <label for="documento">Documento</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.documento" name="documento" placeholder="Documento">
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Documento</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.documento" name="documento" placeholder="Documento">
+                </div>
             </div>
+            <!--
             <div class="form-group">
                 <label for="nombres">Nombres</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.nombres" name="nombres" placeholder="Nombres">
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Nombres</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.nombres" name="nombres" placeholder="Nombres">
+                </div>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="apellidos">Apellidos</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.apellidos" name="apellidos" placeholder="Apellidos">
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Apellidos</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.apellidos" name="apellidos" placeholder="Apellidos">
+                </div>
             </div>
 
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="NumeroDeTelefono">Numero de Telefono</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.numero_contacto" name="NumeroDeTelefono" placeholder="Telefono">
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Numero Telefonico</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.numero_contacto" name="NumerodeTelefono" placeholder="Telefono">
+                </div>
             </div>
-
             <div class="form-group row">
                 <label for="correo" class="col-sm-2 col-form-label">Correo</label>
                 <div class="col-sm-10">
                     <input type="texto" class="form-control" [(ngModel)]="cliente.correo" name="correo" placeholder="Correo">
                 </div>
             </div>
-
-            <div class="form-group" data-select2-id="35">
+            <!--<div class="form-group" data-select2-id="35">
                 <label for="departamento">Departamento</label>
                 <select name="departamento" id="departamento" [compareWith]="compararAsignatura" [(ngModel)]="departamentoseleccionado" [ngModelOptions]="{standalone: true}" (change)="cargarCiudadDeptId(departamentoseleccionado);" class="form-control select2 select2-hidden-accessible"
                     style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
@@ -42,9 +69,21 @@
                        </ng-template>
                            <option *ngFor="let departamento of listaDepartamentos" [ngValue]="departamento" >{{departamento.nombre}}</option>      
                 </select>
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Documento</label>
+                <div class="col-sm-10">
+                    <select name="departamento" id="departamento" [compareWith]="compararAsignatura" [(ngModel)]="departamentoseleccionado" [ngModelOptions]="{standalone: true}" (change)="cargarCiudadDeptId(departamentoseleccionado);" class="form-control select2 select2-hidden-accessible"
+                        style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+                       <option [ngValue]="undefined" *ngIf="!cliente.id else cli_dep_editar">---Seleccione El Departamento---</option>
+                        <ng-template #cli_dep_editar>
+                            <option [ngValue]="undefined">{{cliente.departamento}}</option>
+                       </ng-template>
+                           <option *ngFor="let departamento of listaDepartamentos" [ngValue]="departamento" >{{departamento.nombre}}</option>      
+                </select>
+                </div>
             </div>
-
-            <div class="form-group" data-select2-id="35">
+            <!--<div class="form-group" data-select2-id="35">
                 <label>Ciudad</label>
                 <select [compareWith]="compararAsignatura" [(ngModel)]="CiudadSelec" [ngModelOptions]="{standalone: true}" (change)="asignarCiudadSeleccionada(CiudadSelec)" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9"
                     tabindex="-1" aria-hidden="true">
@@ -54,11 +93,30 @@
                     </ng-template>
                     <option *ngFor="let ciudad of listaCiudades" [ngValue]="ciudad">{{ciudad.nombre}}</option>
                 </select>
+            </div>-->
+            <div class="form-group row">
+                <label for="correo" class="col-sm-2 col-form-label">Ciudad</label>
+                <div class="col-sm-10">
+                    <select [compareWith]="compararAsignatura" [(ngModel)]="CiudadSelec" [ngModelOptions]="{standalone: true}" (change)="asignarCiudadSeleccionada(CiudadSelec)" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9"
+                        tabindex="-1" aria-hidden="true">
+                    <option [ngValue]="undefined" *ngIf="!cliente.id else cli_ciu_editar">---Seleccione La Ciudad---</option>
+                    <ng-template #cli_ciu_editar>
+                        <option [ngValue]="undefined">{{cliente.ciudad}}</option>
+                    </ng-template>
+                    <option *ngFor="let ciudad of listaCiudades" [ngValue]="ciudad">{{ciudad.nombre}}</option>
+                </select>
+                </div>
             </div>
 
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="direccion">Dirección</label>
                 <input type="text" class="form-control" [(ngModel)]="cliente.direccion" name="direccion" placeholder="Dirección">
+            </div>-->
+            <div class="form-group row">
+                <label for="codigo_postal" class="col-sm-2 col-form-label">ireción</label>
+                <div class="col-sm-10">
+                    <input type="texto" class="form-control" [(ngModel)]="cliente.direccion" name="direccion" placeholder="Dirección">
+                </div>
             </div>
 
             <div class="form-group row">
@@ -71,6 +129,7 @@
 
     </form>
 </div>
+
 <!-- botones de acciones -->
 <mat-dialog-actions>
 
