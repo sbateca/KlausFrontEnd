@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cliente } from '../../../../angularklausLeather/src/app/clientes/cliente';
-import { ClienteService } from '../../../../angularklausLeather/src/app/clientes/cliente.service';
+import { Cliente } from '../cliente';
+import { ClienteService } from '../cliente.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 

@@ -50,6 +50,26 @@
             </div>
 
             <div class="form-group row">
+                <label for="departamento" class="col-sm-2 col-form-label">Departamento</label>
+                <div class="col-sm-10">
+                    <select name="dpto" id="dpto" [(ngModel)]="departamentoSeleccionado" (change)="cargarListaCiudades(departamentoSeleccionado)" [ngModelOptions]="{standalone: true}">
+                       <option *ngFor="let departamento of listaDepartamentos" [ngValue]="departamento">{{departamento.nombre}}</option>
+                   </select>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <label for="ciudad" class="col-sm-2 col-form-label">Ciudad</label>
+                <div class="col-sm-10">
+                    <select name="ciud" id="ciud" [(ngModel)]="ciudadSeleccionada" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let ciudad of listaCiudades">{{ciudad.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
                 <label for="correoElectronico" class="col-sm-2 col-form-label">Dirección residencia</label>
                 <div class="col-sm-10">
                     <input type="email" name="direccion" class="form-control" placeholder="Dirección residencia" [(ngModel)]="proveedor.direccionResidencia">

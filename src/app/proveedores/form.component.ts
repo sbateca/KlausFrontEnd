@@ -12,7 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 // librerías relacionadas con ventanas modales
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
+// librerías para trabajar con departamentos y ciudades
+import { Departamento } from '../departamentos/departamento';
+import { Ciudad } from '../ciudades/ciudad';
+import { DepartamentoService } from '../departamentos/departamento.service';
+import { CiudadService } from '../ciudades/ciudad.service';
 
 
 
@@ -38,7 +42,21 @@ export class FormProveedoresComponent implements OnInit {
     private activatedRoute: ActivatedRoute; // se usa para extraer información de la ruta
 
 
-    // ------ Variables para la ventana modal
+    // -------- Variables para ciudades y departamentos ---------------
+
+    // declaramos services para Departamento y Ciudad
+    private departamentoService: DepartamentoService;
+    private ciudadService: CiudadService;
+
+    // Variables donde se va a almacenar el Departamento y Ciudad seleccionada en el formulario
+    departamentoSeleccionado: Departamento;
+    ciudadSeleccionada: Ciudad;
+
+    // variables donde se almacenan los listados de departamentos y ciudades
+    listaDepartamentos: Departamento[];
+    listaCiudades: Ciudad[];
+
+    // ------ Variables para la ventana modal ------------------
 
     // variable de referencia a la ventana modal
     public referenciaVentanaModal: MatDialogRef<FormProveedoresComponent>;
@@ -53,12 +71,16 @@ export class FormProveedoresComponent implements OnInit {
 
     // instanciamos las variables (las private)
     constructor(proveedorService: ProveedorService,
+                departamentoService: DepartamentoService,
+                ciudadService: CiudadService,
                 enrutador: Router,
                 activatedRoute: ActivatedRoute,
                 referenciaVentanaModal: MatDialogRef<FormProveedoresComponent>,
                 @Inject(MAT_DIALOG_DATA) IdProveedor: number) {
 
         this.proveedorService = proveedorService;
+        this.departamentoService = departamentoService,
+        this.ciudadService = ciudadService,
         this.enrutador = enrutador;
         this.activatedRoute = activatedRoute;
         this.IdProveedor = IdProveedor;
@@ -71,6 +93,7 @@ export class FormProveedoresComponent implements OnInit {
     */
     ngOnInit() {
         this.cargaProveedorEnFormulario();
+        this.cargarListaDepartamentos();
     }
 
 
@@ -103,8 +126,22 @@ export class FormProveedoresComponent implements OnInit {
 
 
 
+    /*
+        El método cargarListaDepartamentos permite obtener la lista de Departamentos
+        y los asigna a una variable de clase
+    */
+    cargarListaDepartamentos(): void {
+        this.departamentoService.obtenerDepartamentos().subscribe(listaDepartamentos => this.listaDepartamentos = listaDepartamentos);
+    }
 
-
+    /*
+        El método cargarListaCiudades permite obtener la lista de ciudades
+        de acuerdo al parámetro recibido (departamento seleccionado).
+        Esta lista es asignada a una variable de clase
+    */
+    cargarListaCiudades(departamento: Departamento): void {
+        this.ciudadService.obtenerCiudadId(departamento.id).subscribe(listaCiudades => this.listaCiudades = listaCiudades);
+    }
 
     /*
         El método cancelarOperacion() cierra la ventana modal
