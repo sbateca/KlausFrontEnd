@@ -159,15 +159,9 @@ export class FormProveedoresComponent implements OnInit {
         El método compararDepartamentos permite averiguar si dos Departamentos son iguales
         Retorna true cuando son iguales o false cuando no son iguales 
     */
-   compararDepartamentos(dpto1: Departamento, dpto2: Departamento) {
-    if (dpto1 === undefined && dpto2 === undefined) {
-        return true;
-      }
-    if(dpto1.id === dpto2.id){
-        return true;
-    }else{
-        return false;
-    }
+   compararDepartamentos(dpto1, dpto2) {
+       console.log(dpto1===dpto2);
+       return dpto1.id === dpto2.id;
    }
 
 
