@@ -253,6 +253,10 @@ abrirVentana(): void {
       if (resultado != null) {
           // el resultado es el proveedor que se ha llenado en el formulario
           this.proveedor = resultado;
+          
+          console.log("---------------------");
+          console.log(this.proveedor);
+          console.log("---------------------");
           this.crearProveedor();
       }
     });

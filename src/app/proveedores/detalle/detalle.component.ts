@@ -9,6 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
+// para mostrar información del departamento en la página
+import { Departamento } from '../../departamentos/departamento';
+import { DepartamentoService } from '../../departamentos/departamento.service';
 
 
 @Component({
@@ -40,14 +43,19 @@ export class DetalleComponent implements OnInit {
   referenciaVentanaModal: MatDialogRef<DetalleComponent>;
   // se declara la variable a inyectar (esta variable recibe la información de otro componente)
   public idProveedor: number;
+  
+  // se declara una variable Departamento donde será almacenado el departamento asociado a la ciudad del proveedor
+  departamento: Departamento;
 
-
-
+  // se declara un DepartamentoService para poder realizar las peticiones al backend
+  departamentoService: DepartamentoService;
 
   constructor(proveedorService: ProveedorService,
+              departamentoService: DepartamentoService,
               referenciaVentanaModal: MatDialogRef<DetalleComponent>,
               @Inject(MAT_DIALOG_DATA) idProveedor) {
                   this.proveedorService = proveedorService;
+                  this.departamentoService = departamentoService;
                   this.referenciaVentanaModal = referenciaVentanaModal;
                   this.idProveedor = idProveedor;
               }
@@ -69,9 +77,23 @@ export class DetalleComponent implements OnInit {
   obtenerProveedorPorID(idProveedor): void {
     if (idProveedor) {
       this.proveedorService.getProveedor(idProveedor).subscribe(proveedor => this.proveedor = proveedor);
+
     }
   }
 
+
+  /*
+    El método obtenerDepartamentoPorID almacena en una variable de clase el departamento
+    por la ID que recibe como parámetro.
+    - Parámetro: el ID del departamento
+  */
+ obtenerDepartamentoPorID(idDepartamento): void {
+    this.departamentoService.obtenerDepartamentoPorID(idDepartamento).subscribe(resultado => this.departamento = resultado);
+
+    console.log("----------------");
+    console.log(this.departamento);
+    console.log("----------------");
+ }
 
   /*
     El método cerrarVentana() cierra la ventana modal

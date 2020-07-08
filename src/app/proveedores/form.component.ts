@@ -143,6 +143,34 @@ export class FormProveedoresComponent implements OnInit {
         this.ciudadService.obtenerCiudadId(departamento.id).subscribe(listaCiudades => this.listaCiudades = listaCiudades);
     }
 
+
+    /*
+        El método asignarCiudadAObjetoProveedor permite asignar la ciudad seleccionada al
+        objeto Proveedor que se está llenando en el formulario
+    */
+   asignarCiudadAObjetoProveedor(ciudad: Ciudad) {
+       this.proveedor.ciudad = ciudad;
+   }
+
+
+    
+
+    /*
+        El método compararDepartamentos permite averiguar si dos Departamentos son iguales
+        Retorna true cuando son iguales o false cuando no son iguales 
+    */
+   compararDepartamentos(dpto1: Departamento, dpto2: Departamento) {
+    if (dpto1 === undefined && dpto2 === undefined) {
+        return true;
+      }
+    if(dpto1.id === dpto2.id){
+        return true;
+    }else{
+        return false;
+    }
+   }
+
+
     /*
         El método cancelarOperacion() cierra la ventana modal
     */

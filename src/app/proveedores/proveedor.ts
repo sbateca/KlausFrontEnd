@@ -1,3 +1,5 @@
+import { Ciudad } from '../ciudades/ciudad';
+
 export class Proveedor {
     id: number;
     nombres: string;
@@ -7,4 +9,5 @@ export class Proveedor {
     numeroContacto: number;
     correoElectronico: string;
     direccionResidencia: string;
+    ciudad: Ciudad;
 }
