@@ -254,7 +254,7 @@ abrirVentana(): void {
           // el resultado es el proveedor que se ha llenado en el formulario
           this.proveedor = resultado;
           
-          console.log("---------------------");
+          console.log("--------- proveedor nuevo ------------");
           console.log(this.proveedor);
           console.log("---------------------");
           this.crearProveedor();
@@ -283,6 +283,11 @@ abrirVentanaEditarProveedor(idProveedor): void {
 
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     this.proveedor = resultado;
+
+    console.log("--------- proveedor actualizado ------------");
+    console.log(this.proveedor);
+    console.log("---------------------");
+
     this.actualizarProveedor();
   });
 

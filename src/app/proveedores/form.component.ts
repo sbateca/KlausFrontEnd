@@ -106,9 +106,23 @@ export class FormProveedoresComponent implements OnInit {
     cargaProveedorEnFormulario(): void {
 
         console.log('ID seleccionado: ' + this.IdProveedor);
-        
+
         if (this.IdProveedor) {
-            this.proveedorService.getProveedor(this.IdProveedor).subscribe( proveedor => this.proveedor = proveedor );
+            this.proveedorService.getProveedor(this.IdProveedor).subscribe( proveedor => {
+                this.proveedor = proveedor;
+
+                this.departamentoSeleccionado = new Departamento(
+                    this.proveedor.ciudad.departamento.id,
+                    this.proveedor.ciudad.departamento.nombre
+                );
+
+                this.cargarListaCiudades(this.departamentoSeleccionado);
+
+                this.ciudadSeleccionada = new Ciudad(
+                    this.proveedor.ciudad.id,
+                    this.proveedor.ciudad.nombre
+                );
+            })
         }
 
         /*
@@ -159,10 +173,25 @@ export class FormProveedoresComponent implements OnInit {
         El método compararDepartamentos permite averiguar si dos Departamentos son iguales
         Retorna true cuando son iguales o false cuando no son iguales 
     */
-   compararDepartamentos(dpto1, dpto2) {
-       console.log(dpto1===dpto2);
-       return dpto1.id === dpto2.id;
+   compararDepartamentos(dpto1: Departamento, dpto2: Departamento) {
+        if ( dpto1 == null || dpto2 == null || dpto1 === undefined || dpto2 === undefined) {
+            return false;
+        }
+        return dpto1.id === dpto2.id;
    }
+
+
+    /*
+        El método compararCiudades permite averiguar si dos Ciudades son iguales
+        Retorna true cuando son iguales o false cuando no son iguales 
+    */
+   compararCiudades(c1: Ciudad, c2: Ciudad) {
+    if ( c1 == null || c2 == null || c1 === undefined || c2 === undefined) {
+        return false;
+    }
+    return c1.id === c2.id;
+}
+
 
 
     /*
