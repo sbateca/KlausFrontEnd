@@ -214,13 +214,29 @@ comparar(a: number | string, b: number | string, esAscendente: boolean) {
       Retorna: nada
   */
   eliminarProveedor(proveedor: Proveedor) {
+ 
+    alertasSweet.fire({
+      title: 'Cuidado:',
+      text: '¿Seguro que desea eliminar al proveedor ' + proveedor.nombres + '?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#ad3333',
+      confirmButtonText: 'Si, eliminar!'
+    }).then((result) => {
+      if (result.value) {
 
-   this.proveedorService.eliminarProveedor(proveedor.id).subscribe(
-     respuesta => {
-       // this.proveedores = this.proveedores.filter( prov => prov !== proveedor)
-       this.listaPaginado(); // cada vez que se elimine se lista paginado (refresca los valores y la lista)
-     }
-   );
+        this.proveedorService.eliminarProveedor(proveedor.id).subscribe(
+          respuesta => {
+            // this.proveedores = this.proveedores.filter( prov => prov !== proveedor)
+            this.listaPaginado(); // cada vez que se elimine se lista paginado (refresca los valores y la lista)
+            alertasSweet.fire('Eliminado!', 'El proveedor <strong>'+ proveedor.nombres + '</strong> ha sido eliminado', 'success');
+          }
+        );
+
+      }
+    });
+
   }
 
 
@@ -243,7 +259,7 @@ abrirVentana(): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormProveedoresComponent,
     {
       width: '60%',
-      height: '85%',
+      height: 'auto',
       position: {left: '30%', top: '60px'}
     });
 
@@ -276,7 +292,7 @@ abrirVentanaEditarProveedor(idProveedor): void {
 
   const referenciaVentanaModal = this.ventanaModal.open(FormProveedoresComponent,{
     width: '60%',
-    height: '85%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idProveedor
   });
@@ -313,7 +329,7 @@ crearProveedor(): void {
   this.proveedorService.crearProveedor(this.proveedor).subscribe(
       respuesta => {
           this.listaPaginado();
-          alertasSweet.fire('Nuevo proveedor', respuesta.mensaje);
+          alertasSweet.fire('Nuevo proveedor', respuesta.mensaje, 'success');
       }
   );
 }
@@ -350,9 +366,10 @@ crearProveedor(): void {
 */
 
 abrirVentanaVer(idProveedor): void {
+  
   this.ventanaModal.open(DetalleComponent, {
     width: '60%',
-    height: '85%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idProveedor
   });

@@ -9,4 +9,5 @@ export class Departamento {
         this.nombre = nombre;
         this.id = id;
     }
+
 }

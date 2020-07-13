@@ -4,77 +4,46 @@
 
 <div mat-dialog-content>
 
-    <form class="form-horizontal">
-        <div class="card-body">
-            <div class="form-group row">
-                <label for="nombres" class="col-sm-2 col-form-label">Nombres</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nombres" class="form-control" placeholder="nombres" [(ngModel)]="proveedor.nombres" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="nombres" class="col-sm-2 col-form-label">Apellidos</label>
-                <div class="col-sm-10">
-                    <input type="text" name="apellidos" class="form-control" placeholder="apellidos" [(ngModel)]="proveedor.apellidos" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="documento" class="col-sm-2 col-form-label">Documento</label>
-                <div class="col-sm-10">
-                    <input type="text" name="documento" class="form-control" placeholder="documento" [(ngModel)]="proveedor.documento" disabled>
-                </div>
-            </div>
-
-
-            <div class="form-group row">
-                <label for="nit" class="col-sm-2 col-form-label">NIT</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nit" class="form-control" placeholder="NIT" [(ngModel)]="proveedor.nit" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="numeroContacto" class="col-sm-2 col-form-label">Número de contacto</label>
-                <div class="col-sm-10">
-                    <input type="text" name="numcontacto" class="form-control" placeholder="numeroContacto" [(ngModel)]="proveedor.numeroContacto" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="correoElectronico" class="col-sm-2 col-form-label">Correo electrónico</label>
-                <div class="col-sm-10">
-                    <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" [(ngModel)]="proveedor.correoElectronico" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="ciudad" class="col-sm-2 col-form-label">Departamento</label>
-                <div class="col-sm-10">
-                    <input type="text" name="departamento" class="form-control" placeholder="Departamento" [(ngModel)]="proveedor.ciudad.departamento.nombre" disabled>
-                </div>
-            </div>
-
-
-
-            <div class="form-group row">
-                <label for="ciudad" class="col-sm-2 col-form-label">Ciudad</label>
-                <div class="col-sm-10">
-                    <input type="text" name="ciudad" class="form-control" placeholder="Ciudad" [(ngModel)]="proveedor.ciudad.nombre" disabled>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="correoElectronico" class="col-sm-2 col-form-label">Dirección residencia</label>
-                <div class="col-sm-10">
-                    <input type="email" name="direccion" class="form-control" placeholder="Dirección residencia" [(ngModel)]="proveedor.direccionResidencia" disabled>
-                </div>
-            </div>
-
-        </div>
-
-    </form>
+    <table class="table table-sm">
+        <tbody>
+            <tr>
+                <th scope="row">Nombres</th>
+                <td>{{proveedor.nombres}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Apellidos</th>
+                <td>{{proveedor.apellidos}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Documento</th>
+                <td>{{proveedor.documento}}</td>
+            </tr>
+            <tr>
+                <th scope="row">NIT</th>
+                <td>{{proveedor.nit}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Número de contacto</th>
+                <td>{{proveedor.numeroContacto}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Correo electrónico</th>
+                <td>{{proveedor.correoElectronico}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Dirección residencia</th>
+                <td>{{proveedor.direccionResidencia}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Departamento</th>
+                <td>{{proveedor.ciudad.departamento.nombre}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Ciudad</th>
+                <td>{{proveedor.ciudad.nombre}}</td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 

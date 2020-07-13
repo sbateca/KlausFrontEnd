@@ -4,78 +4,83 @@
 
 <div mat-dialog-content>
 
-    <form class="form-horizontal">
+    <form #ProveedorForm="ngForm">
         <div class="card-body">
-            <div class="form-group row">
-                <label for="nombres" class="col-sm-2 col-form-label">Nombres</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nombres" class="form-control" placeholder="nombres" [(ngModel)]="proveedor.nombres">
-                </div>
-            </div>
 
-            <div class="form-group row">
-                <label for="nombres" class="col-sm-2 col-form-label">Apellidos</label>
-                <div class="col-sm-10">
-                    <input type="text" name="apellidos" class="form-control" placeholder="apellidos" [(ngModel)]="proveedor.apellidos">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Nombres</mat-label>
+                <input matInput name="nombres" placeholder="Nombres" type="text" [(ngModel)]="proveedor.nombres" required #nombre="ngModel">
+                <mat-error *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+                    <span *ngIf="nombre.errors.required">Debe proporcionar un valor</span>
+                </mat-error>
+            </mat-form-field>
 
-            <div class="form-group row">
-                <label for="documento" class="col-sm-2 col-form-label">Documento</label>
-                <div class="col-sm-10">
-                    <input type="text" name="documento" class="form-control" placeholder="documento" [(ngModel)]="proveedor.documento">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Apellidos</mat-label>
+                <input matInput name="apellidos" placeholder="apellidos" type="text" [(ngModel)]="proveedor.apellidos" required #apellidos="ngModel">
+                <mat-error *ngIf="apellidos.invalid && (apellidos.dirty || apellidos.touched)">
+                    <span *ngIf="apellidos.errors.required">Debe proporcionar un valor</span>
+                </mat-error>
+            </mat-form-field>
 
+            <mat-form-field class="dosPartes">
+                <mat-label>Documento</mat-label>
+                <input matInput name="documento" placeholder="Documento" type="number" [(ngModel)]="proveedor.documento" minlength="1" maxlength="10" #documento="ngModel">
+                <mat-error *ngIf="documento.invalid && (documento.dirty || documento.touched)">
+                    <span *ngIf="documento.errors.minlength">El documento debe ser mayor a 0</span>
+                    <span *ngIf="documento.errors.maxlength">El documento debe ser menor a 9999999999</span>
+                </mat-error>
+            </mat-form-field>
 
-            <div class="form-group row">
-                <label for="nit" class="col-sm-2 col-form-label">NIT</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nit" class="form-control" placeholder="NIT" [(ngModel)]="proveedor.nit">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>NIT</mat-label>
+                <input matInput name="nit" placeholder="NIT" type="number" [(ngModel)]="proveedor.nit" minlength="1" #nit="ngModel">
+                <mat-error *ngIf="nit.invalid && (nit.dirty || nit.touched)">
+                    <span *ngIf="nit.errors.minlength">El NIT debe ser mayor a 0</span>
+                </mat-error>
+            </mat-form-field>
 
-            <div class="form-group row">
-                <label for="numeroContacto" class="col-sm-2 col-form-label">Número de contacto</label>
-                <div class="col-sm-10">
-                    <input type="text" name="numcontacto" class="form-control" placeholder="numeroContacto" [(ngModel)]="proveedor.numeroContacto">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Número de contacto</mat-label>
+                <input matInput name="contacto" placeholder="Número de contacto" type="number" [(ngModel)]="proveedor.numeroContacto" required #contacto="ngModel">
+                <mat-error *ngIf="contacto.invalid && (contacto.dirty || contacto.touched)">
+                    <span *ngIf="contacto.errors.required">Debe proporcionar un valor</span>
+                </mat-error>
+            </mat-form-field>
 
-            <div class="form-group row">
-                <label for="correoElectronico" class="col-sm-2 col-form-label">Correo electrónico</label>
-                <div class="col-sm-10">
-                    <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" [(ngModel)]="proveedor.correoElectronico">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput name="correo" placeholder="Correo electrónico" type="text" [(ngModel)]="proveedor.correoElectronico" required email #correo="ngModel">
+                <mat-error *ngIf="correo.invalid && (correo.dirty || correo.touched)">
+                    <span *ngIf="correo.errors.required">Debe proporcionar un valor</span>
+                    <span *ngIf="correo.errors.email">Formato de correo no válido</span>
+                </mat-error>
+            </mat-form-field>
 
+            <mat-form-field class="dosPartes">
+                <mat-label>Departamento</mat-label>
+                <mat-select name="dpto" id="dpto" [(ngModel)]="departamentoSeleccionado" [compareWith]="compararDepartamentos" (selectionChange)="cargarListaCiudades(departamentoSeleccionado)" [ngModelOptions]="{standalone:true}" required #depar="ngModel">
+                    <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">{{departamento.nombre}}</mat-option>
+                    <mat-error *ngIf="depar.invalid">
+                        Debe seleccionar un departamento
+                    </mat-error>
+                </mat-select>
+            </mat-form-field>
 
-            <div class="form-group row">
-                <label for="departamento" class="col-sm-2 col-form-label">Departamento</label>
-                <div class="col-sm-10">
-                    <select name="dpto" id="dpto" [(ngModel)]="departamentoSeleccionado" [compareWith]="compararDepartamentos" (change)="cargarListaCiudades(departamentoSeleccionado)" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let departamento of listaDepartamentos" [ngValue]="departamento">{{departamento.nombre}}</option>
-                   </select>
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Ciudad</mat-label>
+                <mat-select name="ciud" id="ciud" [(ngModel)]="ciudadSeleccionada" [compareWith]="compararCiudades" (selectionChange)="asignarCiudadAObjetoProveedor(ciudadSeleccionada)" [ngModelOptions]="{standalone:true}" required #ciuda="ngModel">
+                    <mat-option *ngFor="let ciudad of listaCiudades" [value]="ciudad">{{ciudad.nombre}}</mat-option>
+                    <mat-error *ngIf="ciuda.invalid">
+                        Debe seleccionar una ciudad
+                    </mat-error>
+                </mat-select>
+            </mat-form-field>
 
-
-            <div class="form-group row">
-                <label for="ciudad" class="col-sm-2 col-form-label">Ciudad</label>
-                <div class="col-sm-10">
-                    <select name="ciud" id="ciud" [(ngModel)]="ciudadSeleccionada" [ngModelOptions]="{standalone: true}" [compareWith]="compararCiudades" (change)="asignarCiudadAObjetoProveedor(ciudadSeleccionada)">
-                        <option *ngFor="let ciudad of listaCiudades" [ngValue]="ciudad">{{ciudad.nombre}}</option>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="form-group row">
-                <label for="correoElectronico" class="col-sm-2 col-form-label">Dirección residencia</label>
-                <div class="col-sm-10">
-                    <input type="email" name="direccion" class="form-control" placeholder="Dirección residencia" [(ngModel)]="proveedor.direccionResidencia">
-                </div>
-            </div>
+            <mat-form-field class="dosPartes">
+                <mat-label>Dirección residencia</mat-label>
+                <input matInput name="direccion" placeholder="Dirección residencia" type="text" [(ngModel)]="proveedor.direccionResidencia">
+            </mat-form-field>
 
         </div>
 
@@ -88,8 +93,8 @@
 <mat-dialog-actions>
 
     <button mat-button (click)="cancelarOperacion()">Cancelar</button>
-    <button mat-button color="primary" [mat-dialog-close]=this.proveedor *ngIf="!this.proveedor.id">Enviar</button>
-    <button mat-button color="primary" [mat-dialog-close]=this.proveedor *ngIf="this.proveedor.id">Editar</button>
+    <button mat-button color="primary" [mat-dialog-close]=this.proveedor *ngIf="!this.proveedor.id" [disabled]="!ProveedorForm.form.valid">Enviar</button>
+    <button mat-button color="primary" [mat-dialog-close]=this.proveedor *ngIf="this.proveedor.id" [disabled]="!ProveedorForm.form.valid">Editar</button>
 
 </mat-dialog-actions>
 

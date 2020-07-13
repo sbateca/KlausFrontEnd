@@ -23,13 +23,13 @@ import { FormClientesComponent } from './clientes/form.component';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
-
-// import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
 
@@ -66,11 +66,12 @@ const routes: Routes = [
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    // MatFormFieldModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

@@ -12,6 +12,10 @@ import { MatButtonModule } from '@angular/material/button';
 // librerías relacionadas con ventanas modales
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+// librerías para formularios de AngularMaterial
+import {MatInputModule} from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+
 // librerías para trabajar con departamentos y ciudades
 import { Departamento } from '../departamentos/departamento';
 import { Ciudad } from '../ciudades/ciudad';
@@ -22,7 +26,8 @@ import { CiudadService } from '../ciudades/ciudad.service';
 
 @Component({
     selector: 'app-proveedor-form',
-    templateUrl: './form.component.html'
+    templateUrl: './form.component.html',
+    styleUrls: ['./form.component.css']
 
 })
 
@@ -108,6 +113,7 @@ export class FormProveedoresComponent implements OnInit {
         console.log('ID seleccionado: ' + this.IdProveedor);
 
         if (this.IdProveedor) {
+
             this.proveedorService.getProveedor(this.IdProveedor).subscribe( proveedor => {
                 this.proveedor = proveedor;
 
@@ -122,7 +128,7 @@ export class FormProveedoresComponent implements OnInit {
                     this.proveedor.ciudad.id,
                     this.proveedor.ciudad.nombre
                 );
-            })
+            });
         }
 
         /*
@@ -134,7 +140,7 @@ export class FormProveedoresComponent implements OnInit {
             }
         })
         */
-        
+
     }
 
 
@@ -145,7 +151,11 @@ export class FormProveedoresComponent implements OnInit {
         y los asigna a una variable de clase
     */
     cargarListaDepartamentos(): void {
-        this.departamentoService.obtenerDepartamentos().subscribe(listaDepartamentos => this.listaDepartamentos = listaDepartamentos);
+
+        this.departamentoService.obtenerDepartamentos().subscribe(listaDepartamentos => {
+            this.listaDepartamentos = listaDepartamentos;
+            this.listaDepartamentos.unshift({id: null, nombre: 'Seleccione...' })
+        })
     }
 
     /*
@@ -167,13 +177,21 @@ export class FormProveedoresComponent implements OnInit {
    }
 
 
-    
 
     /*
         El método compararDepartamentos permite averiguar si dos Departamentos son iguales
-        Retorna true cuando son iguales o false cuando no son iguales 
+        Retorna true cuando son iguales o false cuando no son iguales
+        - Parámetros:
+            dpto1 ---> la lista de departamentos
+            dpto2 ---> el departamento seleccionado (departamentoSeleccionado)
     */
    compararDepartamentos(dpto1: Departamento, dpto2: Departamento) {
+
+        console.log( "--------- departamento 1 ------------" );
+        console.log(dpto1.nombre);
+        console.log( "--------- departamento 2 ------------" );
+        console.log(dpto2.nombre);
+
         if ( dpto1 == null || dpto2 == null || dpto1 === undefined || dpto2 === undefined) {
             return false;
         }
@@ -183,7 +201,7 @@ export class FormProveedoresComponent implements OnInit {
 
     /*
         El método compararCiudades permite averiguar si dos Ciudades son iguales
-        Retorna true cuando son iguales o false cuando no son iguales 
+        Retorna true cuando son iguales o false cuando no son iguales
     */
    compararCiudades(c1: Ciudad, c2: Ciudad) {
     if ( c1 == null || c2 == null || c1 === undefined || c2 === undefined) {
@@ -200,6 +218,5 @@ export class FormProveedoresComponent implements OnInit {
     cancelarOperacion(): void {
         this.referenciaVentanaModal.close();
     }
-
 
 }
