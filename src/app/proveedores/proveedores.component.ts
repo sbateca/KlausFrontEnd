@@ -222,6 +222,7 @@ comparar(a: number | string, b: number | string, esAscendente: boolean) {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#ad3333',
+      cancelButtonText: 'Cancelar',
       confirmButtonText: 'Si, eliminar!'
     }).then((result) => {
       if (result.value) {
@@ -238,9 +239,6 @@ comparar(a: number | string, b: number | string, esAscendente: boolean) {
     });
 
   }
-
-
-
 
 
   /*

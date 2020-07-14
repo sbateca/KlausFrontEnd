@@ -20,48 +20,60 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                <li class="nav-item has-treeview menu-open">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Opciones
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+
+                <li class="nav-item">
+                    <a [routerLink]="['/clientes']" class="nav-link">
+                        <i class="fa fa-users nav-icon"></i>
+                        <p>Clientes</p>
                     </a>
-                    <ul class="nav nav-treeview">
+                </li>
 
+                <li class="nav-item">
+                    <a [routerLink]="['/proveedores']" class="nav-link">
+                        <i class="fa fa-child nav-icon"></i>
+                        <p>Proveedores</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fa fa-archive nav-icon"></i>
+                        <p>Inventario</p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
-                            <a [routerLink]="['/clientes']" class="nav-link">
-                                <i class="fa fa-users nav-icon"></i>
-                                <p>Clientes</p>
+                            <a routerLink="" class="nav-link">
+                                <i class="far fa-circle nav-icon text-blue"></i>
+                                <p>Tallas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/proveedores']" class="nav-link">
-                                <i class="fa fa-child nav-icon"></i>
-                                <p>Proveedores</p>
+                            <a routerLink="" class="nav-link">
+                                <i class="far fa-circle nav-icon text-danger"></i>
+                                <p>Colores</p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none;">
-                                <li class="nav-item">
-                                    <a routerLink="/clientes" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>General</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a routerLink="clientes/form" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Crear</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
 
+                        <li class="nav-item">
+                            <a routerLink="" class="nav-link">
+                                <i class="far fa-circle nav-icon text-green"></i>
+                                <p>Productos</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="" class="nav-link">
+                                <i class="far fa-circle nav-icon text-yellow"></i>
+                                <p>Inventario</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
+
             </ul>
+
+
         </nav>
         <!-- /.sidebar-menu -->
     </div>
