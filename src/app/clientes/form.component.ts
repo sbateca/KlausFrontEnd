@@ -20,7 +20,8 @@ import { ɵBROWSER_SANITIZATION_PROVIDERS } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-form',
-  templateUrl: './form.component.html'
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.css']
 })
 export class FormClientesComponent implements OnInit {
 
@@ -28,7 +29,6 @@ export class FormClientesComponent implements OnInit {
   public cliente: Cliente = new Cliente();
   public departamentoseleccionado: Departamento;
   public listaCiudades: Ciudad[];
-  public IdCiudadSelecc: Number;
   public CiudadSelec: Ciudad;
   titulo: string = " Crear cliente";
 
@@ -84,8 +84,7 @@ export class FormClientesComponent implements OnInit {
   en el formulario
 */
  asignarCiudadSeleccionada(CiudadSelecc): void {
-   this.IdCiudadSelecc = this.CiudadSelec.id;
-   this.cliente.ciudad = this.CiudadSelec.nombre;
+   this.cliente.ciudad = this.CiudadSelec;
  }
 /*
   Este método obtiene las ciudades pertenecientes al departamento seleccionado
@@ -95,25 +94,23 @@ export class FormClientesComponent implements OnInit {
 */
  cargarCiudadDeptId(departamentoseleccionado): void {
     this.ciudadSrvice.obtenerCiudadId(departamentoseleccionado.id).subscribe(ciud => {
-      this.cliente.departamento = departamentoseleccionado.nombre;
       this.listaCiudades = ciud;
     });
   }
 
-  compararAsignatura( a1: Departamento, a2: Departamento): boolean {
+  compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
     if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
       return true;
     }
-    /*
-    if ( a1 === null || a2 === null || a1 === undefined || a2 === undefined ) {
-      return false;
-    }
-    if (a1.id === a2.id) {// si los ids son iguales significa que son iguales
-      return true;
-    }*/
 
     return ( a1 === null || a2 === null || a1 === undefined || a2 === undefined )
     ? false : a1.id === a2.id;
+  }
+
+  compararCiudades( c1: Ciudad, c2: Ciudad): boolean {
+
+    return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
+    ? false : c1.id === c2.id;
   }
 
 /*
@@ -125,7 +122,17 @@ export class FormClientesComponent implements OnInit {
   cargarCliente(): void {
 
     if (this.idCliente) {
-          this.clienteService.getCliente(this.idCliente).subscribe((cliente) => this.cliente = cliente);
+          this.clienteService.getCliente(this.idCliente).subscribe((cliente) => {
+            this.cliente = cliente;
+            this.CiudadSelec = new Ciudad(this.cliente.ciudad.id, this.cliente.ciudad.nombre, this.cliente.ciudad.departamento);
+            this.departamentoseleccionado = new Departamento(this.cliente.ciudad.departamento.id, this.cliente.ciudad.departamento.nombre);
+            this.cargarCiudadDeptId(this.cliente.ciudad.departamento);
+            console.log("------------- departamento ---------------");
+            console.log(this.departamentoseleccionado);
+            console.log("------------- ciudad ---------------");
+            console.log(this.CiudadSelec);
+
+          });
         }
   }
 }

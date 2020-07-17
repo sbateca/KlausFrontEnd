@@ -32,9 +32,8 @@ import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.compo
 export class ClientesComponent implements OnInit {
 
   public cliente: Cliente[];
-  public ciudad: Ciudad[];
-  public deparatamentos: Departamento[];
-  public client: Cliente[];
+  public ciudades: Ciudad[];
+  public departamentos: Departamento[];
   public idSelec: number;
   public departametoSelec: Departamento;
 
@@ -175,8 +174,8 @@ reordenar(sort: Sort) {
       case 'nombres': return this.comparar(a.nombres, b.nombres, esAscendente);
       case 'apellidos': return this.comparar( a.apellidos, b.apellidos, esAscendente);
       case 'numero_contacto': return this.comparar( a.numero_contacto, b.numero_contacto, esAscendente);
-      case 'departamento': return this.comparar( a.departamento, b.departamento, esAscendente);
-      case 'ciudad': return this.comparar( a.ciudad, b.ciudad, esAscendente);
+      //case 'departamento': return this.comparar( a.departamento, b.departamento, esAscendente);
+     // case 'ciudad': return this.comparar( a.ciudad, b.ciudad, esAscendente);
       case 'direccion': return this.comparar( a.direccion, b.direccion, esAscendente);
       case 'correo': return this.comparar( a.correo, b.correo, esAscendente);
       case 'codigo_postal': return this.comparar( a.codigo_postal, b.codigo_postal, esAscendente);
@@ -196,7 +195,7 @@ reordenar(sort: Sort) {
   // Cargar Departamento, carga los Departamentos para el select.
   cargarDepartamentos(): void {
     this.departamentoservice.obtenerDepartamentos().subscribe(departa => {
-      this.deparatamentos = departa; //
+      this.departamentos = departa; //
     });
   }
 
@@ -206,8 +205,8 @@ reordenar(sort: Sort) {
   // Toma la id del Departamento seleccionado y hace la lista de sus Ciudades para el select
   cargarCiudades(departamentoSeleccionado): void {
     // this.ciudadService.listaCiudades().subscribe(ciuda=>{
-      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciuda => {
-      this.ciudad = ciuda;
+      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciudad => {
+      this.ciudades = ciudad;
      });
   }
 
@@ -216,7 +215,7 @@ reordenar(sort: Sort) {
 // Carga Clientes por Ciudad: con la id de la Ciudad obtengo todos los clientes de la ciudad seleccionada y la dibijo en una tabla.
  cargarClientesPorciudadId(id) {
    this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad => {
-     this.client = clienteciudad; // Dibuja ciudad en la tabla
+     this.cliente = clienteciudad; // Dibuja ciudad en la tabla
    });
  }
 

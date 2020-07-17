@@ -2,10 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,  ReactiveFormsModule } from '@angular/forms';
+
 import { RouterModule, Routes } from '@angular/router';
 import { ClienteService } from './clientes/cliente.service';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
@@ -23,8 +23,10 @@ import { FormClientesComponent } from './clientes/form.component';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
+import {MatSelectModule } from '@angular/material/select';
 
-// import {MatFormFieldModule} from '@angular/material/form-field';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -32,6 +34,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
+// import { MatOptionModule } from '@angular/material';
 
 
 const routes: Routes = [
@@ -66,11 +69,14 @@ const routes: Routes = [
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    // MatFormFieldModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    ReactiveFormsModule
+    // MatOptionModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

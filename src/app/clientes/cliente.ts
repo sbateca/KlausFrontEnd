@@ -1,15 +1,13 @@
 import { Ciudad } from '../ciudades/ciudad';
 
-
 export class Cliente {
   id: number;
-  documento: string;
+  documento: number;
   nombres: string;
   apellidos: string;
-  numero_contacto: string;
-  departamento: string;
-  ciudad: string;
+  numero_contacto: number;
+  ciudad: Ciudad ;
   direccion: string;
   correo: string;
-  codigo_postal: string;
+  codigo_postal: number;
 }

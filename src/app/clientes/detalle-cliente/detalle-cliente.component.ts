@@ -1,8 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cliente } from '../../../../angularklausLeather/src/app/clientes/cliente';
-import { ClienteService } from '../../../../angularklausLeather/src/app/clientes/cliente.service';
+import { Cliente } from '../cliente';
+import { ClienteService } from '../cliente.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Ciudad } from '../../ciudades/ciudad';
+import { Departamento } from '../../departamentos/departamento';
+
+
 
 
 
@@ -17,8 +21,8 @@ export class DetalleClienteComponent implements OnInit {
 
   cliente: Cliente;
   // Titulos de cada Columna
-   columnasTabla: string [] = ['id', 'documento','nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal'];
-  // columnasTabla: string [] = ['id', 'documento'];
+   //columnasTabla: string [] = ['id', 'documento','nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal'];
+  columnasTabla: string [] = ['documento'];
   datos: MatTableDataSource<Cliente>;
 
   constructor( private referenciaVentanaModal: MatDialogRef<DetalleClienteComponent>, // variable de referencia a la ventana modal

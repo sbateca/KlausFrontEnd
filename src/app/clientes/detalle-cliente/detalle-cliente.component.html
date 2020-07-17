@@ -3,8 +3,14 @@
     <h1 mat-mini-fab color="primary">Cliente</h1>
 </div>
 <div mat-dialog-content>
-
     <div>
+        <!--<mat-table [dataSource]="datos" width="100%">
+            <ng-container matColumnDef="documento">
+                <th mat-header-cell *matHeaderCellDef>Documento</th>
+                <td mat-cell *matCellDef="let cliente"> {{cliente.documento}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+        </mat-table>-->
         <table class="table">
             <tr>
                 <th class="text-secondary font-weight-normal">Documento:</th>
@@ -25,11 +31,11 @@
             </tr>
             <tr>
                 <th class="text-secondary font-weight-normal">Departamento:</th>
-                <th class="text-dark"><small>{{cliente.departamento}}</small></th>
+                <th class="text-dark"><small>{{cliente.ciudad.departamento.nombre}}</small></th>
             </tr>
             <tr>
                 <th class="text-secondary font-weight-normal">Ciudad:</th>
-                <th class="text-dark"><small>{{cliente.ciudad}}</small></th>
+                <th class="text-dark"><small>{{cliente.ciudad.nombre}}</small></th>
             </tr>
             <tr>
                 <th class="text-secondary font-weight-normal">Dirección:</th>
