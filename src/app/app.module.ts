@@ -32,6 +32,8 @@ import {MatDialogConfig} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
+import { TallasColoresComponent } from './tallasColores/tallas-colores.component';
+import { FormTallaComponent } from './tallasColores/forms/form-talla.component';
 
 
 const routes: Routes = [
@@ -41,7 +43,8 @@ const routes: Routes = [
     {path: 'proveedores/form', component: FormProveedoresComponent},
     {path: 'proveedores/form/:id', component: FormProveedoresComponent},
     {path: 'clientes/form', component: FormClientesComponent},
-    {path: 'clientes/form/:id', component: FormClientesComponent}
+    {path: 'clientes/form/:id', component: FormClientesComponent},
+    {path: 'tallascolores', component: TallasColoresComponent}
 ];
 
 @NgModule({
@@ -55,7 +58,9 @@ const routes: Routes = [
     ProveedoresComponent,
     DetalleComponent,
     FormClientesComponent,
-    DetalleClienteComponent
+    DetalleClienteComponent,
+    TallasColoresComponent,
+    FormTallaComponent
   ],
   imports: [
     BrowserModule,

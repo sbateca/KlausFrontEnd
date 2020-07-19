@@ -18,41 +18,45 @@ import {map, catchError} from 'rxjs/operators';
 
 
 
-export class ProveedorService{
+export class ProveedorService {
 
     // Variables de clase
     private httpCliente: HttpClient;
-    private rutaEndPoint: string = 'http://localhost:8080/api/proveedores';
+    private rutaEndPoint = 'http://localhost:8080/api/proveedores';
     private enrutador: Router;
     private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type': 'application/json'});
 
-    
-    
+
+
     // constructor de la clase. Instanciamos las variables
 
-    constructor(httpcliente: HttpClient, enrutador: Router){
+    constructor(httpcliente: HttpClient, enrutador: Router) {
         this.httpCliente = httpcliente;
         this.enrutador = enrutador;
     }
-    
+
 
    /*
        El método getProveedores() realiza una petición HTTP de tipo get al servidor backend
        Parámetros: ninguno
        Retorna: Un Observable de tipo Proveedor[]
    */
-    getProveedores(): Observable<Proveedor[]>{
+    getProveedores(): Observable<Proveedor[]> {
         return this.httpCliente.get<Proveedor[]>(this.rutaEndPoint);
     }
 
 
 
     /*
-        El método getProveedoresPaginado realiza una petición de tipo get al servidor backend
+        El método getProveedoresPaginado realiza una petición de tipo get al servidor backend.
 
         Parámetros:
             - page: string --> Número de página inicial
             - size: string --> Tamaño de la página
+
+        El método realiza una petición GET enviando dos parámetros (page, size) los cuales son establecidos
+        en este método, luego son enviados y por último estos parámetros asociados al paginador en el backend
+
         Retorna:
             - Un observable de tipo genérico <any>. Debe ser genérico porque el json que retorna
               además del contenido (Proveedor) tiene también información del paginador
@@ -66,7 +70,7 @@ export class ProveedorService{
 
     /*
         El método crearProveedor realiza la petición de tipo post al servidor backend
-        
+
         Parámetros:
             - Ruta
             - Objeto con la información
@@ -79,7 +83,7 @@ export class ProveedorService{
     */
     crearProveedor(proveedor: Proveedor): Observable<any> {
         return this.httpCliente.post<any>(this.rutaEndPoint, proveedor, {headers: this.cabeceraHttp}).pipe(
-            
+
             catchError(e => {
                 console.error(e.error.mensaje);
                 alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.error.error, 'error'); // lanzamos la alerta de SweetAlert
@@ -100,9 +104,9 @@ export class ProveedorService{
         Este método implementa manejo de errores (para ello usa los operadores catchError y throwError)
             - Muestra una alerta SweetAlert con el mensaje de error
     */
-    
+
     getProveedor(id: number): Observable<Proveedor> {
-        
+
         return this.httpCliente.get<Proveedor>(`${this.rutaEndPoint}/${id}`).pipe(
             catchError(e => {
                 this.enrutador.navigate(['/proveedores']);
@@ -121,7 +125,7 @@ export class ProveedorService{
 
             Parámetros: el proveedor que contiene la información a modificar en base de datos
             Retorna: Un Observable de cualquier tipo <any>
-        
+
             Este método implementa manejo de errores (para ello utiliza los operadores catchError y throwError)
                 - Muestra una alerta SweetAlert con el mensaje de error
     */
@@ -138,7 +142,7 @@ export class ProveedorService{
 
 
 
-    
+
 
     /*
         El método eliminarProveedor(id) realiza una petición HTTP tipo delete al servidor backend
@@ -151,7 +155,7 @@ export class ProveedorService{
         Este método implementa manejo de errores a través de los operadores catchError y throwError:
             - Muestra una alerta SweetAlert con el mensaje de error
     */
-    eliminarProveedor(id: number): Observable<any>{
+    eliminarProveedor(id: number): Observable<any> {
         return this.httpCliente.delete<any>(`${this.rutaEndPoint}/${id}`, {headers: this.cabeceraHttp}).pipe(
             catchError( e => {
                 console.error(e.error.error);
