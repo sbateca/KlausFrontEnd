@@ -7,7 +7,7 @@ import { DepartamentoService } from '../departamentos/departamento.service';
 import { Departamento } from '../departamentos/departamento';
 import { Ciudad } from '../ciudades/ciudad';
 import { CiudadService } from '../ciudades/ciudad.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 
 
@@ -38,7 +38,8 @@ export class FormClientesComponent implements OnInit {
               private departamentoService: DepartamentoService,
               private ciudadSrvice: CiudadService,
               private referenciaVentanaModal: MatDialogRef<FormClientesComponent>, // variable de referencia a la ventana modal
-              @Inject(MAT_DIALOG_DATA) private idCliente: number)// Se inyecta un MAT_DIALOG_DATA idCliente al formulario
+              @Inject(MAT_DIALOG_DATA) private idCliente: number,// Se inyecta un MAT_DIALOG_DATA idCliente al formulario
+              private constructorFormulario: FormBuilder )
               { }
 
 
