@@ -1,5 +1,5 @@
 export class Talla{
     id: number;
-    talla: string;
+    talla: number;
     descripcion: string;
 }

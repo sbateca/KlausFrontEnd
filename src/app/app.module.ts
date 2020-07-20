@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ClienteService } from './clientes/cliente.service';
 
@@ -66,6 +66,7 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     MatTableModule,

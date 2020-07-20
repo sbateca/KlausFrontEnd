@@ -193,7 +193,7 @@ export class TallasColoresService {
   */
 
   actualizarTalla(talla: Talla): Observable<any> {
-    return this.httpCliente.put(`${this.rutaEndPointTallas}/${talla.id}`, talla, {headers: this.cabeceraHttp}).pipe(
+    return this.httpCliente.put<any>(`${this.rutaEndPointTallas}/${talla.id}`, talla, {headers: this.cabeceraHttp}).pipe(
         catchError(e => {
           alertasSweet.fire('Error', e.error.error + ' : ' + e.error.error);
           return throwError(e);

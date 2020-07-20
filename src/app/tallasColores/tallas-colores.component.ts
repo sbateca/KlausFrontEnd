@@ -5,6 +5,11 @@ import { Talla } from './talla';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Color } from './color';
+import alertasSweet from 'sweetalert2';
+
+// -------------- librerías para implementación de ventanas modales -------------------------- //
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormTallaComponent } from './forms/form-talla.component';
 
 
 
@@ -61,17 +66,27 @@ export class TallasColoresComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
   @ViewChild(MatSort, {static: true}) ordenadorRegistrosColor: MatSort;
 
-  // variable que almacenará el listado de tallas
+  // variables almacenan los listados de Tallas y Colores
   listaTallas: Talla[];
-
-  // variable que almacenará el listado de tallas
   listaColor: Color[];
 
+  // variables para las ventanas modales (Talla y Color)
+  ventanaModalTalla: MatDialog;
+  ventanaModalColor: MatDialog;
+
+
+  // Variables Talla y Color que reciben los datos de la ventana modal (Componente formulario)
+  talla: Talla;
+  color: Color;
 
 
   // -------------- constructor de la clase --------------------------- //
-  constructor(tallaColorService: TallasColoresService) {
+  constructor(tallaColorService: TallasColoresService,
+              ventanaModalTalla: MatDialog,
+              ventanaModalColor: MatDialog) {
     this.tallaColorService = tallaColorService;
+    this.ventanaModalTalla = ventanaModalTalla;
+    this.ventanaModalColor = ventanaModalColor;
   }
 
 
@@ -289,10 +304,83 @@ aplicarFiltroColores(event: Event) {
 
 
 
-// ------------------------------------ CONTROL FORMULARIO TALLAS --------------------------------------- //
+// ------------------------------------ CONTROL VENTANAS MODALES ------------------------------------ //
+
+
+  /*
+    El método abrirVentana implementa acciones sobre la ventana modal:
+      - open: Abre una ventana con los parámetros que se envían:
+              - el componente que implementa la vista de la ventana modal
+              - datos adicionales:
+                  - Un JSON con configuraciones para la ventana
+                  - data: acá se puede enviar información a la ventana modal (componente).
+                          En este caso se envía el ID de la Talla
+      - afterClosed: Al cerrarse la ventana se asigna la talla con la información del formulario (resultado).
+  */
+  abrirVentanaModalTalla(): void {
+    const referenciaVentanaModal = this.ventanaModalTalla.open(FormTallaComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'}
+    });
+
+    referenciaVentanaModal.afterClosed().subscribe(resultado => {
+      if (resultado != null) {
+        this.talla = resultado;
+        this.crearTalla();
+      }
+    });
+
+  }
 
 
 
+
+  /*
+    El método abrirVentanaEditarTalla() perimte cargar el componente formulario con la
+    información de la talla seleccionada cargada en dicho formulario
+  */
+ abrirVentanaEditarTalla(idTalla: number): void {
+   const referenciaVentanaEditar = this.ventanaModalTalla.open(FormTallaComponent, {
+    width: '60%',
+    height: 'auto',
+    position: {left: '30%', top: '60px'},
+    data: idTalla
+   });
+
+   referenciaVentanaEditar.afterClosed().subscribe( resultado => {
+      if ( resultado != null) {
+        this.talla = resultado;
+        this.talla.id = idTalla; // es necesario asignar el id al objeto que viene del formulario porque el formulario no asigna id
+        this.actualizarTalla();
+      }
+    });
+
+ }
+
+
+    /*
+        El método crearTalla() ejecuta el método crearTalla del TallaColorService y se suscribe en espera de una repuesta
+        La respuesta se utiliza para mostrar un mensaje de confirmación con datos de la talla creada
+        Parámetros:
+            - Nada
+        Retorna: Nada
+    */
+     crearTalla(): void {
+       this.tallaColorService.crearTalla(this.talla).subscribe( respuesta => {
+          this.listarTallasPaginado();
+          alertasSweet.fire('Nueva talla', respuesta.mensaje, 'success');
+       });
+     }
+
+
+
+     actualizarTalla(): void {
+       this.tallaColorService.actualizarTalla(this.talla).subscribe( respuesta => {
+         this.listarTallasPaginado();
+         alertasSweet.fire('Mensaje', respuesta.mensaje, 'success');
+       });
+     }
 
 
 

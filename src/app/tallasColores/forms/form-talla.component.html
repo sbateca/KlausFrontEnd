@@ -1,1 +1,41 @@
-<p>form-talla works!</p>
+<h3 mat-dialog-title>{{funcionalidad}}</h3>
+
+
+
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="forma">
+        <div class="card-body">
+
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Talla</mat-label>
+                <input matInput name="nombre" placeholder="Talla" type="number" formControlName="talla">
+                <mat-error *ngIf="tallaNoValida">Debe digitar la talla</mat-error>
+                <mat-error *ngIf="tallaNumeroNoValido">La talla debe tener máximo dos cifras</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Descripción</mat-label>
+                <input matInput name="descripcion" placeholder="Descripción" type="text" formControlName="descripcion">
+                <mat-error *ngIf="descripcionNoValida">
+                    Debe digitar la descripción
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<mat-dialog-actions>
+
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.tallaFormulario.id">Enviar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="this.tallaFormulario.id">Editar</button>
+
+</mat-dialog-actions>

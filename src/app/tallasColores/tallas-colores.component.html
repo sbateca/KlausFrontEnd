@@ -3,7 +3,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="float-left pr-3">{{titulo}}</h1>
-                <button mat-mini-fab color="primary"><mat-icon>straighten</mat-icon></button>
+                <button mat-mini-fab color="primary" (click)="abrirVentanaModalTalla()"><mat-icon>straighten</mat-icon></button>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -55,7 +55,7 @@
                                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                                 <td mat-cell *matCellDef="let elemento">
                                     <button mat-icon-button color="basic"><mat-icon class="verde">search</mat-icon></button>
-                                    <button mat-icon-button color="basic"><mat-icon class="verde">edit</mat-icon></button>
+                                    <button mat-icon-button color="basic"><mat-icon class="verde" (click)="abrirVentanaEditarTalla(elemento.id)">edit</mat-icon></button>
                                     <button mat-icon-button color="basic"><mat-icon>delete</mat-icon></button>
                                 </td>
                             </ng-container>
