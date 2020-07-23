@@ -8,6 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 
 // librerías para formularios reactivos
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import alertasSweet from 'sweetalert2';
 
 
 

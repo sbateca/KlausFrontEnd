@@ -33,7 +33,11 @@ import {MatSelectModule} from '@angular/material/select';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
 import { TallasColoresComponent } from './tallasColores/tallas-colores.component';
-import { FormTallaComponent } from './tallasColores/forms/form-talla.component';
+import { FormTallaComponent } from './tallasColores/formsTallas/form-talla.component';
+import { TallaDetalleComponent } from './tallasColores/detalleTalla/talla-detalle.component';
+import { FormColorComponent } from './tallasColores/formsColores/form-color.component';
+import { ColorDetalleComponent } from './tallasColores/detalleColor/color-detalle.component';
+
 
 
 const routes: Routes = [
@@ -60,7 +64,10 @@ const routes: Routes = [
     FormClientesComponent,
     DetalleClienteComponent,
     TallasColoresComponent,
-    FormTallaComponent
+    FormTallaComponent,
+    TallaDetalleComponent,
+    FormColorComponent,
+    ColorDetalleComponent
   ],
   imports: [
     BrowserModule,

@@ -35,7 +35,7 @@
 <mat-dialog-actions>
 
     <button mat-button (click)="cancelarOperacion()">Cancelar</button>
-    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.tallaFormulario.id">Enviar</button>
-    <button mat-button color="primary" (click)="guardar()" *ngIf="this.tallaFormulario.id">Editar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.tallaFormulario.id" [disabled]="!this.forma.valid">Enviar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="this.tallaFormulario.id" [disabled]="!this.forma.valid">Editar</button>
 
 </mat-dialog-actions>

@@ -215,7 +215,7 @@ export class TallasColoresService {
         - Muestra una alerta SweetAlert con el mensaje de error
   */
   actualizarColor(color: Color): Observable<any> {
-      return this.httpCliente.put(this.rutaEndPointColores, color, {headers: this.cabeceraHttp}).pipe(
+      return this.httpCliente.put(`${this.rutaEndPointColores}/${color.id}`, color, {headers: this.cabeceraHttp}).pipe(
         catchError( e => {
           alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.error.error);
           return throwError(e);
@@ -238,7 +238,7 @@ export class TallasColoresService {
     */
 
    eliminarTalla(id: number): Observable<any> {
-       return this.httpCliente.delete(this.rutaEndPointTallas, {headers: this.cabeceraHttp}).pipe(
+       return this.httpCliente.delete(`${this.rutaEndPointTallas}/${id}`, {headers: this.cabeceraHttp}).pipe(
          catchError(e => {
            alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.error.error);
            return throwError(e);

@@ -9,7 +9,10 @@ import alertasSweet from 'sweetalert2';
 
 // -------------- librerías para implementación de ventanas modales -------------------------- //
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormTallaComponent } from './forms/form-talla.component';
+import { FormTallaComponent } from './formsTallas/form-talla.component';
+import { TallaDetalleComponent } from './detalleTalla/talla-detalle.component';
+import { FormColorComponent } from './formsColores/form-color.component';
+import { ColorDetalleComponent } from './detalleColor/color-detalle.component';
 
 
 
@@ -37,7 +40,7 @@ export class TallasColoresComponent implements OnInit {
   datosTalla: MatTableDataSource<Talla>;
 
   // variables para el MatTableDataSource<Color>
-  columnasTablaColores: string[] = ['nombre', 'codigoColor'];
+  columnasTablaColores: string[] = ['nombre', 'codigoColor', 'acciones'];
   datosColor: MatTableDataSource<Color>;
 
   // variables para el paginador de MatTableDataSource<Talla>
@@ -359,6 +362,74 @@ aplicarFiltroColores(event: Event) {
  }
 
 
+  /*
+      El método abrirVentanaDetalle pernmite cargar el componente tallaDetalleComponente
+      en una ventana modal.
+  */
+
+  abrirVentanaDetalleTalla(idTalla: number): void {
+    const referenciaVentanaVer = this.ventanaModalTalla.open(TallaDetalleComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'},
+      data: idTalla
+    });
+  }
+
+
+
+  abrirVentanaCrearColor(): void {
+    const referenciaVentanaColor = this.ventanaModalColor.open(FormColorComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'}
+    });
+
+    referenciaVentanaColor.afterClosed().subscribe( resultado => {
+      if (resultado != null) {
+        this.color = resultado;
+        this.crearColor();
+      }
+    });
+
+  }
+
+
+
+  abrirVentanaEditarColor(idColor: number): void {
+    const referenciaVentanaModal = this.ventanaModalColor.open(FormColorComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'},
+      data: idColor
+    });
+
+    referenciaVentanaModal.afterClosed().subscribe(resultado => {
+      if (resultado) {
+        this.color = resultado;
+        this.color.id = idColor;
+        this.actualizarColor();
+      }
+    });
+  }
+
+
+
+
+  abrirVentanaDetalleColor(idColor: number): void {
+    const referenciaVentanaModal = this.ventanaModalColor.open(ColorDetalleComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'},
+      data: idColor
+    });
+  }
+
+
+
+ // ----------------- FIN CONTROL VENTANAS MODALES ----------------------------- //
+
+
     /*
         El método crearTalla() ejecuta el método crearTalla del TallaColorService y se suscribe en espera de una repuesta
         La respuesta se utiliza para mostrar un mensaje de confirmación con datos de la talla creada
@@ -373,7 +444,13 @@ aplicarFiltroColores(event: Event) {
        });
      }
 
-
+     crearColor(): void {
+       this.tallaColorService.crearColor(this.color).subscribe( respuesta => {
+         this.listarColoresPaginado();
+         alertasSweet.fire('Nuevo color', respuesta.mensaje, 'success');
+       }
+       );
+     }
 
      actualizarTalla(): void {
        this.tallaColorService.actualizarTalla(this.talla).subscribe( respuesta => {
@@ -382,6 +459,45 @@ aplicarFiltroColores(event: Event) {
        });
      }
 
+
+     actualizarColor(): void {
+       this.tallaColorService.actualizarColor(this.color).subscribe( resultado => {
+         this.listarColoresPaginado();
+         alertasSweet.fire('Mensaje', resultado.mensaje, 'success');
+       });
+     }
+
+
+
+  /*
+      El método eliminarTalla ejecuta el método eliminar del service el cual realiza una petición tipo DELETE
+      al servidor backend. Implementa una alerta de SweetAlert2
+  */
+  eliminarTalla(talla: Talla): void {
+    alertasSweet.fire({
+      title: 'Cuidado!',
+      text: '¿Seguro que desea eliminar la talla ' + talla.talla + '?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#ad3333',
+      confirmButtonText: 'Sí, eliminar!'
+    }).then((result) => {
+      if (result.value) {
+        this.tallaColorService.eliminarTalla(talla.id).subscribe(
+            resultado => {
+              this.listarTallasPaginado();
+              alertasSweet.fire(
+                'Eliminada!',
+                'La talla <strong>' + talla.talla + '</strong> ha sido eliminada',
+                'success'
+              )
+            }
+          );
+
+      }
+    })
+  }
 
 
 }
