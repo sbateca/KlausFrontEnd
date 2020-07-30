@@ -32,6 +32,7 @@
     "datatables.net-searchpanes-bs4": "^1.0.1",
     "ionicons-npm": "^2.0.1",
     "jquery": "^3.4.1",
+    "ngx-color-picker": "^9.1.0",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "sweetalert2": "^9.15.3",

@@ -32,11 +32,17 @@ import {MatDialogConfig} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
-import { TallasColoresComponent } from './tallasColores/tallas-colores.component';
-import { FormTallaComponent } from './tallasColores/formsTallas/form-talla.component';
-import { TallaDetalleComponent } from './tallasColores/detalleTalla/talla-detalle.component';
-import { FormColorComponent } from './tallasColores/formsColores/form-color.component';
-import { ColorDetalleComponent } from './tallasColores/detalleColor/color-detalle.component';
+import { TallaComponent } from './tallas/talla.component';
+import { ColorComponent } from './colores/color.component';
+import { FormTallaComponent } from './tallas/formsTallas/form-talla.component';
+import { TallaDetalleComponent } from './tallas/detalleTalla/talla-detalle.component';
+import { FormColorComponent } from './colores/formsColores/form-color.component';
+import { ColorDetalleComponent } from './colores/detalleColor/color-detalle.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { TipoTallaComponent } from './tiposTallas/tipo-talla.component';
+import { TipoTallaFormComponent } from './tiposTallas/tipoTallaForm/tipo-talla-form.component';
+import { TipoTallaDetalleComponent } from './tiposTallas/tipoTallaDetalle/tipo-talla-detalle.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -48,7 +54,9 @@ const routes: Routes = [
     {path: 'proveedores/form/:id', component: FormProveedoresComponent},
     {path: 'clientes/form', component: FormClientesComponent},
     {path: 'clientes/form/:id', component: FormClientesComponent},
-    {path: 'tallascolores', component: TallasColoresComponent}
+    {path: 'tiposTallas', component: TipoTallaComponent},
+    {path: 'tallas', component: TallaComponent},
+    {path: 'colores', component: ColorComponent}
 ];
 
 @NgModule({
@@ -63,11 +71,15 @@ const routes: Routes = [
     DetalleComponent,
     FormClientesComponent,
     DetalleClienteComponent,
-    TallasColoresComponent,
+    TallaComponent,
+    ColorComponent,
     FormTallaComponent,
     TallaDetalleComponent,
     FormColorComponent,
-    ColorDetalleComponent
+    ColorDetalleComponent,
+    TipoTallaComponent,
+    TipoTallaFormComponent,
+    TipoTallaDetalleComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +96,9 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    ColorPickerModule,
+    MatTooltipModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

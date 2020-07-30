@@ -22,6 +22,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { FormProveedoresComponent } from './form.component';
 import { DetalleComponent } from './detalle/detalle.component';
 
+// importamos librería para el uso de Tooltips
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 

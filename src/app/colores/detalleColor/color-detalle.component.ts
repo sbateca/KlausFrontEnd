@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Color } from '../color';
-import { TallasColoresService } from '../tallas-colores.service';
+import { ColorService } from '../color.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
@@ -24,7 +24,7 @@ export class ColorDetalleComponent implements OnInit {
   funcionalidad = 'Detalle de color';
 
 
-  constructor(private tallaColorService: TallasColoresService,
+  constructor(private colorService: ColorService,
               @Inject(MAT_DIALOG_DATA) public idColor,
               private referenciaVentanaModal: MatDialogRef<ColorDetalleComponent>) { }
 
@@ -35,7 +35,7 @@ export class ColorDetalleComponent implements OnInit {
 
   obtenerColorPorID(): void {
     if (this.idColor) {
-      this.tallaColorService.getColorPorID(this.idColor).subscribe( resultado => {
+      this.colorService.getColorPorID(this.idColor).subscribe( resultado => {
         this.color = resultado;
       });
     }

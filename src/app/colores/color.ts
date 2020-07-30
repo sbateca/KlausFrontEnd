@@ -1,4 +1,4 @@
-export class Color{
+export class Color {
     id: number;
     nombre: string;
     codigoColor: string;

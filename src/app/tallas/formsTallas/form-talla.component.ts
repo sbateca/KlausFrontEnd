@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TallasColoresService } from '../tallas-colores.service';
+import { TallaService } from '../talla.service';
 import { Talla } from '../talla';
 
 // librerías para formularios de AngularMaterial
@@ -9,6 +9,8 @@ import {MatInputModule} from '@angular/material/input';
 // librerías para formularios reactivos
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import alertasSweet from 'sweetalert2';
+import { TipoTalla } from '../../tiposTallas/TipoTalla';
+import { TipoTallaService } from '../../tiposTallas/tipo-talla.service';
 
 
 
@@ -26,7 +28,8 @@ export class FormTallaComponent implements OnInit {
   funcionalidad = 'Crear Talla';
 
   // Variables Service
-  private tallaColorService: TallasColoresService;
+  private tallaService: TallaService;
+  private tipoTallaService: TipoTallaService;
 
   // variables para la ventana modal
   public referenciaVentanaModal: MatDialogRef<FormTallaComponent>;
@@ -40,6 +43,9 @@ export class FormTallaComponent implements OnInit {
   // Se declara la variable donde quedará almacenada la información del formulario (NgModel)
   tallaFormulario: Talla = new Talla();
 
+  // se declara la variable donde quedará alcacenado el listado de Tipos de Talla
+  listaTipoTalla: TipoTalla[];
+
 
   // ----------------- campos para formularios reactivos -------------------------------- //
   forma: FormGroup;
@@ -48,12 +54,14 @@ export class FormTallaComponent implements OnInit {
 
   // ---------------------------- constructor de la clase ------------------------------- //
 
-  constructor(tallaColorService: TallasColoresService,
+  constructor(tallaService: TallaService,
+              tipoTallaService: TipoTallaService,
               referenciaVentanaModal: MatDialogRef<FormTallaComponent>,
               @Inject(MAT_DIALOG_DATA) idTalla: number,
               constructorFormularios: FormBuilder) {
 
-                this.tallaColorService = tallaColorService;
+                this.tallaService = tallaService;
+                this.tipoTallaService = tipoTallaService;
                 this.referenciaVentanaModal = referenciaVentanaModal;
                 this.idTalla = idTalla;
 
@@ -63,6 +71,7 @@ export class FormTallaComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
     this.cargarDatosEnFormulario();
+    this.obtenerListaTiposTalla();
   }
 
 
@@ -73,8 +82,9 @@ export class FormTallaComponent implements OnInit {
   */
   crearFormulario(): void {
     this.forma = this.constructorFormularios.group({
-      talla:       ['', [Validators.required, Validators.max(99)]],
-      descripcion: ['', Validators.required]
+      talla:        ['', [Validators.required, Validators.max(99)]],
+      descripcion:  [''],
+      tipoTalla:    ['', Validators.required]
     });
   }
 
@@ -82,15 +92,28 @@ export class FormTallaComponent implements OnInit {
   cargarDatosEnFormulario(): void {
 
     if (this.idTalla) {
-      this.tallaColorService.getTallaPorID(this.idTalla).subscribe(resultado => {
+      this.tallaService.getTallaPorID(this.idTalla).subscribe(resultado => {
         this.tallaFormulario = resultado;
         this.forma.setValue({
           talla: this.tallaFormulario.talla,
-          descripcion: this.tallaFormulario.descripcion
+          descripcion: this.tallaFormulario.descripcion,
+          tipoTalla: this.tallaFormulario.tipoTalla
         });
       });
     }
   }
+
+
+
+
+  obtenerListaTiposTalla(): void {
+    this.tipoTallaService.obtenerTipoTallas().subscribe(resultado => {
+      this.listaTipoTalla = resultado;
+    });
+  }
+
+
+
 
 /*
     El método guardar revisa si el formulario fué inválido para lanzar los avisos.
@@ -106,6 +129,17 @@ export class FormTallaComponent implements OnInit {
     }
 
   }
+
+  /*
+    Esta función permite comparar dos objetos TipoTalla y retorna un true cuando son iguales
+  */
+  compararTiposTalla(tt1: TipoTalla, tt2: TipoTalla): boolean {
+    return tt1 && tt2 ? tt1.id === tt2.id : tt1 === tt2;
+  }
+
+
+
+
 
 
 
@@ -135,8 +169,9 @@ export class FormTallaComponent implements OnInit {
     this.forma.get('talla').errors.max;
   }
 
-  get descripcionNoValida() {
-    return this.forma.get('descripcion').invalid && this.forma.get('descripcion').touched;
+  get tipoTallaNoValido() {
+    return this.forma.get('tipoTalla').invalid &&
+    this.forma.get('tipoTalla').touched;
   }
 
   // -------------------------------------------------------------------------------------------- //

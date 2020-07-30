@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TallasColoresService } from '../tallas-colores.service';
+import { TallaService } from '../talla.service';
 import { Talla } from '../talla';
 
 
@@ -22,7 +22,7 @@ export class TallaDetalleComponent implements OnInit {
 
   constructor(public referenciaVentanaModal: MatDialogRef<TallaDetalleComponent>,
               @Inject(MAT_DIALOG_DATA) public idTalla: number,
-              private tallasColoresService: TallasColoresService) { }
+              private tallaService: TallaService) { }
 
 
 
@@ -32,7 +32,7 @@ export class TallaDetalleComponent implements OnInit {
 
 
   verDetalleTalla(idTalla): void {
-    this.tallasColoresService.getTallaPorID(this.idTalla).subscribe( resultado => {
+    this.tallaService.getTallaPorID(this.idTalla).subscribe( resultado => {
       if (resultado) {
         this.talla = resultado;
       }

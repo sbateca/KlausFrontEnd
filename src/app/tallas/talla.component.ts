@@ -1,47 +1,44 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { TallasColoresService } from './tallas-colores.service';
+import { TallaService } from './talla.service';
 import { Talla } from './talla';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
-import { Color } from './color';
 import alertasSweet from 'sweetalert2';
 
 // -------------- librerías para implementación de ventanas modales -------------------------- //
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormTallaComponent } from './formsTallas/form-talla.component';
 import { TallaDetalleComponent } from './detalleTalla/talla-detalle.component';
-import { FormColorComponent } from './formsColores/form-color.component';
-import { ColorDetalleComponent } from './detalleColor/color-detalle.component';
+
+
+// Librería para el uso de tooltips
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
 @Component({
   selector: 'app-tallas-colores',
-  templateUrl: './tallas-colores.component.html',
-  styleUrls: ['./tallas-colores.component.css']
+  templateUrl: './talla.component.html',
+  styleUrls: ['./talla.component.css']
 })
 
 
-export class TallasColoresComponent implements OnInit {
+export class TallaComponent implements OnInit {
 
   // --------- variables de clase --------------------------------- //
 
   titulo = 'Tallas';
-  titulo2 = 'Colores';
-  rutaFuncionalidades = 'Inventario / Listar tallas y colores';
+  rutaFuncionalidades = 'Inventario / Listar tallas';
 
 
   // declaración de los services que se requieren
-  private tallaColorService: TallasColoresService;
+  private tallaService: TallaService;
 
   // variables para el MatTableDataSource<Talla>
-  columnasTablaTallas: string[] = ['talla', 'descripcion', 'acciones'];
+  columnasTablaTallas: string[] = ['tipoTalla', 'talla', 'descripcion', 'acciones'];
   datosTalla: MatTableDataSource<Talla>;
 
-  // variables para el MatTableDataSource<Color>
-  columnasTablaColores: string[] = ['nombre', 'codigoColor', 'acciones'];
-  datosColor: MatTableDataSource<Color>;
 
   // variables para el paginador de MatTableDataSource<Talla>
   totalRegistros = 0;
@@ -49,53 +46,39 @@ export class TallasColoresComponent implements OnInit {
   paginaActual = 0;
   elementosPorPagina: number[] = [5, 10, 15, 20, 25];
 
-  // variables para el paginador de MatTableDataSource<Color>
-  totalRegistrosColor = 0;
-  tamanoPaginaColor = 5;
-  paginaActualColor = 0;
-  elementosPorPaginaColor: number[] = [5, 10, 15, 20, 25];
-
 
   /*  ViewChild se usa para extraer parte de una vista (en este caso) un paginador
       y se agigna a la variable "paginador"
   */
   @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
-  @ViewChild(MatPaginator, {static: true}) paginadorColor: MatPaginator;
 
 
   /*  ViewChild se usa para extraer parte de una vista (en este caso) un paginador
       y se agigna a la variable "ordenadorRegistros"
   */
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
-  @ViewChild(MatSort, {static: true}) ordenadorRegistrosColor: MatSort;
 
-  // variables almacenan los listados de Tallas y Colores
+  // variables almacenan los listados de Tallas
   listaTallas: Talla[];
-  listaColor: Color[];
 
-  // variables para las ventanas modales (Talla y Color)
+  // variables para las ventanas modales (Talla
   ventanaModalTalla: MatDialog;
-  ventanaModalColor: MatDialog;
 
 
-  // Variables Talla y Color que reciben los datos de la ventana modal (Componente formulario)
+  // Variable Talla que recibe los datos de la ventana modal (Componente formulario)
   talla: Talla;
-  color: Color;
 
 
   // -------------- constructor de la clase --------------------------- //
-  constructor(tallaColorService: TallasColoresService,
-              ventanaModalTalla: MatDialog,
-              ventanaModalColor: MatDialog) {
-    this.tallaColorService = tallaColorService;
+  constructor(tallaService: TallaService,
+              ventanaModalTalla: MatDialog) {
+    this.tallaService = tallaService;
     this.ventanaModalTalla = ventanaModalTalla;
-    this.ventanaModalColor = ventanaModalColor;
   }
 
 
   ngOnInit(): void {
     this.listarTallasPaginado();
-    this.listarColoresPaginado();
   }
 
 
@@ -104,7 +87,7 @@ export class TallasColoresComponent implements OnInit {
     Este método se suscribe al Observador para obtener la información resultante de este proceso
   */
   listarTallas() {
-    this.tallaColorService.getTallas().subscribe(resultado => {
+    this.tallaService.getTallas().subscribe(resultado => {
       this.listaTallas = resultado;
       this.datosTalla = new MatTableDataSource<Talla>(this.listaTallas);
     });
@@ -120,7 +103,7 @@ export class TallasColoresComponent implements OnInit {
     - Retorna: nada
   */
   listarTallasPaginado(): void {
-    this.tallaColorService.getTallasPaginado(this.paginaActual.toString(), this.tamanoPagina.toString()).subscribe(
+    this.tallaService.getTallasPaginado(this.paginaActual.toString(), this.tamanoPagina.toString()).subscribe(
       resultado => {
 
         /*  El método getTallasPaginado retorna un paginador.
@@ -147,30 +130,6 @@ export class TallasColoresComponent implements OnInit {
 
 
 
-  /*
-    El método listarColoresPaginado() realiza la petidión GET al service
-    de acuerdo a los valores recibidos en los parámetros.
-    Estos parámetros vienen de la vista html (paginador)
-
-    - Parámetros: ninguno
-    - Retorna: nada
-  */
- listarColoresPaginado(): void {
-   this.tallaColorService.getColoresPaginado(this.paginaActualColor.toString(), this.tamanoPaginaColor.toString()).subscribe(
-      resultado => {
-        this.totalRegistrosColor = resultado.totalElements as number;
-        this.listaColor = resultado.content as Color[];
-        this.datosColor = new MatTableDataSource<Color>(this.listaColor);
-        this.datosColor.paginator = this.paginadorColor;
-
-        this.datosColor.sort = this.ordenadorRegistrosColor;
-        this.datosColor.sort.active = 'color';
-        this.datosColor.sort.direction = 'asc';
-      }
-   );
- }
-
-
 
 
   /*
@@ -190,22 +149,6 @@ export class TallasColoresComponent implements OnInit {
 
 
 
-
-
-  /*
-    El método paginarColores() realiza el control de la paginación.
-    Cada vez que se seleccione un botón del paginador se actualizan los valores de las variables y se realiza el GET con los parámetros
-      Parámetros:
-        - evento: PageEvent --> el evento de tipo PageEvent
-      Retorna: nada
-  */
-  paginarColores(evento: PageEvent): void {
-    this.tamanoPaginaColor = evento.pageSize;
-    this.paginaActualColor = evento.pageIndex;
-    this.totalRegistrosColor = evento.length;
-
-    this.listarColoresPaginado();
-  }
 
 
 
@@ -236,6 +179,7 @@ export class TallasColoresComponent implements OnInit {
       this.listaTallas = listTallas.sort( (a, b) => {
         const esAscendente = sort.direction === 'asc'; // se determina si es ascendente
         switch (sort.active) { // sort.active obtiene el id (string) de la columna seleccionada
+          case 'tipoTalla': return this.comparar(a.tipoTalla.tipoTalla, b.tipoTalla.tipoTalla, esAscendente);
           case 'talla': return this.comparar( a.talla, b.talla, esAscendente);
           case 'descripcion': return this.comparar(a.descripcion, b.descripcion, esAscendente);
         }
@@ -246,36 +190,13 @@ export class TallasColoresComponent implements OnInit {
 
 
 
-/*
-    El método reordenarColores() genera nuevamente el MatTableDataSource con los datos ordenados,
-    según la columna a la cual se ha hecho clic
-  */
-  reordenarColores(sortColores: Sort): void {
-    // obtenemos una copia del array de colores
-    const listaColores = this.listaColor.slice();
-
-    // si el sorting está inactivo o es vacío retorna un vacío. La lista quedará igual
-    if (!sortColores.active || sortColores.direction === '') {
-      return;
-    }
-
-    this.datosColor = new MatTableDataSource<Color>(
-      this.listaColor = this.listaColor.sort( (a, b) => {
-        const esAscendente = sortColores.direction === 'asc';
-        switch ( sortColores.active ) {
-          case 'nombre': return this.comparar(a.nombre, b.nombre, esAscendente);
-          case 'codigoColor': return this.comparar(a.codigoColor, b.codigoColor, esAscendente);
-        }
-      } )
-    );
-
-
-  }
-
   // Esta función compara dos String junto con el valor de la variable isAsc y retorna:
   comparar(a: number | string, b: number | string, esAscendente: boolean) {
     return (a < b ? -1 : 1) * (esAscendente ? 1 : -1);
   }
+
+
+
 
   /*
   El método aplicarFiltroTallas permite realizar proceso de filtrado de datos
@@ -283,27 +204,12 @@ export class TallasColoresComponent implements OnInit {
       - El evento generado
       - Retorna: nada
 */
-
-
-
  aplicarFiltroTallas(event: Event) {
   const textoFiltro = (event.target as HTMLInputElement).value;
   this.datosTalla.filter = textoFiltro.trim().toLowerCase();
 }
 
 
-
-  /*
-  El método aplicarFiltroColores permite realizar proceso de filtrado de datos
-  Parámetros:
-      - El evento generado
-      - Retorna: nada
-*/
-
-aplicarFiltroColores(event: Event) {
-  const textoFiltro = (event.target as HTMLInputElement).value;
-  this.datosColor.filter = textoFiltro.trim().toLowerCase();
-}
 
 
 
@@ -377,56 +283,6 @@ aplicarFiltroColores(event: Event) {
   }
 
 
-
-  abrirVentanaCrearColor(): void {
-    const referenciaVentanaColor = this.ventanaModalColor.open(FormColorComponent, {
-      width: '60%',
-      height: 'auto',
-      position: {left: '30%', top: '60px'}
-    });
-
-    referenciaVentanaColor.afterClosed().subscribe( resultado => {
-      if (resultado != null) {
-        this.color = resultado;
-        this.crearColor();
-      }
-    });
-
-  }
-
-
-
-  abrirVentanaEditarColor(idColor: number): void {
-    const referenciaVentanaModal = this.ventanaModalColor.open(FormColorComponent, {
-      width: '60%',
-      height: 'auto',
-      position: {left: '30%', top: '60px'},
-      data: idColor
-    });
-
-    referenciaVentanaModal.afterClosed().subscribe(resultado => {
-      if (resultado) {
-        this.color = resultado;
-        this.color.id = idColor;
-        this.actualizarColor();
-      }
-    });
-  }
-
-
-
-
-  abrirVentanaDetalleColor(idColor: number): void {
-    const referenciaVentanaModal = this.ventanaModalColor.open(ColorDetalleComponent, {
-      width: '60%',
-      height: 'auto',
-      position: {left: '30%', top: '60px'},
-      data: idColor
-    });
-  }
-
-
-
  // ----------------- FIN CONTROL VENTANAS MODALES ----------------------------- //
 
 
@@ -438,34 +294,23 @@ aplicarFiltroColores(event: Event) {
         Retorna: Nada
     */
      crearTalla(): void {
-       this.tallaColorService.crearTalla(this.talla).subscribe( respuesta => {
+       this.tallaService.crearTalla(this.talla).subscribe( respuesta => {
           this.listarTallasPaginado();
           alertasSweet.fire('Nueva talla', respuesta.mensaje, 'success');
        });
      }
 
-     crearColor(): void {
-       this.tallaColorService.crearColor(this.color).subscribe( respuesta => {
-         this.listarColoresPaginado();
-         alertasSweet.fire('Nuevo color', respuesta.mensaje, 'success');
-       }
-       );
-     }
+
 
      actualizarTalla(): void {
-       this.tallaColorService.actualizarTalla(this.talla).subscribe( respuesta => {
+       this.tallaService.actualizarTalla(this.talla).subscribe( respuesta => {
          this.listarTallasPaginado();
          alertasSweet.fire('Mensaje', respuesta.mensaje, 'success');
        });
      }
 
 
-     actualizarColor(): void {
-       this.tallaColorService.actualizarColor(this.color).subscribe( resultado => {
-         this.listarColoresPaginado();
-         alertasSweet.fire('Mensaje', resultado.mensaje, 'success');
-       });
-     }
+
 
 
 
@@ -484,20 +329,22 @@ aplicarFiltroColores(event: Event) {
       confirmButtonText: 'Sí, eliminar!'
     }).then((result) => {
       if (result.value) {
-        this.tallaColorService.eliminarTalla(talla.id).subscribe(
+        this.tallaService.eliminarTalla(talla.id).subscribe(
             resultado => {
               this.listarTallasPaginado();
               alertasSweet.fire(
                 'Eliminada!',
                 'La talla <strong>' + talla.talla + '</strong> ha sido eliminada',
                 'success'
-              )
+              );
             }
           );
 
       }
-    })
+    });
   }
+
+
 
 
 }

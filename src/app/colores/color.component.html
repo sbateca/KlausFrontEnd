@@ -1,0 +1,79 @@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="float-left pr-3">{{titulo2}}</h1>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Color" (click)="abrirVentanaCrearColor()"><mat-icon>palette</mat-icon></button>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{rutaFuncionalidades}}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="content">
+
+    <div class="card">
+        <div class="card-body">
+            <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                <div class="alert alert-danger" *ngIf="listaColor.length == 0">
+                    No existen colores registrados
+                </div>
+
+
+                <div class="row" *ngIf="listaColor.length>0">
+                    <div class="col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Buscar</mat-label>
+                            <input matInput (keyup)="aplicarFiltroColores($event)" placeholder="Escriba algo...">
+                        </mat-form-field>
+
+                        <table mat-table matSort [dataSource]="datosColor" (matSortChange)="reordenarColores($event)" width="100%">
+
+
+                            <!-- Columna talla -->
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombre</th>
+                                <td mat-cell *matCellDef="let elemento"> {{elemento.nombre}} </td>
+                            </ng-container>
+
+                            <!-- Columna nombres -->
+                            <ng-container matColumnDef="codigoColor">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Color</th>
+                                <td mat-cell *matCellDef="let elemento">
+                                    <mat-icon aria-hidden="true" [ngStyle]="{'color': elemento.codigoColor, 'font-size': '36px', 'float':'left' }" [inline]="true">stop_circle</mat-icon> {{elemento.codigoColor}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="acciones">
+                                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                <td mat-cell *matCellDef="let elemento">
+                                    <button mat-icon-button color="basic" matTooltip="Ver" (click)="abrirVentanaDetalleColor(elemento.id)"><mat-icon>search</mat-icon></button>
+                                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditarColor(elemento.id)"><mat-icon>edit</mat-icon></button>
+                                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarColor(elemento)"><mat-icon>delete</mat-icon></button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columnasTablaColores"> </tr>
+                            <tr mat-row *matRowDef="let row; columns: columnasTablaColores;"></tr>
+                        </table>
+
+                        <mat-paginator [length]="totalRegistrosColor" [pageSize]="tamanoPaginaColor" [pageIndex]="paginaActualColor" [pageSizeOptions]="elementosPorPaginaColor" (page)="paginarColores($event)">
+                        </mat-paginator>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>

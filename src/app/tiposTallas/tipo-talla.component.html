@@ -1,0 +1,78 @@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="float-left pr-3">{{titulo}}</h1>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Tipo de Talla" (click)="abrirVentanaModalAgregar()"><mat-icon>square_foot</mat-icon></button>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{rutaFuncionalidad}}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="content">
+
+    <div class="card">
+        <div class="card-body">
+            <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                <div class="alert alert-danger" *ngIf="listaTiposTalla.length == 0">
+                    No existen tipos de tallas registradas
+                </div>
+
+
+                <div class="row" *ngIf="listaTiposTalla.length>0">
+                    <div class="col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Buscar</mat-label>
+                            <input matInput placeholder="Escriba algo..." (keyup)="aplicarFiltroTallas($event)">
+                        </mat-form-field>
+
+                        <table mat-table matSort (matSortChange)="reordenar($event)" [dataSource]="datos" width="100%">
+
+
+                            <!-- Columna talla -->
+                            <ng-container matColumnDef="tipoTalla">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Tipo de talla</th>
+                                <td mat-cell *matCellDef="let tipoTalla"> {{tipoTalla.tipoTalla}} </td>
+                            </ng-container>
+
+                            <!-- Columna nombres -->
+                            <ng-container matColumnDef="descripcion">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Descripción</th>
+                                <td mat-cell *matCellDef="let tipoTalla"> {{tipoTalla.descripcion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="acciones">
+                                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                <td mat-cell *matCellDef="let tipoTalla">
+                                    <button mat-icon-button color="basic" matTooltip="Ver detalle" (click)="abrirVentanaModalVer(tipoTalla.id)"><mat-icon class="verde">search</mat-icon></button>
+                                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaModalModificar(tipoTalla.id)"><mat-icon class="verde">edit</mat-icon></button>
+                                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarTipoTalla(tipoTalla)"><mat-icon>delete</mat-icon></button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columnasTipoTallas"> </tr>
+                            <tr mat-row *matRowDef="let row; columns: columnasTipoTallas;"></tr>
+                        </table>
+
+                        <mat-paginator [length]="totalRegistros" [pageSize]="tamanoPagina" [pageIndex]="paginaActual" [pageSizeOptions]="tamanosPagina" (page)="paginar($event)">
+                        </mat-paginator>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>

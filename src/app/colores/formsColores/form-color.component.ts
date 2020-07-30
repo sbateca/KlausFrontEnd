@@ -1,8 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TallasColoresService } from '../tallas-colores.service';
+import { ColorService } from '../color.service';
 import { Color } from '../color';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
 
@@ -24,13 +25,16 @@ export class FormColorComponent implements OnInit {
   // el grupo de formularios
   formulario: FormGroup;
 
+  colorSeleccionado = '';
+  posicion = 'left';
+
   // nombre de la funcionalidad
   funcionalidad = 'Crear color';
 
 
   constructor(public referenciaVentanaModal: MatDialogRef<FormColorComponent>,
               @Inject(MAT_DIALOG_DATA) public idColor: number,
-              private tallaColorService: TallasColoresService,
+              private colorService: ColorService,
               private constructorFormulario: FormBuilder) { }
 
   ngOnInit(): void {
@@ -49,13 +53,20 @@ export class FormColorComponent implements OnInit {
 
   cargarColorEnFormulario(): void {
     if (this.idColor) {
-      this.tallaColorService.getColorPorID(this.idColor).subscribe(resultado => {
+      this.colorService.getColorPorID(this.idColor).subscribe(resultado => {
         this.formulario.setValue({
           nombre: resultado.nombre,
           codigoColor: resultado.codigoColor
         });
       });
     }
+  }
+
+
+  asignarColor(): void {
+    this.formulario.patchValue({
+      codigoColor: this.colorSeleccionado
+    });
   }
 
 
