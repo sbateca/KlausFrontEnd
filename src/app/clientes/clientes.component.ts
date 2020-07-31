@@ -319,6 +319,7 @@ abrirVentanaEditarCliente(idCliente): void {
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     this.cli = resultado;
+    this.cli.id = idCliente;
     this.actualizarCliente();
   });
 }

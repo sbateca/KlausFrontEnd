@@ -52,6 +52,7 @@ export class ClienteService {
     // map((response: any) => response.cliente as Cliente),
       catchError(e => {
       console.error(e.error.mensaje);
+      console.error(e.error.error);
       swal.fire(e.error.mensaje, e.error.error, 'error');
       return throwError(e);
     })
