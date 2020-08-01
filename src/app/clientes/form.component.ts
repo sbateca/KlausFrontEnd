@@ -59,15 +59,15 @@ export class FormClientesComponent implements OnInit {
    CrearFormulario(): void {
      this.camposformulario = this.constructorFormulario.group(
        {
-         documento: ['', Validators.required],
+         documento:  ['', [Validators.required, Validators.minLength(8), Validators.maxLength(10)]],
          nombres: ['', Validators.required],
          apellidos: ['', Validators.required],
-         numero_contacto: ['', Validators.required],
+         numero_contacto: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(10)]],
          departamento: ['', Validators.required],
          ciudad: ['', Validators.required],
          direccion: ['', Validators.required],
-         correo: [''],
-         codigo_postal: ['']
+         correo: ['', Validators.email],
+         codigo_postal: ['', [Validators.minLength(6), Validators.maxLength(6)]]
       }
      );
    }

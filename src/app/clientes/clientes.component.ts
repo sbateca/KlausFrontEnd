@@ -11,7 +11,8 @@ import { Departamento } from '../departamentos/departamento';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
-
+// librería para el manejo de Tooltips
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -51,26 +52,9 @@ export class ClientesComponent implements OnInit {
 
 
   // Titulos de cada Columna
-  // columnasTable: string [] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones'];
+
   columnasTable: string [] = ['documento', 'nombres', 'apellidos', 'acciones'];
   datos: MatTableDataSource<Cliente>;
-
-
-
-  // Definir Variable columnas
-  /*columnas = [
-    {titulo: 'Id', value: 'id'},
-    {titulo: 'Documento', value: 'documento'},
-    {titulo: 'Nombres', value: 'nombres'},
-    {titulo: 'Apellidos', value: 'apellidos'},
-    {titulo: 'Numero de Telefono', value: 'numero_contacto'},
-    {titulo: 'Departamento', value: 'departamento'},
-    {titulo: 'Ciudad', value: 'ciudad'},
-    {titulo: 'Dirección', value: 'direccion'},
-    {titulo: 'Correo', value: 'correo'},
-    {titulo: 'Codigo Postal', value: 'codigo_postal'},
-    {titulo: 'Acciones', value: 'acciones'}
-  ];*/
 
 // Instanciamos
   constructor(public clienteService: ClienteService,
@@ -174,8 +158,6 @@ reordenar(sort: Sort) {
       case 'nombres': return this.comparar(a.nombres, b.nombres, esAscendente);
       case 'apellidos': return this.comparar( a.apellidos, b.apellidos, esAscendente);
       case 'numero_contacto': return this.comparar( a.numero_contacto, b.numero_contacto, esAscendente);
-      //case 'departamento': return this.comparar( a.departamento, b.departamento, esAscendente);
-     // case 'ciudad': return this.comparar( a.ciudad, b.ciudad, esAscendente);
       case 'direccion': return this.comparar( a.direccion, b.direccion, esAscendente);
       case 'correo': return this.comparar( a.correo, b.correo, esAscendente);
       case 'codigo_postal': return this.comparar( a.codigo_postal, b.codigo_postal, esAscendente);
@@ -223,48 +205,29 @@ reordenar(sort: Sort) {
 
 
  // Ejecuta el metodo eliminar cliente, retorna- nada
+
   delete(cliente: Cliente): void {
-    this.clienteService.delete(cliente.id).subscribe( respuesta => {
-      //  this.cliente = this.cliente.filter( cli => cli !== cliente )
-       this.listarPaginado();
-    });
-  }
-/*
-  delete (cliente: Cliente):void{
-    const swalWithBootstrapButtons = swal.mixin({
-    customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-    },
-    buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-    title: 'Estas seguro?',
-    text: `¿Seguro que desea eliminar al cliente? ${cliente.nombres} ${cliente.apellidos}`,
+    swal.fire ({
+
+      title: 'Estas seguro?',
+    text: '¿Seguro que desea eliminar al cliente?'+ cliente.nombres +'?',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonText: 'Si, eliminar!',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#ad3333',
     cancelButtonText: 'No, cancelar!',
-    reverseButtons: true
-     })
-    .then((result) => {
-    if (result.value) {
-    this.clienteService.delete(cliente.id).subscribe(
-    response =>{
-    this.cliente = this.cliente.filter(cli=> cli !==cliente)//filtrar que no muestre el cliente que acabamos de eliminar
-    swalWithBootstrapButtons.fire(
-      'Cliente Eliminado!',
-      `Cliente ${cliente.nombres} eliminado con éxito.`,
-      'success'
-                                  )
-                }
-                                                    )
-                      }
-    })
-    }*/
+    confirmButtonText: 'Si, eliminar!'
 
-
-    /*
+     }).then((result) => {
+       if (result.value) {
+         this.clienteService.delete(cliente.id).subscribe(respuesta => {
+         this.listarPaginado();
+         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong>eliminado con éxito.', 'success');
+          });
+       }
+      });
+}
+/*
     El método abrirVentana implementa acciones sobre la ventana modal:
       - open: Abre una ventana con los parámetros que se envían:
               - el componente que implementa la vista de la ventana modal
@@ -279,7 +242,7 @@ abrirVentana(): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent,
     {
       width: '60%',
-      height: '85%',
+      height: 'auto',
       position: {left: '30%', top: '60px'}
     });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
@@ -313,7 +276,7 @@ abrirVentana(): void {
 abrirVentanaEditarCliente(idCliente): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent, {
     width: '60%',
-    height: '85%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idCliente
   });
@@ -346,7 +309,7 @@ abrirVentanaEditarCliente(idCliente): void {
 abrirVentanaVer(idCliente): void {
   this.ventanaModal.open(DetalleClienteComponent, {
     width: '60%',
-    height: '86%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idCliente
   });

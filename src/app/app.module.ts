@@ -14,7 +14,7 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { FormProveedoresComponent } from './proveedores/form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { FormClientesComponent } from './clientes/form.component';
 
@@ -75,8 +75,8 @@ const routes: Routes = [
     MatIconModule,
     MatDialogModule,
     MatSelectModule,
-    ReactiveFormsModule
-    // MatOptionModule
+    ReactiveFormsModule,
+    MatTooltipModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],
