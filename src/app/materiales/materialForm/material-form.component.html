@@ -1,0 +1,36 @@
+<h3 mat-dialog-title>{{funcionalidad}}</h3>
+
+
+
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="card-body">
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Nombre</mat-label>
+                <input matInput name="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+                <mat-error *ngIf="nombreNoValido">Debe digitar el nombre del material</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Descripción</mat-label>
+                <input matInput name="descripcion" placeholder="Descripción" type="text" formControlName="descripcion">
+            </mat-form-field>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<mat-dialog-actions>
+
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.idMaterial" [disabled]="!this.formulario.valid">Enviar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="this.idMaterial" [disabled]="!this.formulario.valid">Editar</button>
+
+</mat-dialog-actions>

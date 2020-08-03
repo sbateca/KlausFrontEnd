@@ -22,35 +22,38 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a [routerLink]="['/clientes']" class="nav-link">
+                    <a [routerLink]="['/clientes']" class="nav-link" routerLinkActive="active">
                         <i class="fa fa-users nav-icon"></i>
                         <p>Clientes</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a [routerLink]="['/proveedores']" class="nav-link">
+                    <a [routerLink]="['/proveedores']" class="nav-link" routerLinkActive="active">
                         <i class="fa fa-child nav-icon"></i>
                         <p>Proveedores</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" routerLinkActive="active">
                         <i class="fa fa-archive nav-icon"></i>
                         <p>Inventario</p>
+                        <span class="pull-right-container">
+                            <i class="right fas fa-angle-left fijarDerecha"></i>
+                          </span>
                     </a>
                     <ul class="nav nav-treeview" style="display: none;">
 
                         <li class="nav-item">
-                            <a routerLink="colores" class="nav-link">
+                            <a routerLink="colores" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon text-blue"></i>
                                 <p>Colores</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a routerLink="tiposTallas" class="nav-link">
+                            <a routerLink="tiposTallas" routerLinkActive="active" class="nav-link">
                                 <i class="far fa-circle nav-icon text-white"></i>
                                 <p>Tipo de Talla</p>
                             </a>
@@ -58,20 +61,28 @@
 
 
                         <li class="nav-item">
-                            <a routerLink="tallas" class="nav-link">
+                            <a routerLink="tallas" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon text-red"></i>
                                 <p>Tallas</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a routerLink="" class="nav-link">
+                            <a routerLink="materiales" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-purple"></i>
+                                <p>Materiales</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="#" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon text-green"></i>
                                 <p>Productos</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a routerLink="" class="nav-link">
+                            <a routerLink="#" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon text-yellow"></i>
                                 <p>Inventario</p>
                             </a>

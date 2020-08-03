@@ -7,7 +7,7 @@ import { Talla } from '../talla';
 import {MatInputModule} from '@angular/material/input';
 
 // librerías para formularios reactivos
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import alertasSweet from 'sweetalert2';
 import { TipoTalla } from '../../tiposTallas/TipoTalla';
 import { TipoTallaService } from '../../tiposTallas/tipo-talla.service';

@@ -1,0 +1,14 @@
+.fijarDerecha {
+    float: right;
+}
+
+li.nav-item a.active {
+    background-color: rgba(255, 255, 255, .1) !important;
+    color: #fff !important;
+}
+
+@media (min-width: 992px) {
+    .sidebar-mini.sidebar-collapse {
+        background-color: salmon !important;
+    }
+}

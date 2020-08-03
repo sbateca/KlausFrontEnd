@@ -43,6 +43,9 @@ import { TipoTallaComponent } from './tiposTallas/tipo-talla.component';
 import { TipoTallaFormComponent } from './tiposTallas/tipoTallaForm/tipo-talla-form.component';
 import { TipoTallaDetalleComponent } from './tiposTallas/tipoTallaDetalle/tipo-talla-detalle.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { MaterialComponent } from './materiales/material.component';
+import { MaterialFormComponent } from './materiales/materialForm/material-form.component';
+import { MaterialDetalleComponent } from './materiales/materialDetalle/material-detalle.component';
 
 
 
@@ -56,7 +59,8 @@ const routes: Routes = [
     {path: 'clientes/form/:id', component: FormClientesComponent},
     {path: 'tiposTallas', component: TipoTallaComponent},
     {path: 'tallas', component: TallaComponent},
-    {path: 'colores', component: ColorComponent}
+    {path: 'colores', component: ColorComponent},
+    {path: 'materiales', component: MaterialComponent}
 ];
 
 @NgModule({
@@ -79,7 +83,10 @@ const routes: Routes = [
     ColorDetalleComponent,
     TipoTallaComponent,
     TipoTallaFormComponent,
-    TipoTallaDetalleComponent
+    TipoTallaDetalleComponent,
+    MaterialComponent,
+    MaterialFormComponent,
+    MaterialDetalleComponent
   ],
   imports: [
     BrowserModule,
