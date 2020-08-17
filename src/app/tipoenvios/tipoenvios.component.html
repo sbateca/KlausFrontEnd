@@ -1,0 +1,43 @@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="float-left pr-3">Tipo Envio</h1>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Tipo Envio" (click)='AbrirFormularioTipoEnvios()'><mat-icon>person_add</mat-icon></button>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">Tipo Envio/Listar Tipo Envio</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Bucador-->
+<div class="col-sm-12">
+    <mat-form-field>
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="AplicarFiltro($event)" placeholder="Escriba algo...">
+    </mat-form-field>
+    <!--Tabla-->
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let tipo_envio"> {{tipo_envio.nombre}} </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button color="basic" matTooltip="Ver Detalle" (click)=AbrirVentanaDetalle(element?.id)><mat-icon class="verde">loupe</mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Editar" (click)=AbrirFormularioEditar(element.id)><mat-icon>edit</mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)=Eliminar(element)><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+        </table>
+    </div>
+    <br>
+    <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
+    </mat-paginator>

@@ -41,11 +41,12 @@ export class ClienteService {
     return this.http.get<any>(`${this.urlEndPoint}/pagina`, { params: params });
   }
   create(cliente: Cliente, IdCiudadSelecc: Number): Observable<Cliente> {// recibe el onjeto cliente en json
-    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders});
+    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders}).pipe(
     catchError(e => {
       console.error(e.error.mensaje, e.error.error, 'error');
       return throwError(e);
-    });
+    })
+    );
   }
   crearCliente(cliente: Cliente): Observable<Cliente> {// recibe el onjeto cliente en json
     return this.http.post<Cliente>(`${this.urlEndPoint}`, cliente, {headers: this.httpHeaders}).pipe(

@@ -34,7 +34,14 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
+import { TipoenviosComponent } from './tipoenvios/tipoenvios.component';
+
+
+
 // import { MatOptionModule } from '@angular/material';
+import { Tipoenvios } from './tipoenvios/tipoenvios';
+import { FormtipoenviosComponent } from './tipoenvios/formtipoenvios/formtipoenvios.component';
+import { DetalleTipoEnvioComponent } from './tipoenvios/detalle-tipo-envio/detalle-tipo-envio.component';
 
 
 const routes: Routes = [
@@ -44,7 +51,8 @@ const routes: Routes = [
     {path: 'proveedores/form', component: FormProveedoresComponent},
     {path: 'proveedores/form/:id', component: FormProveedoresComponent},
     {path: 'clientes/form', component: FormClientesComponent},
-    {path: 'clientes/form/:id', component: FormClientesComponent}
+    {path: 'clientes/form/:id', component: FormClientesComponent},
+    {path: 'tipoenvios', component: TipoenviosComponent}
 ];
 
 @NgModule({
@@ -58,7 +66,10 @@ const routes: Routes = [
     ProveedoresComponent,
     DetalleComponent,
     FormClientesComponent,
-    DetalleClienteComponent
+    DetalleClienteComponent,
+    TipoenviosComponent,
+    FormtipoenviosComponent,
+    DetalleTipoEnvioComponent
   ],
   imports: [
     BrowserModule,

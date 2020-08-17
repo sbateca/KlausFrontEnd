@@ -158,7 +158,7 @@ export class FormClientesComponent implements OnInit {
    // console.log(evento.value);
    this.ciudadSrvice.obtenerCiudadId(evento.value.id).subscribe(ciud => {
    const FiltroListaCiudades = [];
-   ciud.forEach(elemento =>{
+   ciud.forEach(elemento => {
      FiltroListaCiudades.push(
        {
          "id": elemento.id,
@@ -224,7 +224,7 @@ compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
   cargarCiudadDeptIdporDefecto(departamento: Departamento): void {
    this.ciudadSrvice.obtenerCiudadId(departamento.id).subscribe(ciud => {
    const FiltroListaCiudades = [];
-   ciud.forEach(elemento =>{
+   ciud.forEach(elemento => {
      FiltroListaCiudades.push(
        {
          "id": elemento.id,

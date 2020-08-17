@@ -11,11 +11,8 @@ import { Departamento } from '../departamentos/departamento';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
-// librería para el manejo de Tooltips
-import { MatTooltipModule } from '@angular/material/tooltip';
 
-
-
+import { MatTooltipModule } from '@angular/material/tooltip'; // Tooltips
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -62,20 +59,16 @@ export class ClientesComponent implements OnInit {
               public departamentoservice: DepartamentoService,
               public ventanaModal: MatDialog) { }
 
-
-
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
-    this.clienteService.getClientes().subscribe(
-      cliente => {
-        this.cliente = cliente; // Actualiza listado
-      }
-    );
+   // this.clienteService.getClientes().subscribe(
+   // cliente => {
+   //   this.cliente = cliente; // Actualiza listado
+   //   }
+   // );
     this.listarPaginado();
     this.cargarDepartamentos();
   }
-
-
 
 /*
   El método aplicarFiltro permite realizar proceso de filtrado de datos
@@ -89,9 +82,6 @@ aplicarFiltro(event: Event) {
   this.datos.filter = textoFiltro.trim().toLowerCase();
 }
 
-
-
-
   // Realiza el control de la paginacion, y las pagina.
   // Cada vez que se seleccione un boton del paginador se actualizan los valores
   // PageEvent--> El evento de tipo PageEvent
@@ -103,10 +93,7 @@ aplicarFiltro(event: Event) {
   }
 
 
-
-
 // Listar paginado : Realiza el get deacuerdo a los valores actualizados de cada pagina
-
 private listarPaginado() {
 
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
@@ -130,10 +117,6 @@ private listarPaginado() {
 
     });
   }
-
-
-
-
 
 reordenar(sort: Sort) {
 
@@ -201,16 +184,13 @@ reordenar(sort: Sort) {
    });
  }
 
-
-
-
  // Ejecuta el metodo eliminar cliente, retorna- nada
 
   delete(cliente: Cliente): void {
     swal.fire ({
 
-      title: 'Estas seguro?',
-    text: '¿Seguro que desea eliminar al cliente?'+ cliente.nombres +'?',
+      title: '¿Estas seguro?',
+    text: '¿Seguro que desea Eliminar al Cliente, '+ cliente.nombres +' ?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -222,7 +202,7 @@ reordenar(sort: Sort) {
        if (result.value) {
          this.clienteService.delete(cliente.id).subscribe(respuesta => {
          this.listarPaginado();
-         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong>eliminado con éxito.', 'success');
+         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
           });
        }
       });
@@ -297,7 +277,7 @@ abrirVentanaEditarCliente(idCliente): void {
     this.clienteService.update(this.cli)
     .subscribe(respuesta => {
       this.listarPaginado();
-      swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success')
+      swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success');
     });
   }
 

@@ -20,43 +20,40 @@
         <mat-label>Buscar</mat-label>
         <input matInput (keyup)="aplicarFiltro($event)" placeholder="Escriba algo...">
     </mat-form-field>
-    <div>
 
-        <!--Tabla Angular Material-->
-        <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
+    <!--Tabla Angular Material-->
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
-                <!-- Columna documento -->
-                <ng-container matColumnDef="documento">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
-                    <td mat-cell *matCellDef="let cliente"> {{cliente.documento}} </td>
-                </ng-container>
-                <!-- Columna documento -->
-                <ng-container matColumnDef="nombres">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombres</th>
-                    <td mat-cell *matCellDef="let cliente"> {{cliente.nombres}} </td>
-                </ng-container>
-                <!-- Columna documento -->
-                <ng-container matColumnDef="apellidos">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Apellidos</th>
-                    <td mat-cell *matCellDef="let cliente"> {{cliente.apellidos}} </td>
-                </ng-container>
+            <!-- Columna documento -->
+            <ng-container matColumnDef="documento">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
+                <td mat-cell *matCellDef="let cliente"> {{cliente.documento}} </td>
+            </ng-container>
+            <!-- Columna documento -->
+            <ng-container matColumnDef="nombres">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombres</th>
+                <td mat-cell *matCellDef="let cliente"> {{cliente.nombres}} </td>
+            </ng-container>
+            <!-- Columna documento -->
+            <ng-container matColumnDef="apellidos">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Apellidos </th>
+                <td mat-cell *matCellDef="let cliente"> {{cliente.apellidos}} </td>
+            </ng-container>
 
-                <ng-container matColumnDef="acciones">
-                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                    <td mat-cell *matCellDef="let cliente">
-                        <button mat-icon-button color="basic" matTooltip="Ver Detalle" (click)="abrirVentanaVer(cliente.id)"><mat-icon class="verde">loupe</mat-icon></button>
-                        <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditarCliente(cliente.id)"><mat-icon>edit</mat-icon></button>
-                        <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="delete(cliente)"><mat-icon>delete</mat-icon></button>
-                    </td>
-                </ng-container>
-                >
-                <tr mat-header-row *matHeaderRowDef="columnasTable"></tr>
-                <tr mat-row *matRowDef="let row; columns: columnasTable;"></tr>
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let cliente">
+                    <button mat-icon-button color="basic" matTooltip="Ver Detalle" (click)="abrirVentanaVer(cliente.id)"><mat-icon class="verde">loupe</mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditarCliente(cliente.id)"><mat-icon>edit</mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="delete(cliente)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnasTable"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTable;"></tr>
 
-            </table>
-
-        </div>
-        <br>
-        <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
-        </mat-paginator>
+        </table>
+    </div>
+    <br>
+    <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
+    </mat-paginator>
