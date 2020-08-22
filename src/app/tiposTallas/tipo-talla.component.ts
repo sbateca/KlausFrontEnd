@@ -178,7 +178,7 @@ abrirVentanaModalModificar(id: number): void {
     if (resultado) {
       this.tipoTalla = resultado;
       this.tipoTalla.id = id;
-      this.agregarTipoTalla();
+      this.editarTipoTalla();
     }
   });
 }
@@ -191,6 +191,13 @@ agregarTipoTalla(): void {
   this.tipoTallaService.agregarTipoTalla(this.tipoTalla).subscribe( resultado => {
     this.listarTiposTallaPaginado();
     alertasSweet.fire('Nuevo tipo de talla', resultado.mensaje);
+  });
+}
+
+editarTipoTalla(): void {
+  this.tipoTallaService.modificarTipoTalla(this.tipoTalla).subscribe( resultado => {
+    this.listarTiposTallaPaginado();
+    alertasSweet.fire('Tipo de talla modificada', resultado.mensaje);
   });
 }
 

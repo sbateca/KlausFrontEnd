@@ -152,7 +152,9 @@ export class ColorService {
   }
 
 
-
+  buscarColorPorNombre(nombre: string): Observable<any> {
+    return this.httpCliente.get(this.rutaEndPointColores + '/filtro/' + nombre);
+  }
 
 
 

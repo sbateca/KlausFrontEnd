@@ -73,4 +73,9 @@ export class MaterialService {
   }
 
 
+  buscarMaterialPorNombre(nombre: string): Observable<any> {
+    return this.httpCliente.get(this.rutaEndPoint + '/filtro/' + nombre);
+  }
+
+
 }

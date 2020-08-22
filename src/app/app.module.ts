@@ -30,6 +30,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDialogConfig} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCardModule} from '@angular/material/card';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
+
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
 import { TallaComponent } from './tallas/talla.component';
@@ -42,10 +49,15 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { TipoTallaComponent } from './tiposTallas/tipo-talla.component';
 import { TipoTallaFormComponent } from './tiposTallas/tipoTallaForm/tipo-talla-form.component';
 import { TipoTallaDetalleComponent } from './tiposTallas/tipoTallaDetalle/tipo-talla-detalle.component';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import { MaterialComponent } from './materiales/material.component';
 import { MaterialFormComponent } from './materiales/materialForm/material-form.component';
 import { MaterialDetalleComponent } from './materiales/materialDetalle/material-detalle.component';
+import { PiezaComponent } from './piezas/pieza.component';
+import { FormPiezaComponent } from './piezas/formPieza/form-piezas.component';
+import { ProductoComponent } from './productos/producto.component';
+import { ProductoFormComponent } from './productos/productoForm/producto-form.component';
+import { ProductoDetalleComponent } from './productos/productoDetalle/producto-detalle.component';
+
 
 
 
@@ -60,7 +72,8 @@ const routes: Routes = [
     {path: 'tiposTallas', component: TipoTallaComponent},
     {path: 'tallas', component: TallaComponent},
     {path: 'colores', component: ColorComponent},
-    {path: 'materiales', component: MaterialComponent}
+    {path: 'materiales', component: MaterialComponent},
+    {path: 'productos', component: ProductoComponent}
 ];
 
 @NgModule({
@@ -86,7 +99,12 @@ const routes: Routes = [
     TipoTallaDetalleComponent,
     MaterialComponent,
     MaterialFormComponent,
-    MaterialDetalleComponent
+    MaterialDetalleComponent,
+    PiezaComponent,
+    FormPiezaComponent,
+    ProductoComponent,
+    ProductoFormComponent,
+    ProductoDetalleComponent
   ],
   imports: [
     BrowserModule,
@@ -105,6 +123,8 @@ const routes: Routes = [
     MatDialogModule,
     MatSelectModule,
     ColorPickerModule,
+    MatExpansionModule,
+    MatAutocompleteModule,
     MatTooltipModule
     ],
   entryComponents: [ FormProveedoresComponent ],

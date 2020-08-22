@@ -117,4 +117,16 @@ export class TipoTallaService {
 
 
 
+    modificarTipoTalla( tipoTalla: TipoTalla): Observable<any> {
+      return this.httpCliente.put(this.rutaEndPointTipoTalla + '/' + tipoTalla.id , tipoTalla, {headers: this.cabeceraHttp}).pipe(
+        catchError( e => {
+          console.log(e.error.mensaje);
+          alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.error.error);
+          return throwError(e);
+        })
+      );
+    }
+
+
+
 }

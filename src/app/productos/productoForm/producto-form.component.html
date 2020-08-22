@@ -1,0 +1,121 @@
+<h3 mat-dialog-title>{{funcionalidad}}</h3>
+
+
+
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="card-body">
+
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Nombre</mat-label>
+                <input matInput name="tipoTalla" placeholder="Nombre" type="text" formControlName="nombre">
+                <mat-error *ngIf="nombreInvalido">Digite el nombre del producto</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Referencia</mat-label>
+                <input matInput name="descripcion" placeholder="Referencia" type="text" formControlName="referencia">
+                <mat-error *ngIf="referenciaInvalida">Digite la referencia</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Costo</mat-label>
+                <input matInput name="costo" placeholder="Costo" type="number" formControlName="costo">
+                <mat-error *ngIf="costoInvalido">Debe digitar el costo</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Precio de venta</mat-label>
+                <input matInput name="precioVenta" placeholder="Precio de venta" type="number" formControlName="precioVenta">
+                <mat-error *ngIf="precioInvalido">Debe digitar el precio</mat-error>
+            </mat-form-field>
+
+
+        </div>
+
+        <h4>Piezas <button mat-icon-button color="basic" matTooltip="Agregar pieza" (click)="agregarPieza()"><mat-icon>add_circle</mat-icon></button></h4>
+        <hr>
+
+
+        <mat-accordion class="example-headers-align" formArrayName="piezas">
+
+            <div *ngFor="let pieza of obtenerPiezas.controls; let i = index;">
+
+
+                <mat-expansion-panel [formGroupName]="i">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Pieza No. {{i+1}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <mat-form-field class="unaParte">
+                        <mat-label>Nombre pieza</mat-label>
+                        <input matInput name="nombrePieza" placeholder="Nombre pieza" type="text" formControlName="nombre">
+                        <mat-error *ngIf="nombrePiezaInvalida(i)">Digite el nombre de la pieza</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="dosPartes">
+                        <mat-label>Color</mat-label>
+
+                        <input type="text" matInput [matAutocomplete]="etiquetaAutocompletar" [formControl]="myControl">
+                        <mat-autocomplete #etiquetaAutocompletar="matAutocomplete" [displayWith]="mostrarNombreColor">
+                            <mat-option *ngFor="let color of listaFiltradaColores | async" [value]="color" (onSelectionChange)="asignarSeleccionado($event, i)">
+                                {{color.nombre}}
+                            </mat-option>
+                        </mat-autocomplete>
+
+                    </mat-form-field>
+
+                    <mat-form-field class="dosPartes">
+                        <mat-label>Material</mat-label>
+                        <input matInput placeholder="Material" type="text" [matAutocomplete]="autocompletarMaterial" [formControl]="campoMaterialAutoComplete">
+                        <mat-autocomplete #autocompletarMaterial [displayWith]="mostrarNombreMaterial">
+                            <mat-option *ngFor="let material of listaMateriales" [value]="material" (onSelectionChange)="asignarSeleccionadoMaterial($event, i)">
+                                {{material.nombre}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+
+                    <mat-form-field class=" unaParte ">
+                        <mat-label>Observación</mat-label>
+                        <input matInput name="observacion" placeholder="Observación" type="text" formControlName="observacion">
+                    </mat-form-field>
+
+                    <mat-action-row>
+                        <button mat-icon-button color="basic" matTooltip="Eliminar pieza" (click)="quitaPiezaArray(i)"><mat-icon>delete</mat-icon></button>
+                    </mat-action-row>
+
+                </mat-expansion-panel>
+
+
+            </div>
+        </mat-accordion>
+        <!--
+
+        <div class="card">
+            <div class="card-header">Listado de piezas <button mat-button (click)="agregarPieza() ">Agregar pieza</button></div>
+            <div class="card-body" formArrayName="piezas">
+
+            </div>
+        </div>
+-->
+    </form>
+
+</div>
+
+<mat-dialog-actions>
+
+    <button mat-button (click)="cancelarOperacion() ">Cancelar</button>
+    <button mat-button color="primary" (click)="guardar() " *ngIf="!this.idProducto " [disabled]="!this.formulario.valid ">Enviar</button>
+    <button mat-button color="primary" (click)="guardar() " *ngIf="this.idProducto " [disabled]="!this.formulario.valid ">Editar</button>
+
+</mat-dialog-actions>
+
+
+{{formulario.value | json}} {{formulario.valid}}
