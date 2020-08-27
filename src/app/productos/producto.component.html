@@ -36,7 +36,7 @@
                             <input matInput placeholder="¿Qué desea buscar?" (keyup)="aplicarFiltro($event)">
                         </mat-form-field>
 
-                        <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
+                        <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%" class="table-hover">
 
 
                             <!-- Columna talla -->

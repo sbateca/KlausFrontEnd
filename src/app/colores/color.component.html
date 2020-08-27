@@ -36,7 +36,7 @@
                             <input matInput (keyup)="aplicarFiltroColores($event)" placeholder="Escriba algo...">
                         </mat-form-field>
 
-                        <table mat-table matSort [dataSource]="datosColor" (matSortChange)="reordenarColores($event)" width="100%">
+                        <table mat-table matSort [dataSource]="datosColor" (matSortChange)="reordenarColores($event)" width="100%" class="table-hover">
 
 
                             <!-- Columna talla -->

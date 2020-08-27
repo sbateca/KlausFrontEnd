@@ -57,6 +57,7 @@ import { FormPiezaComponent } from './piezas/formPieza/form-piezas.component';
 import { ProductoComponent } from './productos/producto.component';
 import { ProductoFormComponent } from './productos/productoForm/producto-form.component';
 import { ProductoDetalleComponent } from './productos/productoDetalle/producto-detalle.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 
@@ -125,7 +126,8 @@ const routes: Routes = [
     ColorPickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

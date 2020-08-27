@@ -1,1 +1,64 @@
-<p>producto-detalle works!</p>
+<h3 mat-dialog-title>{{funcionalidad}}</h3>
+
+
+
+<div mat-dialog-content>
+
+    <table class="table table-sm table-hover">
+        <tbody>
+            <tr>
+                <th scope="row">Nombre</th>
+                <td>{{producto.nombre}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Rererencia</th>
+                <td>{{producto.referencia}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Costo</th>
+                <td>{{producto.costo}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Precio de venta</th>
+                <td>{{producto.precioVenta}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Activo</th>
+                <td>{{producto.activo ? 'Activo': 'Inactivo'}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <span>Listado de piezas</span>
+
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr class="thead-light">
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Material</th>
+                <th>Color</th>
+                <th>Observación</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pieza of producto.piezas; let i = index">
+                <th scope="row">{{i+1}}</th>
+                <td>{{pieza.nombre}}</td>
+                <td>{{pieza.material.nombre}}</td>
+                <td>{{pieza.color.nombre}}</td>
+                <td>{{pieza.observacion}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<!-- botones de acciones -->
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" (click)="cerrarVentana()">Cerrar</button>
+</mat-dialog-actions>
+
+
+<!-- /fin botones de acciones -->

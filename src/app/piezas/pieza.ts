@@ -1,5 +1,6 @@
 import { Color } from '../colores/color';
 import { Material } from '../materiales/Material';
+import { Producto } from '../productos/producto';
 
 
 export class Pieza {
@@ -8,4 +9,5 @@ export class Pieza {
     observacion: string;
     color: Color;
     material: Material;
+    producto: Producto;
 }

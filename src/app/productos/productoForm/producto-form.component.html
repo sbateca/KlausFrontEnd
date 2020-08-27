@@ -33,6 +33,10 @@
                 <mat-error *ngIf="precioInvalido">Debe digitar el precio</mat-error>
             </mat-form-field>
 
+            <span>
+                <mat-checkbox class="example-margin" formControlName="activo">Activo</mat-checkbox>
+            </span>
+
 
         </div>
 
@@ -62,7 +66,7 @@
                     <mat-form-field class="dosPartes">
                         <mat-label>Color</mat-label>
 
-                        <input type="text" matInput [matAutocomplete]="etiquetaAutocompletar" [formControl]="myControl">
+                        <input type="text" matInput placeholder="Buscar color" [matAutocomplete]="etiquetaAutocompletar" [formControl]="myControl">
                         <mat-autocomplete #etiquetaAutocompletar="matAutocomplete" [displayWith]="mostrarNombreColor">
                             <mat-option *ngFor="let color of listaFiltradaColores | async" [value]="color" (onSelectionChange)="asignarSeleccionado($event, i)">
                                 {{color.nombre}}
@@ -73,9 +77,9 @@
 
                     <mat-form-field class="dosPartes">
                         <mat-label>Material</mat-label>
-                        <input matInput placeholder="Material" type="text" [matAutocomplete]="autocompletarMaterial" [formControl]="campoMaterialAutoComplete">
+                        <input matInput placeholder="Buscar material" type="text" [matAutocomplete]="autocompletarMaterial" [formControl]="campoMaterialAutoComplete">
                         <mat-autocomplete #autocompletarMaterial [displayWith]="mostrarNombreMaterial">
-                            <mat-option *ngFor="let material of listaMateriales" [value]="material" (onSelectionChange)="asignarSeleccionadoMaterial($event, i)">
+                            <mat-option *ngFor="let material of listaFiltradaMateriales | async" [value]="material" (onSelectionChange)="asignarSeleccionadoMaterial($event, i)">
                                 {{material.nombre}}
                             </mat-option>
                         </mat-autocomplete>
@@ -96,15 +100,7 @@
 
             </div>
         </mat-accordion>
-        <!--
 
-        <div class="card">
-            <div class="card-header">Listado de piezas <button mat-button (click)="agregarPieza() ">Agregar pieza</button></div>
-            <div class="card-body" formArrayName="piezas">
-
-            </div>
-        </div>
--->
     </form>
 
 </div>
@@ -112,10 +108,7 @@
 <mat-dialog-actions>
 
     <button mat-button (click)="cancelarOperacion() ">Cancelar</button>
-    <button mat-button color="primary" (click)="guardar() " *ngIf="!this.idProducto " [disabled]="!this.formulario.valid ">Enviar</button>
+    <button mat-button color="primary" (click)="guardar() " *ngIf="!this.idProducto ">Enviar</button>
     <button mat-button color="primary" (click)="guardar() " *ngIf="this.idProducto " [disabled]="!this.formulario.valid ">Editar</button>
 
 </mat-dialog-actions>
-
-
-{{formulario.value | json}} {{formulario.valid}}

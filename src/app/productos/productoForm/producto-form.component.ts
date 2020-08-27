@@ -12,6 +12,8 @@ import { Material } from '../../materiales/Material';
 import { ColorService } from '../../colores/color.service';
 import { startWith, map, flatMap } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
+
 
 
 @Component({
@@ -36,7 +38,7 @@ export class ProductoFormComponent implements OnInit {
 
   // listado de colores
   listaColores = new Array<Color>();
-  listaMateriales: Material[] = [];
+  listaMateriales = new Array<Material>();
 
   // estas variables se usarán para el filtrado en el autocompletar
   listaFiltradaColores: Observable<Color[]>;
@@ -45,6 +47,7 @@ export class ProductoFormComponent implements OnInit {
 
   myControl = new FormControl();
   campoMaterialAutoComplete = new FormControl();
+
 
   constructor(public referenciaVentanaModal: MatDialogRef<ProductoFormComponent>,
               @Inject(MAT_DIALOG_DATA) public idProducto,
@@ -58,11 +61,9 @@ export class ProductoFormComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
     this.obtenerColores();
-
+    this.obtenerMateriales();
     this.filtrarAutoCompleteColor();
     this.filtrarAutoCompleteMaterial();
-
-
   }
 
   crearFormulario(): void {
@@ -71,6 +72,7 @@ export class ProductoFormComponent implements OnInit {
       referencia: ['', Validators.required],
       costo: ['', Validators.required],
       precioVenta: ['', Validators.required],
+      activo: ['true'],
       piezas: this.constructorFormulario.array([])
     });
   }
@@ -125,6 +127,8 @@ export class ProductoFormComponent implements OnInit {
        }
 
       });
+    } else {
+      this.referenciaVentanaModal.close(this.formulario.value);
     }
   }
 
@@ -143,10 +147,6 @@ export class ProductoFormComponent implements OnInit {
   // ------------------ métodos para el filtrado en el autocompletar ------------------ //
 
 
-  obtenerColorForm(posicion: number): FormControl {
-    return (this.formulario.get('piezas') as FormArray).controls[posicion].get('color') as FormControl;
-  }
-
 
   /*
     Este método obtiene asigna obtiene dos tipos de listas de colores:
@@ -164,14 +164,13 @@ export class ProductoFormComponent implements OnInit {
 
 
 
-  /* Este método obtiene el FormControl "Color" que se encuentra en determinada posición
-  del FormArray de piezas */
-    obtenerFormControlColorDeLista(posicion: number): FormControl {
-    return this.formulario.get('piezas')[posicion].get('color');
+  obtenerMateriales(): void {
+    this.materialService.obtenerMateriales().subscribe(resultado => {
+      this.listaMateriales = resultado;
+    });
+
+    this.listaFiltradaMateriales = this.materialService.obtenerMateriales();
   }
-
-
-
 
 
   /* en esta parte se obtiene el FormControl "Color" que se encuentra en determinada posición
@@ -187,14 +186,30 @@ export class ProductoFormComponent implements OnInit {
     );
   }
 
+  filtrarAutoCompleteMaterial(): void {
+    this.listaFiltradaMateriales = this.campoMaterialAutoComplete.valueChanges.pipe(
+      startWith(''),
+      map(valor => this.filtrarArrayMaterial(valor))
+    );
+  }
+
 
   private filtraArrayColor(nombre: string): Color[] {
-    const nombreAFiltrar = nombre.toLowerCase().replace(/\s/g, '');
+    const nombreAFiltrar = nombre.toLowerCase().replace(/\s/g, ''); // paso el string a minúscula y quito espacios
     return this.listaColores.filter(resultado => resultado.nombre.toLowerCase().replace(/\s/g, '').includes(nombreAFiltrar));
+  }
+
+  private filtrarArrayMaterial(nombre: string): Material[] {
+    const nombreAFiltrarMaterial = nombre.toLowerCase().replace(/\s/g, ''); // paso el string a minúscula y quito espacios
+    return this.listaMateriales.filter(resultado => resultado.nombre.toLowerCase().replace(/\s/g, '').includes(nombreAFiltrarMaterial));
   }
 
   mostrarNombreColor(color: Color): string {
     return color && color.nombre ? color.nombre : '';
+  }
+
+  mostrarNombreMaterial(material: Material): string {
+    return material && material.nombre ? material.nombre : '';
   }
 
 
@@ -207,9 +222,6 @@ export class ProductoFormComponent implements OnInit {
       nombre: color.nombre,
       codigoColor: color.codigoColor
     });
-
-    console.log('color seleccionado');
-    console.log(color.nombre);
 
     this.obtenerColores();
     this.filtrarAutoCompleteColor();
@@ -225,35 +237,17 @@ export class ProductoFormComponent implements OnInit {
       nombre: material.nombre,
       descripcion: material.descripcion
     });
+    this.obtenerMateriales();
+    this.filtrarAutoCompleteMaterial();
   }
 
-
-
-
-  filtrarAutoCompleteMaterial(): void {
-    this.campoMaterialAutoComplete.valueChanges.pipe(
-      map(valor => typeof valor === 'string' ? valor : valor.nombre),
-      flatMap(valor => valor ? this.materialService.buscarMaterialPorNombre(valor as string) : [])
-    ).subscribe( materiales => {
-      this.listaMateriales = materiales;
-    });
-  }
-
-
-
+// ------------------ fín métodos para el filtrado en el autocompletar ------------------ //
 
 
   quitaPiezaArray(posicion: number): void {
     this.piezas.removeAt(posicion);
   }
 
-
-
-
-
-  mostrarNombreMaterial(material: Material): string {
-    return material ? material.nombre : '';
-  }
 
 
   // ---------------------- validaciones ---------------------------- //

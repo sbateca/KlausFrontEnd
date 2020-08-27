@@ -14,7 +14,7 @@ import alertasSweet from 'sweetalert2';
 export class PiezaService {
 
   // Variable de rutas para las peticiones
-  rutaEndPoint = 'http://localhost:4200/api/pieza';
+  rutaEndPoint = 'http://localhost:8080/api/pieza';
 
   // Declaracion de cabecera para las peticiones que lo requieren
   cabeceraHttp: HttpHeaders = new HttpHeaders( {'Content-type' : 'application/json'} );

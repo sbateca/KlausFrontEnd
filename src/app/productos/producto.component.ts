@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ɵConsole } from '@angular/core';
 import { Producto } from './producto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -9,6 +9,10 @@ import { ProductoFormComponent } from './productoForm/producto-form.component';
 import { ProductoDetalleComponent } from './productoDetalle/producto-detalle.component';
 import alertasSweet from 'sweetalert2';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PiezaService } from '../piezas/pieza.service';
+import { ProductoPiezaService } from '../productoPieza/producto-pieza.service';
+import { ProductoPieza } from '../productoPieza/ProductoPieza';
+import { Pieza } from '../piezas/pieza';
 
 
 
@@ -54,11 +58,15 @@ listaProductos: Producto[];
 
 // en esta variable se asignará el valor recibido en el formulario
 producto: Producto;
+productoConID: Producto;
 
 
-
+productoPieza: ProductoPieza = new ProductoPieza();
+piezasConID = new Array<Pieza>();
 
   constructor(private productoService: ProductoService,
+              private piezaService: PiezaService,
+              private productoPiezaService: ProductoPiezaService,
               public ventanaModal: MatDialog) { }
 
   ngOnInit(): void {
@@ -194,11 +202,46 @@ abrirVentanaDetalle(idProducto: number): void {
 // --------------- funciones para el CRUD -------------------------------- //
 
 
+
 agregarProducto(): void {
+
+  /*
+    En el Backend el producto está relacionado con PiezaProducto y NO con las piezas.
+    Al realizar el POST de producto, el resultado es un producto sin las piezas,
+    es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
+    componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
+  */
+
+
   this.productoService.agregarProducto(this.producto).subscribe( resultado => {
+    this.productoConID = resultado.producto; // sobreescribo el producto porque el que viene del backend tiene el ID
+
+    /*
+      Asigno el ID al producto porque al ser un producto nuevo es necesario
+      insertarlo primero para luego usarlo en los insert de las demás tablas
+    */
+    this.producto.id = this.productoConID.id;
+
+    this.producto.piezas.forEach( pieza => {
+      pieza.producto = this.producto;
+
+      // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
+      pieza.producto.piezas = [];
+
+      this.piezaService.agregarPieza(pieza).subscribe(r => {
+        console.log('resultado de insertar pieza');
+        console.log(r.mensaje);
+      });
+
+    });
+
     alertasSweet.fire('Nuevo producto', resultado.mensaje);
     this.listarProductoPaginado();
+
   });
+
+
+
 }
 
 editarProducto(): void {
