@@ -28,9 +28,7 @@ export class FormClientesComponent implements OnInit {
 
   public listaDepartamentos: Departamento[];
   public cliente: Cliente = new Cliente();
-  public departamentoseleccionado: Departamento;
   public listaCiudades: Ciudad[];
-  public CiudadSelec: Ciudad;
   titulo: string = "Crear cliente";
   public camposformulario: FormGroup; // Grupo de formulario
 
@@ -131,23 +129,6 @@ export class FormClientesComponent implements OnInit {
 
 
 /*
-  Este método asigna a la variable de clase CiudadSelecc el objeto de la ciudad seleccionada, 
-  en el formulario
-*/
- asignarCiudadSeleccionada(evento): void {
-  // console.log(evento.value);
-  this.camposformulario.patchValue({
-    id: evento.value.id,
-    nombre: evento.value.nombre,
-    departamento :
-      {
-        id: evento.value.departamento.id,
-        nombre: evento.value.departamento.nombre
-      }
-  });
- }
-
-/*
   Este método obtiene las ciudades pertenecientes al departamento seleccionado
   y asigna el nombre del departamente a la variable departamento:String de la case Cliente
     - Parámetros: El departamento seleccionado
@@ -176,6 +157,7 @@ export class FormClientesComponent implements OnInit {
   }
 
 compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
+
     if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
       return true;
     }
@@ -212,8 +194,8 @@ compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
               apellidos: this.cliente.apellidos,
               numero_contacto: this.cliente.numero_contacto,
               correo: this.cliente.correo,
-              departamento: this.cliente.ciudad.departamento,
-              ciudad: this.cliente.ciudad,
+              departamento: this.cliente.ciudad.departamento, // Se carga el objeto Departamento completo
+              ciudad: this.cliente.ciudad, // Se carga el objeto Ciudad completo
               direccion: this.cliente.direccion,
               codigo_postal: this.cliente.codigo_postal
             });
@@ -238,7 +220,7 @@ compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
      );
    });
    this.listaCiudades = FiltroListaCiudades;
-   console.log(this.listaCiudades);
+   // console.log(this.listaCiudades);
    });
   }
 

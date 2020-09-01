@@ -130,27 +130,17 @@ reordenar(sort: Sort) {
      this.datos = new MatTableDataSource<Cliente>(this.cliente);
      return;
   }
-
   this.datos = new MatTableDataSource<Cliente>(
   this.cliente = listCliente.sort( (a, b) => {
-
     const esAscendente = sort.direction === 'asc'; // se determina si es ascendente
     switch (sort.active) { // sort.active obtiene el id (string) de la columna seleccionada
-      case 'id': return this.comparar( a.id, b.id, esAscendente);
       case 'documento': return this.comparar( a.documento, b.documento, esAscendente);
       case 'nombres': return this.comparar(a.nombres, b.nombres, esAscendente);
       case 'apellidos': return this.comparar( a.apellidos, b.apellidos, esAscendente);
-      case 'numero_contacto': return this.comparar( a.numero_contacto, b.numero_contacto, esAscendente);
-      case 'direccion': return this.comparar( a.direccion, b.direccion, esAscendente);
-      case 'correo': return this.comparar( a.correo, b.correo, esAscendente);
-      case 'codigo_postal': return this.comparar( a.codigo_postal, b.codigo_postal, esAscendente);
-  }
+    }
   }));
-
-  // cada vez que se haga clic en un botón para reordenar es necesario paginar de nuevo
+      // cada vez que se haga clic en un botón para reordenar es necesario paginar de nuevo
   }
-
-
   // Esta función compara dos String junto con el valor de la variable isAsc y retorna:
   comparar(a: number | string, b: number | string, esAscendente: boolean) {
   return (a < b ? -1 : 1) * (esAscendente ? 1 : -1);

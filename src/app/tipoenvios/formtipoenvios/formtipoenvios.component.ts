@@ -2,10 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TipoenviosService } from '../tipoenvios.service';
-import { Tipoenvios } from '../tipoenvios';
-
-
-
+import { TipoEnvio } from '../tipoenvios';
 
 @Component({
   selector: 'app-formtipoenvios',
@@ -15,12 +12,12 @@ import { Tipoenvios } from '../tipoenvios';
 export class FormtipoenviosComponent implements OnInit {
 
   public camposFormularioTipoEnvio: FormGroup ;
-  public tipoenvio: Tipoenvios;
+  public tipoEnvio: TipoEnvio;
 
   constructor(private VentanaModal: MatDialogRef<FormtipoenviosComponent>, // Ventana Modal
               private constructorFormularioTipoEnvio: FormBuilder,
               private tipoenvioservice: TipoenviosService,
-              @Inject(MAT_DIALOG_DATA) private idTipoEnvio: number)  { } // Formulario
+              @Inject(MAT_DIALOG_DATA) public idTipoEnvio: number)  { } // Formulario
 
   ngOnInit(): void {
     this.CrearFormularioTipoEnvio();
@@ -53,11 +50,11 @@ export class FormtipoenviosComponent implements OnInit {
    cargarTipoEnvio(): void {
      if (this.idTipoEnvio) {
        this.tipoenvioservice.verTipoEnvioPorId(this.idTipoEnvio).subscribe(respuesta => {
-         this.tipoenvio = respuesta;
-         console.log(this.tipoenvio);
+         this.tipoEnvio = respuesta;
+         // console.log(this.tipoEnvio);
          this.camposFormularioTipoEnvio.setValue({
-            nombre: this.tipoenvio.nombre,
-            descripcion: this.tipoenvio.descripcion
+            nombre: this.tipoEnvio.nombre,
+            descripcion: this.tipoEnvio.descripcion
          });
        });
      }

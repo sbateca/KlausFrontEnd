@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Tipoenvios } from './tipoenvios';
+import { TipoEnvio } from './tipoenvios';
 import { Observable, throwError } from 'rxjs'; // Validar
 import { catchError, map } from 'rxjs/operators'; // Validar
 import swal from 'sweetalert2';
@@ -19,11 +19,11 @@ export class TipoenviosService {
 
   constructor( private http: HttpClient) { }
 
-  verTipoEnvio(): Observable <Tipoenvios[]> {
-    return this.http.get<Tipoenvios[]>(this.urlTipoenvios);
+  verTipoEnvio(): Observable <TipoEnvio[]> {
+    return this.http.get<TipoEnvio[]>(this.urlTipoenvios);
   }
-  verTipoEnvioPorId(id: number): Observable<Tipoenvios> {
-    return this.http.get<Tipoenvios>(`${this.urlTipoenvios}/${id}`).pipe(
+  verTipoEnvioPorId(id: number): Observable<TipoEnvio> {
+    return this.http.get<TipoEnvio>(`${this.urlTipoenvios}/${id}`).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
         swal.fire('Error al editar', e.error.mensaje, 'error');
@@ -38,8 +38,8 @@ export class TipoenviosService {
     .set('size', tamanoPagina);
     return this.http.get<any>(`${this.urlTipoenvios}/pagina`, { params: params });
   }
-  crearTipoEnvios(tipoenvios: Tipoenvios): Observable<Tipoenvios> {
-    return this.http.post<Tipoenvios>(`${this.urlTipoenvios}`, tipoenvios, {headers: this.httpHeaders}).pipe(
+  crearTipoEnvios(tipoenvios: TipoEnvio): Observable<TipoEnvio> {
+    return this.http.post<TipoEnvio>(`${this.urlTipoenvios}`, tipoenvios, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');
@@ -47,8 +47,8 @@ export class TipoenviosService {
       })
     );
   }
-  ModificarTipoEnvio(tipoenvios: Tipoenvios): Observable<Tipoenvios> {
-    return this.http.put<Tipoenvios>(`${this.urlTipoenvios}/${tipoenvios.id}`, tipoenvios, {headers: this.httpHeaders}).pipe(
+  ModificarTipoEnvio(tipoenvios: TipoEnvio): Observable<TipoEnvio> {
+    return this.http.put<TipoEnvio>(`${this.urlTipoenvios}/${tipoenvios.id}`, tipoenvios, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');
@@ -56,8 +56,8 @@ export class TipoenviosService {
       })
     );
   }
-  Eliminar(id: number): Observable<Tipoenvios> {
-    return this.http.delete<Tipoenvios>(`${this.urlTipoenvios}/${id}`, {headers: this.httpHeaders}).pipe(
+  Eliminar(id: number): Observable<TipoEnvio> {
+    return this.http.delete<TipoEnvio>(`${this.urlTipoenvios}/${id}`, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');

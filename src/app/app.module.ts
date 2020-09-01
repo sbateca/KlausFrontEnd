@@ -39,9 +39,11 @@ import { TipoenviosComponent } from './tipoenvios/tipoenvios.component';
 
 
 // import { MatOptionModule } from '@angular/material';
-import { Tipoenvios } from './tipoenvios/tipoenvios';
+import { TipoEnvio } from './tipoenvios/tipoenvios';
 import { FormtipoenviosComponent } from './tipoenvios/formtipoenvios/formtipoenvios.component';
 import { DetalleTipoEnvioComponent } from './tipoenvios/detalle-tipo-envio/detalle-tipo-envio.component';
+import { EnvioCiudadComponent } from './enviociudad/envio-ciudad/envio-ciudad.component';
+import { FormenviociudadComponent } from './enviociudad/formenviociudad/formenviociudad.component';
 
 
 const routes: Routes = [
@@ -52,7 +54,8 @@ const routes: Routes = [
     {path: 'proveedores/form/:id', component: FormProveedoresComponent},
     {path: 'clientes/form', component: FormClientesComponent},
     {path: 'clientes/form/:id', component: FormClientesComponent},
-    {path: 'tipoenvios', component: TipoenviosComponent}
+    {path: 'tipoenvios', component: TipoenviosComponent},
+    {path: 'enviociudad', component: EnvioCiudadComponent}
 ];
 
 @NgModule({
@@ -69,7 +72,9 @@ const routes: Routes = [
     DetalleClienteComponent,
     TipoenviosComponent,
     FormtipoenviosComponent,
-    DetalleTipoEnvioComponent
+    DetalleTipoEnvioComponent,
+    EnvioCiudadComponent,
+    FormenviociudadComponent
   ],
   imports: [
     BrowserModule,
