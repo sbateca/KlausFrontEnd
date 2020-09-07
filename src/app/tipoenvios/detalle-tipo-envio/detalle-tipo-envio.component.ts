@@ -8,8 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-detalle-tipo-envio',
-  templateUrl: './detalle-tipo-envio.component.html',
-  styleUrls: ['./detalle-tipo-envio.component.css']
+  templateUrl: './detalle-tipo-envio.component.html'
 })
 export class DetalleTipoEnvioComponent implements OnInit {
 

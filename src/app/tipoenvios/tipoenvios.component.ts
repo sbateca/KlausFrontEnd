@@ -144,11 +144,11 @@ const VentanaModal = this.ventanaModal.open(FormtipoenviosComponent,
     position: {left: '30%', top: '60px'},
     data: idTipoEnvio
   });
-  
-  VentanaModal.afterClosed().subscribe(resultado => {
+
+VentanaModal.afterClosed().subscribe(resultado => {
     if (resultado != null) {
-      this.tipoEnvio = resultado; 
-      this.tipoEnvio.id = idTipoEnvio;// id para la ruta
+      this.tipoEnvio = resultado;
+      this.tipoEnvio.id = idTipoEnvio; // id para la ruta
       this.editarTipoEnvio();
       this.Paginado();
     }});
@@ -157,7 +157,7 @@ const VentanaModal = this.ventanaModal.open(FormtipoenviosComponent,
 // Editar
 public editarTipoEnvio(): void {
   this.tipoenviosService.ModificarTipoEnvio(this.tipoEnvio).subscribe(respuesta => {
-  swal.fire('Cliente Actializado', `Cliente ${this.tipoEnvio.nombre} actualizado con éxito!`, 'success');
+  swal.fire('Tipo Envio Actializado', `Tipo Envio ${this.tipoEnvio.nombre} actualizado con éxito!`, 'success');
   });
 }
 

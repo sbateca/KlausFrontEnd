@@ -1,16 +1,27 @@
+<!--<app-empresa-transportadora></app-empresa-transportadora>
+<button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="empresaTransportadora?.AbrirFormularioEmpresaTransportadora()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
+-->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="float-left pr-3">Envío Ciudad</h1>
-                <button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="AbrirFormularioEnvioCiudad()"><mat-icon>person_add</mat-icon></button>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="AbrirFormularioEnvioCiudad()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
             </div>
+
+
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item active">Envío Ciudad/Listar Envío Ciudad</li>
                 </ol>
             </div>
         </div>
+        <!--<div class="row mb-3">
+            <div class="col-sm-6">
+                <app-empresa-transportadora></app-empresa-transportadora>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="empresaTransportadora?.AbrirFormularioEmpresaTransportadora()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
+            </div>
+        </div>-->
     </div>
 </section>
 
@@ -28,9 +39,17 @@
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Tipo Envío</th>
                 <td mat-cell *matCellDef="let elemento"> {{elemento.tipoEnvio.nombre}} </td>
             </ng-container>
+            <ng-container matColumnDef="departamento">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Departamento</th>
+                <td mat-cell *matCellDef="let elemento">{{elemento.ciudad.departamento.nombre}}</td>
+            </ng-container>
             <ng-container matColumnDef="ciudad">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Ciudad</th>
                 <td mat-cell *matCellDef="let elemento">{{elemento.ciudad.nombre}}</td>
+            </ng-container>
+            <ng-container matColumnDef="empresaTransportadora">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Empresa Transportadora</th>
+                <td mat-cell *matCellDef="let elemento">{{elemento.empresaTransportadora.nombre}}</td>
             </ng-container>
             <ng-container matColumnDef="valorenvio">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor Envío</th>
@@ -51,3 +70,4 @@
     <br>
     <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
     </mat-paginator>
+</div>

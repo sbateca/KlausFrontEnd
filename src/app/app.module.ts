@@ -44,6 +44,9 @@ import { FormtipoenviosComponent } from './tipoenvios/formtipoenvios/formtipoenv
 import { DetalleTipoEnvioComponent } from './tipoenvios/detalle-tipo-envio/detalle-tipo-envio.component';
 import { EnvioCiudadComponent } from './enviociudad/envio-ciudad/envio-ciudad.component';
 import { FormenviociudadComponent } from './enviociudad/formenviociudad/formenviociudad.component';
+import { EmpresaTransportadoraComponent } from './EmpresaTransportadora/empresa-transportadora/empresa-transportadora.component';
+import { FormEmpresaTransportadoraComponent } from './EmpresaTransportadora/form-empresa-transportadora/form-empresa-transportadora.component';
+import { DetalleEmpresaTransportadoraComponent } from './EmpresaTransportadora/detalle-empresa-transportadora/detalle-empresa-transportadora.component';
 
 
 const routes: Routes = [
@@ -55,7 +58,8 @@ const routes: Routes = [
     {path: 'clientes/form', component: FormClientesComponent},
     {path: 'clientes/form/:id', component: FormClientesComponent},
     {path: 'tipoenvios', component: TipoenviosComponent},
-    {path: 'enviociudad', component: EnvioCiudadComponent}
+    {path: 'enviociudad', component: EnvioCiudadComponent},
+    {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent}
 ];
 
 @NgModule({
@@ -74,7 +78,10 @@ const routes: Routes = [
     FormtipoenviosComponent,
     DetalleTipoEnvioComponent,
     EnvioCiudadComponent,
-    FormenviociudadComponent
+    FormenviociudadComponent,
+    EmpresaTransportadoraComponent,
+    FormEmpresaTransportadoraComponent,
+    DetalleEmpresaTransportadoraComponent
   ],
   imports: [
     BrowserModule,

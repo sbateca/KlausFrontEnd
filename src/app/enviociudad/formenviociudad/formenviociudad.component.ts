@@ -10,6 +10,8 @@ import { CiudadService } from '../../ciudades/ciudad.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { element } from 'protractor';
 import { EnviociudadService } from '../enviociudad.service';
+import { EmpresaTransportadora } from '../../EmpresaTransportadora/empresa-transportadora';
+import { EmpresaTransportadoraService } from '../../EmpresaTransportadora/empresa-transportadora.service';
 
 
 
@@ -26,6 +28,7 @@ export class FormenviociudadComponent implements OnInit {
   public listatipoenvio: TipoEnvio[];
   public listadepartamentos: Departamento[];
   public listaciudadpordep: Ciudad[];
+  public listaEmpresaTransportadora: EmpresaTransportadora[];
   public ciudad: Ciudad;
 
   constructor(private constructorFormularioEnviociudad: FormBuilder,
@@ -33,16 +36,16 @@ export class FormenviociudadComponent implements OnInit {
               private departamentoservice: DepartamentoService,
               private ciudadservice: CiudadService,
               private enviociudadservice: EnviociudadService,
+              private empresaTransportadoraService: EmpresaTransportadoraService,
               private referenciaVentanaModal: MatDialogRef<FormenviociudadComponent>,
               @Inject(MAT_DIALOG_DATA) public idEnvioCiudad: number) { }
 
   ngOnInit(): void {
     this.Crearformulario();
-    
     this.ObtenerListaTipoEnvio();
     this.ObtenerListaDepartamento();
+    this.ObtenerListaEmpresaTransportadora();
     this.cargarEnvioCiudad();
-
   }
 
   // Crear Formulario
@@ -52,12 +55,13 @@ export class FormenviociudadComponent implements OnInit {
         tipoEnvio: ['', Validators.required],
         departamento: ['', Validators.required],
         ciudad: ['', Validators.required],
+        empresaTransportadora: ['', Validators.required],
         valorEnvio: ['', Validators.required]
       }
     );
   }
 
-  // Obtener Lista tipo Envio
+  // Obtener Lista Tipo Envio
   ObtenerListaTipoEnvio(): void {
     this.tipoenvioservice.verTipoEnvio().subscribe( tipoenvio => {
       const FiltroListaTipoEnvio = [];
@@ -97,8 +101,14 @@ export class FormenviociudadComponent implements OnInit {
         );
       });
       this.listaciudadpordep = FiltroListaCiudades;
-      console.log(this.listaciudadpordep);
   });
+  }
+
+  // Obtener Lista Empresa Transportadora
+  ObtenerListaEmpresaTransportadora(): void {
+    this.empresaTransportadoraService.verEmpresaTransportadora().subscribe( empresatransportadora => {
+      this.listaEmpresaTransportadora = empresatransportadora;
+    });
   }
 
   // Cancelar formulario
@@ -126,6 +136,7 @@ export class FormenviociudadComponent implements OnInit {
              tipoEnvio: this.envioCiudad.tipoEnvio, // Se carga el objeto TipoEnvio completo
              ciudad: this.envioCiudad.ciudad, // Se carga el objeto Ciudad completo
              departamento: this.envioCiudad.ciudad.departamento, // Se carga el objeto Departamento completo
+             empresaTransportadora: this.envioCiudad.empresaTransportadora, // Se carga el objeto Empresa Transportadora completo
              valorEnvio: this.envioCiudad.valorEnvio
           });
         });
@@ -183,5 +194,15 @@ export class FormenviociudadComponent implements OnInit {
 
       return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
       ? false : c1.id === c2.id;
+    }
+
+    ComparaEmpresaTransportadora( ET1: EmpresaTransportadora, ET2: EmpresaTransportadora): boolean {
+
+      if (ET1 === undefined && ET2 === undefined) { // ET1, ET2  identico undefined
+        return true;
+      }
+
+      return ( ET1 === null || ET2 === null || ET1 === undefined || ET2 === undefined )
+      ? false : ET1.id === ET2.id;
     }
 }

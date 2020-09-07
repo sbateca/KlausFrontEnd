@@ -31,6 +31,13 @@
                 <mat-error>Se debe seleccionar la Ciudad</mat-error>
             </mat-form-field>
             <mat-form-field class="dosPartes">
+                <mat-label>Empresa Transportadora</mat-label>
+                <mat-select formControlName="empresaTransportadora" [compareWith]="ComparaEmpresaTransportadora">
+                    <mat-option [value]="empresaTransportadora" *ngFor="let empresaTransportadora of listaEmpresaTransportadora">{{empresaTransportadora.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar la Empresa Transpotadora</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dosPartes">
                 <mat-label>Valor Envío</mat-label>
                 <input type="text" name="valorenvio" matInput placeholder="valorenvio" formControlName="valorEnvio">
                 <mat-error>Debe digitar el valor de envío </mat-error>

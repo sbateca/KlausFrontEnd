@@ -32,8 +32,7 @@ export class ClientesComponent implements OnInit {
   public cliente: Cliente[];
   public ciudades: Ciudad[];
   public departamentos: Departamento[];
-  public idSelec: number;
-  public departametoSelec: Departamento;
+ 
 
   // se declara donde quedará la información del resultado obtenido al cerrar la ventana
   // es decir, al cerrar la ventana se asigna el proveedor que se llenó en el formulario en esta variable
@@ -61,11 +60,7 @@ export class ClientesComponent implements OnInit {
 
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
-   // this.clienteService.getClientes().subscribe(
-   // cliente => {
-   //   this.cliente = cliente; // Actualiza listado
-   //   }
-   // );
+
     this.listarPaginado();
     this.cargarDepartamentos();
   }

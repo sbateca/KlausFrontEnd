@@ -8,16 +8,21 @@ import swal from 'sweetalert2';
 import alertasSweet from 'sweetalert2';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort} from '@angular/material/sort'; // Sort
+import { EmpresaTransportadoraComponent } from '../../EmpresaTransportadora/empresa-transportadora/empresa-transportadora.component';
+import { TipoenviosComponent } from '../../tipoenvios/tipoenvios.component';
+import { FormEmpresaTransportadoraComponent } from '../../EmpresaTransportadora/form-empresa-transportadora/form-empresa-transportadora.component';
 
 @Component({
   selector: 'app-envio-ciudad',
-  templateUrl: './envio-ciudad.component.html',
-  styleUrls: ['./envio-ciudad.component.css']
+  templateUrl: './envio-ciudad.component.html'
 })
 export class EnvioCiudadComponent implements OnInit {
 
   public listaenviociudad: Enviociudad[];
   public enviociudad: Enviociudad;
+
+  @ViewChild(EmpresaTransportadoraComponent) empresaTransportadora: EmpresaTransportadoraComponent;
+
 
 // Paginador
 // Variables con valores iniciales para el paginador
@@ -32,7 +37,7 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
               public ventanaModal: MatDialog) { }
 
   // Tabla
-  columnasTabla: string[] = ['tipoenvio', 'ciudad', 'valorenvio', 'acciones'];
+  columnasTabla: string[] = ['tipoenvio', 'departamento' , 'ciudad', 'empresaTransportadora', 'valorenvio', 'acciones'];
   datos: MatTableDataSource<Enviociudad>;
 
   ngOnInit(): void {
@@ -42,6 +47,7 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
     });
     this.Paginado();
   }
+
 
 // Buscador
 AplicarFiltro(event: Event) {
@@ -88,6 +94,7 @@ reordenar(sort: Sort) {
     switch (sort.active) { // Obtiene el id (string) de la columna seleccionada
       case 'tipoenvio': return this.comparar(a.tipoEnvio.id, b.tipoEnvio.id, esAscendente); // compara por id
       case 'ciudad': return this.comparar(a.ciudad.id, b.ciudad.id, esAscendente);
+      case 'empresaTransportadora': return this.comparar(a.empresaTransportadora.id, b.empresaTransportadora.id, esAscendente);
       case 'valorenvio': return this.comparar(a.valorEnvio, b.valorEnvio, esAscendente);
   }
   }));
@@ -112,7 +119,6 @@ AbrirFormularioEnvioCiudad(): void {
   if (resultado != null) {
       // el resultado es que se ha llenado en el formulario
       this.enviociudad = resultado;
-      console.log(this.enviociudad);
       this.CrearEnvioCiudad();
   }
 });
