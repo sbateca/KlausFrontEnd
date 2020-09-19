@@ -14,11 +14,9 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { FormProveedoresComponent } from './proveedores/form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule} from '@angular/material/tooltip';
 
 import { FormClientesComponent } from './clientes/form.component';
-
-
 
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -36,9 +34,6 @@ import { DetalleComponent } from './proveedores/detalle/detalle.component';
 import { DetalleClienteComponent } from './clientes/detalle-cliente/detalle-cliente.component';
 import { TipoenviosComponent } from './tipoenvios/tipoenvios.component';
 
-
-
-// import { MatOptionModule } from '@angular/material';
 import { TipoEnvio } from './tipoenvios/tipoenvios';
 import { FormtipoenviosComponent } from './tipoenvios/formtipoenvios/formtipoenvios.component';
 import { DetalleTipoEnvioComponent } from './tipoenvios/detalle-tipo-envio/detalle-tipo-envio.component';
@@ -47,7 +42,16 @@ import { FormenviociudadComponent } from './enviociudad/formenviociudad/formenvi
 import { EmpresaTransportadoraComponent } from './EmpresaTransportadora/empresa-transportadora/empresa-transportadora.component';
 import { FormEmpresaTransportadoraComponent } from './EmpresaTransportadora/form-empresa-transportadora/form-empresa-transportadora.component';
 import { DetalleEmpresaTransportadoraComponent } from './EmpresaTransportadora/detalle-empresa-transportadora/detalle-empresa-transportadora.component';
+import { PedidoComponent } from './pedido/pedido.component';
+import { FormPedidoComponent } from './pedido/form-pedido/form-pedido.component';
+import { DetallePedidoComponent } from './pedido/detalle-pedido/detalle-pedido.component';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-ciudad.component';
+import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
+import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -59,7 +63,9 @@ const routes: Routes = [
     {path: 'clientes/form/:id', component: FormClientesComponent},
     {path: 'tipoenvios', component: TipoenviosComponent},
     {path: 'enviociudad', component: EnvioCiudadComponent},
-    {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent}
+    {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent},
+    {path: 'pedido', component: PedidoComponent},
+    {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
 ];
 
 @NgModule({
@@ -81,7 +87,14 @@ const routes: Routes = [
     FormenviociudadComponent,
     EmpresaTransportadoraComponent,
     FormEmpresaTransportadoraComponent,
-    DetalleEmpresaTransportadoraComponent
+    DetalleEmpresaTransportadoraComponent,
+    PedidoComponent,
+    FormPedidoComponent,
+    DetallePedidoComponent,
+    EstadoEnvioCiudadComponent,
+    FormEstadoEnvioCiudadComponent,
+    DetalleEstadoEnvioCiudadComponent,
+    EstadoEnvioCiudadComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +112,10 @@ const routes: Routes = [
     MatDialogModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMomentDateModule,
+    MatDatepickerModule,
+    NgxMaterialTimepickerModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

@@ -1,0 +1,63 @@
+<h3 mat-dialog-title *ngIf="!pedido?.id else EditarPedido">Crear Pedido</h3>
+<ng-template #EditarPedido>
+    <h3 matdialog-title>Editar Pedido</h3>
+</ng-template>
+
+<!-- Formulario -->
+
+<div mat-dialog-content>
+    <form [formGroup]="camposFormulario">
+        <div class="card-body col-sm-12">
+
+            <mat-form-field color="accent" class="tresPartes">
+                <input matInput [matDatepicker]="picker" name="fechaPedido" placeholder="Fecha Pedido" formControlName="fechaPedido">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes" appendToInput=true>
+                <mat-label>Hora de Pedido</mat-label>
+                <input matInput aria-label="Hora de Pedido" name="horaPedido" [format]="12" [ngxTimepicker]="defaultValue" formControlName="horaPedido" readonly/>
+                <mat-error>Debe digitar la Hora Pedido </mat-error>
+                <ngx-material-timepicker #defaultValue>
+                </ngx-material-timepicker>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Valor Iva</mat-label>
+                <input type="number" min="1" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
+                <mat-error>Debe digitar el Valor Iva</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Valor Final de La Venta</mat-label>
+                <input type="number" min="1" pattern="^[0-9]+" name="valorfinalVenta" matInput placeholder="Valor Final De La Venta" formControlName="valorFinalVenta">
+                <mat-error>Debe digitar el Valor Final de la Venta </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Cliente</mat-label>
+                <mat-select formControlName="cliente" [compareWith]="compararCliente">
+                    <mat-option *ngIf="!listaClientes else ExisteAlmenosUnCliente">No hay Clientes Registrados, debe registrar uno</mat-option>
+                    <ng-template #ExisteAlmenosUnCliente>
+                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}}</mat-option>
+                    </ng-template>
+                </mat-select>
+                <mat-error>Debe seleccionar el Cliente</mat-error>
+            </mat-form-field>
+
+        </div>
+    </form>
+</div>
+<!-- botones de acciones -->
+<mat-dialog-actions>
+    <button mat-button (click)="CancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="EnviarFormulario()">Enviar</button>
+</mat-dialog-actions>
+
+<!--{{camposFormulario.value | json}}-->

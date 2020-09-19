@@ -15,7 +15,7 @@ export class TipoenviosService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  private urlTipoenvios: string = 'http://localhost:8080/api/TipoEnvios';
+  private urlTipoenvios: string = 'http://localhost:8080/api/TipoEnvio';
 
   constructor( private http: HttpClient) { }
 
