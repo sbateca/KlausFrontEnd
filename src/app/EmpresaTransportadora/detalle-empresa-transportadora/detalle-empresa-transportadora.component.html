@@ -1,0 +1,24 @@
+<!--Tabla Angular Material-->
+<div mat-dialog-title>
+    <h1 mat-mini-fab color="primary">Empresa Transportadora</h1>
+</div>
+<div mat-dialog-content>
+    <div>
+        <table class="table table-sm">
+            <tr>
+                <th class="text-secondary font-weight-normal">Nombre:</th>
+                <th class="text-dark"><small>{{empresaTransportadora?.nombre}}</small></th>
+
+            </tr>
+
+            <tr>
+                <th class="text-secondary font-weight-normal">Descripción:</th>
+                <th class="text-dark"><small>{{empresaTransportadora?.descripcion}}</small></th>
+            </tr>
+
+        </table>
+    </div>
+</div>
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" (click)="CerrarVentana()">Cerrar</button>
+</mat-dialog-actions>

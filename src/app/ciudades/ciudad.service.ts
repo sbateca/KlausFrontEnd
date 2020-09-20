@@ -8,14 +8,15 @@ import { Ciudad } from './ciudad';
 })
 export class CiudadService {
 
-  private urlCiuDept:string='http://localhost:8080/api/ciudadesDpto';
-  private urlCiu:string='http://localhost:8080/api/ciudades';
-  constructor(private http:HttpClient ) { }
+  private urlCiuDept: string = 'http://localhost:8080/api/ciudadesDpto';
+  private urlCiu: string = 'http://localhost:8080/api/ciudades';
 
-obtenerCiudadId(id):Observable<Ciudad[]>{
+  constructor(private http: HttpClient ) { }
+
+obtenerCiudadId(id): Observable <Ciudad[]> {
     return this.http.get<Ciudad[]>(`${this.urlCiuDept}/${id}`);
-} 
-listaCiudades():Observable<Ciudad[]>{
+}
+listaCiudades(): Observable <Ciudad[]> {
   return this.http.get<Ciudad[]>(`${this.urlCiu}`);
 }
 }

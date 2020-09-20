@@ -1,0 +1,54 @@
+<h3 mat-dialog-title *ngIf="!envioCiudad.id else EditarEnvioCiudad">Crear Envio Ciudad</h3>
+<ng-template #EditarEnvioCiudad>
+    <h3 mat-dialog-title>Editar Envio Ciudad</h3>
+</ng-template>
+
+<!-- Formulario -->
+
+<div mat-dialog-content>
+    <form [formGroup]="camposformularioEnviociudad">
+        <div class="card-body col-sm-12">
+            <mat-form-field class="dosPartes">
+                <mat-label>Tipo Envio</mat-label>
+                <mat-select formControlName="tipoEnvio" [compareWith]="comparaTipoEnvio">
+                    <mat-option [value]="tipoEnvio" *ngFor="let tipoEnvio of listatipoenvio">{{tipoEnvio.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar Tipo Envío</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departamento" [compareWith]="comparaDepartamentos" (selectionChange)=" ObtenerListaCiudadesPorDep($event)">
+                    <mat-option [value]="departamento" *ngFor="let departamento of listadepartamentos">{{departamento.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar el Departamento</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dosPartes">
+                <mat-label>Ciudad</mat-label>
+                <mat-select formControlName="ciudad" [compareWith]="comparaCiudades">
+                    <mat-option [value]="ciudad" *ngFor="let ciudad of listaciudadpordep">{{ciudad.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar la Ciudad</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dosPartes">
+                <mat-label>Empresa Transportadora</mat-label>
+                <mat-select formControlName="empresaTransportadora" [compareWith]="ComparaEmpresaTransportadora">
+                    <mat-option [value]="empresaTransportadora" *ngFor="let empresaTransportadora of listaEmpresaTransportadora">{{empresaTransportadora.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar la Empresa Transpotadora</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dosPartes">
+                <mat-label>Valor Envío</mat-label>
+                <input type="text" name="valorenvio" matInput placeholder="valorenvio" formControlName="valorEnvio">
+                <mat-error>Debe digitar el valor de envío </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</div>
+<!-- botones de acciones -->
+<mat-dialog-actions>
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="enviarFormulario()">Enviar</button>
+</mat-dialog-actions>
+
+<!--{{camposformularioEnviociudad.value | json}}-->

@@ -1,0 +1,56 @@
+<!--Tabla Detalle Pedido-->
+<div mat-dialog-title>
+    <h1 mat-mini-fab color="primary">Pedido</h1>
+</div>
+
+<div mat-dialog-content>
+    <div>
+        <table class="table table-sm">
+            <div>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Fecha De Pedido:</th>
+                    <th class="text-dark"><small>{{pedido?.fechaPedido}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Hora De Pedido:</th>
+                    <th class="text-dark"><small>{{pedido?.horaPedido}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Iva:</th>
+                    <th class="text-dark"><small>{{pedido?.valorIva}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Valor General:</th>
+                    <th class="text-dark"><small>{{pedido?.valorFinalVenta}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Observaciones:</th>
+                    <th class="text-dark"><small>{{pedido?.observaciones}}</small></th>
+                </tr>
+            </div>
+            <br>
+            <br>
+            <div>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Cliente:</th>
+                    <th class="text-dark"><small>{{pedido?.cliente.nombres}} {{pedido?.cliente.apellidos}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">NIT:</th>
+                    <th class="text-dark"><small>{{pedido?.cliente.documento}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Dirección:</th>
+                    <th class="text-dark"><small>{{pedido?.cliente.direccion}}, {{pedido?.cliente.ciudad.nombre}}, {{pedido?.cliente.ciudad.departamento.nombre}} </small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Numero De Contacto:</th>
+                    <th class="text-dark"><small>{{pedido?.cliente.numero_contacto}}</small></th>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" (click)="CerrarVentanDetalle()">Cerrar</button>
+</mat-dialog-actions>

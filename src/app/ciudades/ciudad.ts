@@ -5,8 +5,9 @@ export class Ciudad {
     nombre: string;
     departamento: Departamento;
 
-    constructor(id: number, nombre: string){
+    constructor(id, nombre, departamento) {
         this.id = id;
         this.nombre = nombre;
+        this.departamento = departamento;
     }
 }

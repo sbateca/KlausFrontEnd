@@ -12,9 +12,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
 
-
-
-
+import { MatTooltipModule } from '@angular/material/tooltip'; // Tooltips
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -32,11 +30,9 @@ import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.compo
 export class ClientesComponent implements OnInit {
 
   public cliente: Cliente[];
-  public ciudad: Ciudad[];
-  public deparatamentos: Departamento[];
-  public client: Cliente[];
-  public idSelec: number;
-  public departametoSelec: Departamento;
+  public ciudades: Ciudad[];
+  public departamentos: Departamento[];
+ 
 
   // se declara donde quedará la información del resultado obtenido al cerrar la ventana
   // es decir, al cerrar la ventana se asigna el proveedor que se llenó en el formulario en esta variable
@@ -52,26 +48,9 @@ export class ClientesComponent implements OnInit {
 
 
   // Titulos de cada Columna
-  // columnasTable: string [] = ['id', 'documento', 'nombres', 'apellidos', 'numero_contacto', 'departamento', 'ciudad', 'direccion', 'correo', 'codigo_postal', 'acciones'];
+
   columnasTable: string [] = ['documento', 'nombres', 'apellidos', 'acciones'];
   datos: MatTableDataSource<Cliente>;
-
-
-
-  // Definir Variable columnas
-  /*columnas = [
-    {titulo: 'Id', value: 'id'},
-    {titulo: 'Documento', value: 'documento'},
-    {titulo: 'Nombres', value: 'nombres'},
-    {titulo: 'Apellidos', value: 'apellidos'},
-    {titulo: 'Numero de Telefono', value: 'numero_contacto'},
-    {titulo: 'Departamento', value: 'departamento'},
-    {titulo: 'Ciudad', value: 'ciudad'},
-    {titulo: 'Dirección', value: 'direccion'},
-    {titulo: 'Correo', value: 'correo'},
-    {titulo: 'Codigo Postal', value: 'codigo_postal'},
-    {titulo: 'Acciones', value: 'acciones'}
-  ];*/
 
 // Instanciamos
   constructor(public clienteService: ClienteService,
@@ -79,20 +58,12 @@ export class ClientesComponent implements OnInit {
               public departamentoservice: DepartamentoService,
               public ventanaModal: MatDialog) { }
 
-
-
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
-    this.clienteService.getClientes().subscribe(
-      cliente => {
-        this.cliente = cliente; // Actualiza listado
-      }
-    );
+
     this.listarPaginado();
     this.cargarDepartamentos();
   }
-
-
 
 /*
   El método aplicarFiltro permite realizar proceso de filtrado de datos
@@ -106,9 +77,6 @@ aplicarFiltro(event: Event) {
   this.datos.filter = textoFiltro.trim().toLowerCase();
 }
 
-
-
-
   // Realiza el control de la paginacion, y las pagina.
   // Cada vez que se seleccione un boton del paginador se actualizan los valores
   // PageEvent--> El evento de tipo PageEvent
@@ -120,10 +88,7 @@ aplicarFiltro(event: Event) {
   }
 
 
-
-
 // Listar paginado : Realiza el get deacuerdo a los valores actualizados de cada pagina
-
 private listarPaginado() {
 
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
@@ -148,10 +113,6 @@ private listarPaginado() {
     });
   }
 
-
-
-
-
 reordenar(sort: Sort) {
 
   const listCliente = this.cliente.slice(); // obtenemos el array*/
@@ -164,29 +125,17 @@ reordenar(sort: Sort) {
      this.datos = new MatTableDataSource<Cliente>(this.cliente);
      return;
   }
-
   this.datos = new MatTableDataSource<Cliente>(
   this.cliente = listCliente.sort( (a, b) => {
-
     const esAscendente = sort.direction === 'asc'; // se determina si es ascendente
     switch (sort.active) { // sort.active obtiene el id (string) de la columna seleccionada
-      case 'id': return this.comparar( a.id, b.id, esAscendente);
       case 'documento': return this.comparar( a.documento, b.documento, esAscendente);
       case 'nombres': return this.comparar(a.nombres, b.nombres, esAscendente);
       case 'apellidos': return this.comparar( a.apellidos, b.apellidos, esAscendente);
-      case 'numero_contacto': return this.comparar( a.numero_contacto, b.numero_contacto, esAscendente);
-      case 'departamento': return this.comparar( a.departamento, b.departamento, esAscendente);
-      case 'ciudad': return this.comparar( a.ciudad, b.ciudad, esAscendente);
-      case 'direccion': return this.comparar( a.direccion, b.direccion, esAscendente);
-      case 'correo': return this.comparar( a.correo, b.correo, esAscendente);
-      case 'codigo_postal': return this.comparar( a.codigo_postal, b.codigo_postal, esAscendente);
-  }
+    }
   }));
-
-  // cada vez que se haga clic en un botón para reordenar es necesario paginar de nuevo
+      // cada vez que se haga clic en un botón para reordenar es necesario paginar de nuevo
   }
-
-
   // Esta función compara dos String junto con el valor de la variable isAsc y retorna:
   comparar(a: number | string, b: number | string, esAscendente: boolean) {
   return (a < b ? -1 : 1) * (esAscendente ? 1 : -1);
@@ -196,7 +145,7 @@ reordenar(sort: Sort) {
   // Cargar Departamento, carga los Departamentos para el select.
   cargarDepartamentos(): void {
     this.departamentoservice.obtenerDepartamentos().subscribe(departa => {
-      this.deparatamentos = departa; //
+      this.departamentos = departa; //
     });
   }
 
@@ -206,8 +155,8 @@ reordenar(sort: Sort) {
   // Toma la id del Departamento seleccionado y hace la lista de sus Ciudades para el select
   cargarCiudades(departamentoSeleccionado): void {
     // this.ciudadService.listaCiudades().subscribe(ciuda=>{
-      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciuda => {
-      this.ciudad = ciuda;
+      this.ciudadService.obtenerCiudadId(departamentoSeleccionado.id).subscribe(ciudad => {
+      this.ciudades = ciudad;
      });
   }
 
@@ -216,56 +165,34 @@ reordenar(sort: Sort) {
 // Carga Clientes por Ciudad: con la id de la Ciudad obtengo todos los clientes de la ciudad seleccionada y la dibijo en una tabla.
  cargarClientesPorciudadId(id) {
    this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad => {
-     this.client = clienteciudad; // Dibuja ciudad en la tabla
+     this.cliente = clienteciudad; // Dibuja ciudad en la tabla
    });
  }
 
-
-
-
  // Ejecuta el metodo eliminar cliente, retorna- nada
+
   delete(cliente: Cliente): void {
-    this.clienteService.delete(cliente.id).subscribe( respuesta => {
-      //  this.cliente = this.cliente.filter( cli => cli !== cliente )
-       this.listarPaginado();
-    });
-  }
-/*
-  delete (cliente: Cliente):void{
-    const swalWithBootstrapButtons = swal.mixin({
-    customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-    },
-    buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-    title: 'Estas seguro?',
-    text: `¿Seguro que desea eliminar al cliente? ${cliente.nombres} ${cliente.apellidos}`,
+    swal.fire ({
+
+      title: '¿Estas seguro?',
+    text: '¿Seguro que desea Eliminar al Cliente, '+ cliente.nombres +' ?',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonText: 'Si, eliminar!',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#ad3333',
     cancelButtonText: 'No, cancelar!',
-    reverseButtons: true
-     })
-    .then((result) => {
-    if (result.value) {
-    this.clienteService.delete(cliente.id).subscribe(
-    response =>{
-    this.cliente = this.cliente.filter(cli=> cli !==cliente)//filtrar que no muestre el cliente que acabamos de eliminar
-    swalWithBootstrapButtons.fire(
-      'Cliente Eliminado!',
-      `Cliente ${cliente.nombres} eliminado con éxito.`,
-      'success'
-                                  )
-                }
-                                                    )
-                      }
-    })
-    }*/
+    confirmButtonText: 'Si, eliminar!'
 
-
-    /*
+     }).then((result) => {
+       if (result.value) {
+         this.clienteService.delete(cliente.id).subscribe(respuesta => {
+         this.listarPaginado();
+         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
+          });
+       }
+      });
+}
+/*
     El método abrirVentana implementa acciones sobre la ventana modal:
       - open: Abre una ventana con los parámetros que se envían:
               - el componente que implementa la vista de la ventana modal
@@ -280,7 +207,7 @@ abrirVentana(): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent,
     {
       width: '60%',
-      height: '85%',
+      height: 'auto',
       position: {left: '30%', top: '60px'}
     });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
@@ -314,12 +241,13 @@ abrirVentana(): void {
 abrirVentanaEditarCliente(idCliente): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormClientesComponent, {
     width: '60%',
-    height: '85%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idCliente
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     this.cli = resultado;
+    this.cli.id = idCliente;
     this.actualizarCliente();
   });
 }
@@ -334,7 +262,7 @@ abrirVentanaEditarCliente(idCliente): void {
     this.clienteService.update(this.cli)
     .subscribe(respuesta => {
       this.listarPaginado();
-      swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success')
+      swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success');
     });
   }
 
@@ -346,7 +274,7 @@ abrirVentanaEditarCliente(idCliente): void {
 abrirVentanaVer(idCliente): void {
   this.ventanaModal.open(DetalleClienteComponent, {
     width: '60%',
-    height: '86%',
+    height: 'auto',
     position: {left: '30%', top: '60px'},
     data: idCliente
   });

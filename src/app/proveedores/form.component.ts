@@ -126,7 +126,8 @@ export class FormProveedoresComponent implements OnInit {
 
                 this.ciudadSeleccionada = new Ciudad(
                     this.proveedor.ciudad.id,
-                    this.proveedor.ciudad.nombre
+                    this.proveedor.ciudad.nombre,
+                    this.proveedor.ciudad.departamento
                 );
             });
         }

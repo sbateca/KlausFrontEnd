@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
-import { Observable } from 'rxjs';
+import { Observable, throwError} from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Ciudad } from '../ciudades/ciudad';
+import { catchError, map} from 'rxjs/operators';
+import swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 
 
@@ -15,7 +18,7 @@ export class ClienteService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor( private http: HttpClient ) { }
+  constructor( private http: HttpClient , private router: Router) { }
 
   getClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.urlEndPoint);
@@ -38,22 +41,55 @@ export class ClienteService {
     return this.http.get<any>(`${this.urlEndPoint}/pagina`, { params: params });
   }
   create(cliente: Cliente, IdCiudadSelecc: Number): Observable<Cliente> {// recibe el onjeto cliente en json
-    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders});
+    return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders}).pipe(
+    catchError(e => {
+      console.error(e.error.mensaje, e.error.error, 'error');
+      return throwError(e);
+    })
+    );
   }
   crearCliente(cliente: Cliente): Observable<Cliente> {// recibe el onjeto cliente en json
-    return this.http.post<Cliente>(`${this.urlEndPoint}`, cliente, {headers: this.httpHeaders});
+    return this.http.post<Cliente>(`${this.urlEndPoint}`, cliente, {headers: this.httpHeaders}).pipe(
+    // map((response: any) => response.cliente as Cliente),
+      catchError(e => {
+      console.error(e.error.mensaje);
+      console.error(e.error.error);
+      swal.fire(e.error.mensaje, e.error.error, 'error');
+      return throwError(e);
+    })
+    );
   }
+
   getCliente(id): Observable<Cliente> {// cargamos los datos al formulario
-    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`);
+    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
+    catchError(e => { // Optenemos el error status
+      this.router.navigate(['/clientes']); // Redirigimos
+      console.error(e.error.mensaje);
+      swal.fire('Error al editar', e.error.mensaje, 'error');
+      return throwError(e);
+    })
+    );
   }
   obtenerClentesCiudadId(id): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.urlporciudad}/${id}`);
   }
   update(cliente: Cliente): Observable<Cliente> {
-        return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders});
+        return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+catchError(e => {
+  console.error(e.error.mensaje);
+  swal.fire(e.error.mensaje, e.error.error, 'error');
+  return throwError(e);
+})
+        );
   }
   delete(id: number): Observable<Cliente> {
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders});
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
+      catchError(e => {
+        console.error(e.error.mensaje);
+        swal.fire(e.error.mensaje, e.error.error, 'error');
+        return throwError(e);
+      })
+    );
   }
 }
 

@@ -1,0 +1,25 @@
+<h3 mat-dialog-title *ngIf="!tipoEnvio?.id else EditarTipoEnvio">
+    Crear Empresa Transportadora</h3>
+<ng-template #EditarTipoEnvio>
+    <h3 mat-dialog-title>Editar Tipo Envío</h3>
+</ng-template>
+<div mat-dialog-content>
+    <form [formGroup]="camposFormularioTipoEnvio">
+        <div class="card-body col-sm-12">
+            <mat-form-field class="tamaño">
+                <mat-label>Nombre</mat-label>
+                <input name="nombre" type="text" matInput placeholder="Nombre" formControlName="nombre">
+                <mat-error *ngIf="nombreNoValido">Debe digitar el nombre de tipo envio</mat-error>
+            </mat-form-field>
+            <mat-form-field class="tamaño">
+                <mat-label>Descripción</mat-label>
+                <textarea name="descripcion" type="text" matInput placeholder="Descripción" formControlName="descripcion"></textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</div>
+<!--Botones-->
+<mat-dialog-actions>
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button class="prymary" (click)="enviarformularioTipoEnvio()">Enviar</button>
+</mat-dialog-actions>
