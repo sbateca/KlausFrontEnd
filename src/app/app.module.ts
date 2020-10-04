@@ -76,6 +76,10 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-ciudad.component';
 import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
 import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
+import { BodegaInventarioComponent } from './bodega-inventario/bodega-inventario.component';
+import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-inventario/form-bodega-inventario.component';
+import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
+
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -95,6 +99,7 @@ const routes: Routes = [
     {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent},
     {path: 'pedido', component: PedidoComponent},
     {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
+    {path: 'bodegaInventario', component: BodegaInventarioComponent}
 ];
 
 @NgModule({
@@ -140,7 +145,11 @@ const routes: Routes = [
     EstadoEnvioCiudadComponent,
     FormEstadoEnvioCiudadComponent,
     DetalleEstadoEnvioCiudadComponent,
-    EstadoEnvioCiudadComponent
+    EstadoEnvioCiudadComponent,
+    BodegaInventarioComponent,
+    FormBodegaInventarioComponent,
+    DetalleBodegaInventarioComponent,
+    BodegaInventarioComponent
   ],
   imports: [
     BrowserModule,
@@ -165,7 +174,8 @@ const routes: Routes = [
     MatCheckboxModule,
     MatMomentDateModule,
     MatDatepickerModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    MatSlideToggleModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

@@ -1,0 +1,52 @@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="float-left pr-3">Bodega Inventario</h1>
+                <button mat-mini-fab color="primary" matTooltip="Agregar Bodega Inventario" (click)="AbrirFormularioBodegaInventario()"><mat-icon><i class="fa fa-store" aria-hidden="true"></i></mat-icon></button>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">Bodega Inventario/Listar Bodega Inventario</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Bucador-->
+<div class="col-sm-12">
+    <mat-form-field>
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="AplicarFiltro($event)" placeholder="Escriba algo...">
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="datos" matSort (matSortChange)="Reordenar($event)" width="100%">
+            <ng-container matColumnDef="producto">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Producto</th>
+                <!--<td mat-cell *matCellDef="let elemento"> {{elemento.producto.nombre}} Ref: {{elemento.producto.referencia}} </td>-->
+            </ng-container>
+            <ng-container matColumnDef="talla">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Talla</th>
+                <td mat-cell *matCellDef="let elemento"> {{elemento.talla}} </td>
+            </ng-container>
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Cantidad</th>
+                <td mat-cell *matCellDef="let elemento"> {{elemento.cantidad}} </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let elemento">
+                    <button mat-icon-button color="basic" matTooltip="Ver Detalle" (click)="AbrirVentanaDetalle(elemento.id)"><mat-icon class="verde"><i class="fa fa-search" aria-hidden="true"></i></mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="AbrirVentanaEditarBodegaInventario(elemento.id)"><mat-icon>edit</mat-icon></button>
+                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="EliminarBodegaInventario(elemento)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+        </table>
+    </div>
+    <br>
+    <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPaginas" [pageIndex]="paginaActual" [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons class="float-left mx-2">
+    </mat-paginator>
+</div>

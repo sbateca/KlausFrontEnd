@@ -14,7 +14,6 @@
             <mat-form-field class="tresPartes">
                 <mat-label>Documento</mat-label>
                 <input type="text" name="documento" matInput placeholder="Documento" formControlName="documento">
-                <!--{{cliente.documento}}-->
                 <mat-error *ngIf="documentoNoValido">Debe Digitar el documento </mat-error>
             </mat-form-field>
 
@@ -40,7 +39,6 @@
                 <mat-label>Correo</mat-label>
                 <input type="text" name="correo" matInput placeholder="Correo" formControlName="correo">
             </mat-form-field>
-
             <mat-form-field class="dosPartes">
                 <mat-label>Departamento</mat-label>
                 <mat-select formControlName="departamento" [compareWith]="compararDepartamentos" (selectionChange)="cargarCiudadDeptId($event)">
