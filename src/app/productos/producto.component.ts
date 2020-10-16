@@ -211,9 +211,7 @@ agregarProducto(): void {
     es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
     componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
   */
-
-
-  this.productoService.agregarProducto(this.producto).subscribe( resultado => {
+    this.productoService.agregarProducto(this.producto).subscribe( resultado => {
     this.productoConID = resultado.producto; // sobreescribo el producto porque el que viene del backend tiene el ID
 
     /*
@@ -223,19 +221,16 @@ agregarProducto(): void {
     this.producto.id = this.productoConID.id;
 
     this.producto.piezas.forEach( pieza => {
-      pieza.producto = this.producto;
 
-      // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
-      pieza.producto.piezas = [];
+        pieza.producto = this.producto; // asocio el producto ya con ID a cada una de las piezas
 
-      this.piezaService.agregarPieza(pieza).subscribe(r => {
-        console.log('resultado de insertar pieza');
-        console.log(r.mensaje);
-      });
+        // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
+        pieza.producto.piezas = [];
+        this.piezaService.agregarPieza(pieza).subscribe(r => {});
 
     });
 
-    alertasSweet.fire('Nuevo producto', resultado.mensaje);
+    alertasSweet.fire('Nuevo producto', resultado.mensaje, 'success');
     this.listarProductoPaginado();
 
   });
@@ -244,9 +239,25 @@ agregarProducto(): void {
 
 }
 
+
+
+
+
+
 editarProducto(): void {
-  this.productoService.modificarProducto(this.producto).subscribe( resultado => {
-    alertasSweet.fire('Material actualizado', resultado.mensaje);
+
+  console.log('entrta a modificar');
+
+  this.productoService.modificarProducto(this.producto).subscribe(resultado => {
+
+    this.producto.piezas.forEach( pieza => {
+      if (!pieza.id) {
+        pieza.producto = this.producto; // asigno el producto a la pieza
+        pieza.producto.piezas = []; // limpio para evitar bucle infinito
+        this.piezaService.agregarPieza(pieza).subscribe(respuesta => console.log(respuesta));
+      }
+    });
+    alertasSweet.fire('Producto actualizado', resultado.mensaje, 'success');
     this.listarProductoPaginado();
   });
 }
@@ -264,6 +275,11 @@ eliminarProducto(producto: Producto): void {
     confirmButtonText: 'Sí, eliminar!'
   }).then((result) => {
     if (result.value) {
+
+      producto.piezas.forEach( pieza => {
+        this.piezaService.eliminarPieza(pieza).subscribe();
+      });
+
       this.productoService.eliminarProducto(producto).subscribe(respuesta => {
         alertasSweet.fire(
           'Eliminado!',

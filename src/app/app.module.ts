@@ -76,6 +76,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-ciudad.component';
 import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
 import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -165,7 +168,9 @@ const routes: Routes = [
     MatCheckboxModule,
     MatMomentDateModule,
     MatDatepickerModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    MatSnackBarModule,
+    MatSlideToggleModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

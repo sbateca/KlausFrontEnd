@@ -13,6 +13,10 @@ import { ColorService } from '../../colores/color.service';
 import { startWith, map, flatMap } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { Pieza } from '../../piezas/pieza';
+import { PiezaService } from '../../piezas/pieza.service';
 
 
 
@@ -30,7 +34,14 @@ export class ProductoFormComponent implements OnInit {
 
 
   formulario: FormGroup;
+  formularioPiezasGeneral: FormGroup;
   piezas: FormArray;
+
+  /*
+    Este Array contiene las piezas que son eliminadas en la vista para luego, al enviar formulario
+    para luego eliminarlas de base de datos
+  */
+  piezasEliminar = new Array <Pieza>();
 
   funcionalidad = 'Agregar producto';
 
@@ -44,17 +55,21 @@ export class ProductoFormComponent implements OnInit {
   listaFiltradaColores: Observable<Color[]>;
   listaFiltradaMateriales: Observable<Material[]>;
 
-
+  // este array contiene las variables de control usadas en la genmeración de campos dinámicos
+  arrayControlesPiezas = new FormArray([]);
   myControl = new FormControl();
   campoMaterialAutoComplete = new FormControl();
 
+  pocisionArray = -1;
 
   constructor(public referenciaVentanaModal: MatDialogRef<ProductoFormComponent>,
               @Inject(MAT_DIALOG_DATA) public idProducto,
               private productoService: ProductoService,
               private colorService: ColorService,
               private materialService: MaterialService,
-              private constructorFormulario: FormBuilder) {}
+              private constructorFormulario: FormBuilder,
+              private barraNotificaciones: MatSnackBar,
+              private piezaService: PiezaService) {}
 
 
 
@@ -64,6 +79,9 @@ export class ProductoFormComponent implements OnInit {
     this.obtenerMateriales();
     this.filtrarAutoCompleteColor();
     this.filtrarAutoCompleteMaterial();
+    if (this.idProducto) {
+      this.cargarInformacionFormulario();
+    }
   }
 
   crearFormulario(): void {
@@ -73,24 +91,26 @@ export class ProductoFormComponent implements OnInit {
       costo: ['', Validators.required],
       precioVenta: ['', Validators.required],
       activo: ['true'],
+
       piezas: this.constructorFormulario.array([])
     });
+
+    this.formularioPiezasGeneral = this.constructorFormulario.group({
+      nombrePiezaGeneral: ['', Validators.required],
+      colorGeneral: ['', Validators.required],
+      materialGeneral: ['', Validators.required],
+      observacionGeneral: ['']
+    });
+
   }
 
   crearPieza(): FormGroup {
     return this.constructorFormulario.group({
-      nombre: ['', Validators.required],
-      observacion: [''],
-      color: this.constructorFormulario.group({
-        id: ['', Validators.required],
-        nombre: ['', Validators.required],
-        codigoColor: ['', Validators.required]
-      }),
-      material: this.constructorFormulario.group({
-        id: ['', Validators.required],
-        nombre: ['', Validators.required],
-        descripcion: ['', Validators.required]
-      })
+      id: [''],
+      nombrePieza: this.formularioPiezasGeneral.get('nombrePiezaGeneral').value,
+      observacion: this.formularioPiezasGeneral.get('observacionGeneral').value,
+      color: this.formularioPiezasGeneral.get('colorGeneral').value,
+      material: this.formularioPiezasGeneral.get('materialGeneral').value
     });
   }
 
@@ -98,38 +118,97 @@ export class ProductoFormComponent implements OnInit {
   agregarPieza(): void {
     this.piezas = this.formulario.get('piezas') as FormArray;
     this.piezas.push(this.crearPieza());
+
+    // agrego variables al array arrayControlesPiezas el cual contiene
+    // variables que controlan los nuevos campos dinámicos que se han creado (formControl)
+
+    this.agregarControl();
+  }
+
+
+
+
+  agregarControl(): void {
+    this.arrayControlesPiezas.push(new FormGroup({
+      colorControl: new FormControl(),
+      materialControl: new FormControl()
+    }));
+
+  }
+
+
+  cargarInformacionFormulario(): void {
+    this.productoService.obtenerProductoPorID(this.idProducto).subscribe(resultado => {
+
+
+        this.piezas = this.formulario.get('piezas') as FormArray; // le asigno el FormArray
+
+        resultado.piezas.forEach( pieza => { // se recorre cada una de las piezas del producto
+
+          // armado del FormArray
+          this.piezas.push(new FormGroup({
+            id: new FormControl(pieza.id),
+            nombrePieza: new FormControl(pieza.nombrePieza),
+            observacion: new FormControl(pieza.observacion),
+            color: new FormControl(pieza.color),
+            material: new FormControl(pieza.material)
+          }));
+        });
+
+        // llenado del formulario
+        this.formulario.setValue({
+          nombre: resultado.nombre,
+          referencia: resultado.referencia,
+          costo: resultado.costo,
+          precioVenta: resultado. precioVenta,
+          activo: resultado.activo,
+          piezas: this.piezas
+        });
+
+    });
+
+    console.log(this.formulario.value);
+  }
+
+  cargarPiezasformulario(): FormArray {
+    return this.piezas;
+  }
+
+
+  abrirNotificacion(mensaje: string, accion: string) {
+    this.barraNotificaciones.open(mensaje, accion, {
+      duration: 2000,
+    });
   }
 
 
   guardar(): void {
-    if (this.formulario.invalid) {
-      return Object.values( this.formulario.controls).forEach( campoFormulario => {
-        /*
-          el formulario tiene varios tipos de campos: FormControl, FormArray
-          hay que validar el tipo de objeto
-        */
 
-        // si es un FormControl se marca como tocado
-       if (campoFormulario instanceof FormControl) {
-         campoFormulario.markAsTouched();
-       }
-        // si es el FormArray de Piezas se recorren para extraer los campos y los FormGroup
-       if (campoFormulario instanceof FormArray) {
-         campoFormulario.controls.forEach( campoPieza => {
-
-          //  extraemos el FormGroup para recorrerlo
-          const piezaForm = campoPieza as FormGroup;
-          // recorremos cada control para marcarlo
-          Object.keys(piezaForm.controls).forEach(campo => {
-            piezaForm.get(campo).markAsTouched();
-          });
-         });
-       }
-
-      });
+  if (this.piezas == null) {
+      this.abrirNotificacion('Debe agregar piezas', 'Cerrar');
     } else {
-      this.referenciaVentanaModal.close(this.formulario.value);
+      if (this.piezas.length === 0) {
+        this.abrirNotificacion('Debe agregar piezas', 'Cerrar');
+      } else {
+        if (this.formulario.invalid) {
+          this.formulario.markAllAsTouched();
+        } else {
+
+          /*
+            En esta parte se eliminan las piezas de base de datos
+          */
+          this.piezasEliminar.forEach( pieza => {
+            console.log('pieza a eliminar');
+            console.log(pieza);
+            this.piezaService.eliminarPieza(pieza).subscribe(respuesta => console.log(respuesta));
+          });
+
+          this.referenciaVentanaModal.close(this.formulario.value);
+        }
+      }
     }
+
+
   }
 
 
@@ -213,11 +292,11 @@ export class ProductoFormComponent implements OnInit {
   }
 
 
-  asignarSeleccionado(evento: MatOptionSelectionChange, posicion: number): void {
+  asignarSeleccionado(evento: MatOptionSelectionChange): void {
 
     const color = evento.source.value as Color;
 
-    this.piezas.controls[posicion].get('color').patchValue({
+    this.formularioPiezasGeneral.get('colorGeneral').patchValue({
       id: color.id,
       nombre: color.nombre,
       codigoColor: color.codigoColor
@@ -229,10 +308,10 @@ export class ProductoFormComponent implements OnInit {
 
 
 
-  asignarSeleccionadoMaterial(evento: MatOptionSelectionChange, posicion: number): void {
+  asignarSeleccionadoMaterial(evento: MatOptionSelectionChange): void {
     const material = evento.source.value as Material;
 
-    this.piezas.controls[posicion].get('material').patchValue({
+    this.formularioPiezasGeneral.get('materialGeneral').patchValue({
       id: material.id,
       nombre: material.nombre,
       descripcion: material.descripcion
@@ -241,17 +320,24 @@ export class ProductoFormComponent implements OnInit {
     this.filtrarAutoCompleteMaterial();
   }
 
+
+
 // ------------------ fín métodos para el filtrado en el autocompletar ------------------ //
 
 
   quitaPiezaArray(posicion: number): void {
-    this.piezas.removeAt(posicion);
+    /* Antes de eliminar la pieza del Array esta se agrega a un Array auxiliar el cual
+       permitirá realizar el proceso de eliminarción de base de datos*/
+    this.piezasEliminar.push(this.piezas.controls[posicion].value);
+
+    this.piezas.removeAt(posicion); // quito la pieza del FormArray
   }
-
-
 
   // ---------------------- validaciones ---------------------------- //
 
+  get formularioNoValido(): boolean {
+    return this.formulario.valid;
+  }
 
   get nombreInvalido(): boolean {
     return  this.formulario.get('nombre').invalid &&
@@ -273,9 +359,23 @@ export class ProductoFormComponent implements OnInit {
             this.formulario.get('precioVenta').touched;
   }
 
-  nombrePiezaInvalida(posicion: number): boolean {
+  get colorInvalido(): boolean {
+    return  this.formulario.get('colorGeneral').valid &&
+            this.formulario.get('colorGeneral').touched;
+  }
+
+  getnombrePiezaInvalida(posicion: number): boolean {
+
     return  this.piezas.controls[posicion].get('nombre').valid &&
             this.piezas.controls[posicion].get('nombre').touched;
+  }
+
+
+
+  get formPiezaInvalida(): boolean {
+    return  this.formularioPiezasGeneral.valid &&
+            this.myControl.value !== '' &&
+            (this.campoMaterialAutoComplete.value !== '');
   }
 
 }

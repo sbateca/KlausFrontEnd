@@ -33,74 +33,107 @@
                 <mat-error *ngIf="precioInvalido">Debe digitar el precio</mat-error>
             </mat-form-field>
 
-            <span>
-                <mat-checkbox class="example-margin" formControlName="activo">Activo</mat-checkbox>
-            </span>
+            <mat-slide-toggle formControlName="activo">Activo</mat-slide-toggle>
+
 
 
         </div>
 
-        <h4>Piezas <button mat-icon-button color="basic" matTooltip="Agregar pieza" (click)="agregarPieza()"><mat-icon>add_circle</mat-icon></button></h4>
+
+
+
+        <hr>
+        <h4>Piezas</h4>
+
+
+        <form autocomplete="off" [formGroup]="formularioPiezasGeneral">
+
+            <mat-form-field class="unaParte">
+                <mat-label>Nombre pieza</mat-label>
+                <input matInput name="nombrePieza" placeholder="Nombre pieza" type="text" formControlName="nombrePiezaGeneral">
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Color</mat-label>
+
+                <input type="text" matInput placeholder="Buscar color" [matAutocomplete]="etiquetaAutocompletar" [formControl]="myControl">
+                <mat-autocomplete #etiquetaAutocompletar="matAutocomplete" [displayWith]="mostrarNombreColor">
+                    <mat-option *ngFor="let color of listaFiltradaColores | async" [value]="color" (onSelectionChange)="asignarSeleccionado($event)">
+                        {{color.nombre}}
+                    </mat-option>
+                </mat-autocomplete>
+
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Material</mat-label>
+                <input matInput placeholder="Buscar material" type="text" [matAutocomplete]="autocompletarMaterial" [formControl]="campoMaterialAutoComplete">
+                <mat-autocomplete #autocompletarMaterial [displayWith]="mostrarNombreMaterial">
+                    <mat-option *ngFor="let material of listaFiltradaMateriales | async" [value]="material" (onSelectionChange)="asignarSeleccionadoMaterial($event)">
+                        {{material.nombre}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+
+            <mat-form-field class=" unaParte ">
+                <mat-label>Observación</mat-label>
+                <input matInput name="observacion" placeholder="Observación" type="text" formControlName="observacionGeneral">
+            </mat-form-field>
+
+
+        </form>
+
+
+        <button mat-icon-button class="align-right" color="primary" matTooltip="Agregar pieza" [disabled]="!this.formPiezaInvalida" (click)="agregarPieza()">Agregar pieza <mat-icon>add_circle</mat-icon></button>
+
         <hr>
 
+        <h4>Listado de piezas</h4>
 
-        <mat-accordion class="example-headers-align" formArrayName="piezas">
-
-            <div *ngFor="let pieza of obtenerPiezas.controls; let i = index;">
-
-
-                <mat-expansion-panel [formGroupName]="i">
-
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Pieza No. {{i+1}}
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <mat-form-field class="unaParte">
-                        <mat-label>Nombre pieza</mat-label>
-                        <input matInput name="nombrePieza" placeholder="Nombre pieza" type="text" formControlName="nombre">
-                        <mat-error *ngIf="nombrePiezaInvalida(i)">Digite el nombre de la pieza</mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field class="dosPartes">
-                        <mat-label>Color</mat-label>
-
-                        <input type="text" matInput placeholder="Buscar color" [matAutocomplete]="etiquetaAutocompletar" [formControl]="myControl">
-                        <mat-autocomplete #etiquetaAutocompletar="matAutocomplete" [displayWith]="mostrarNombreColor">
-                            <mat-option *ngFor="let color of listaFiltradaColores | async" [value]="color" (onSelectionChange)="asignarSeleccionado($event, i)">
-                                {{color.nombre}}
-                            </mat-option>
-                        </mat-autocomplete>
-
-                    </mat-form-field>
-
-                    <mat-form-field class="dosPartes">
-                        <mat-label>Material</mat-label>
-                        <input matInput placeholder="Buscar material" type="text" [matAutocomplete]="autocompletarMaterial" [formControl]="campoMaterialAutoComplete">
-                        <mat-autocomplete #autocompletarMaterial [displayWith]="mostrarNombreMaterial">
-                            <mat-option *ngFor="let material of listaFiltradaMateriales | async" [value]="material" (onSelectionChange)="asignarSeleccionadoMaterial($event, i)">
-                                {{material.nombre}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+        <div class="text-center alert alert-danger" *ngIf="obtenerPiezas.controls.length == 0">
+            No hay piezas registradas
+        </div>
 
 
-                    <mat-form-field class=" unaParte ">
-                        <mat-label>Observación</mat-label>
-                        <input matInput name="observacion" placeholder="Observación" type="text" formControlName="observacion">
-                    </mat-form-field>
+        <table class="table table-sm table-hover" formArrayName="piezas" *ngIf="obtenerPiezas.controls.length != 0">
+            <tbody>
 
-                    <mat-action-row>
-                        <button mat-icon-button color="basic" matTooltip="Eliminar pieza" (click)="quitaPiezaArray(i)"><mat-icon>delete</mat-icon></button>
-                    </mat-action-row>
+                <tr>
+                    <th scope="row">Nombre pieza</th>
+                    <th scope="row">Color</th>
+                    <th scope="row">Material</th>
+                    <th scope="row">Observación</th>
+                    <th scope="row">Acciones</th>
+                </tr>
 
-                </mat-expansion-panel>
+
+                <tr *ngFor="let pieza of obtenerPiezas.controls; let i = index;" [formGroupName]="i">
+                    <td class="cincoPartes">
+                        {{pieza.get('nombrePieza').value}}
+                    </td>
+
+                    <td class="cincoPartes">
+                        {{pieza.get('color').value.nombre}}
+                    </td>
+
+                    <td class="cincoPartes">
+                        {{pieza.get('material').value.nombre}}
+                    </td>
 
 
-            </div>
-        </mat-accordion>
+                    <td class="cincoPartes">
+                        {{pieza.get('observacion').value}}
+                    </td>
 
+                    <td class="cincoPartes">
+                        <button mat-icon-button color="primary" matTooltip="Eliminar pieza" (click)="quitaPiezaArray(i)"><mat-icon>delete</mat-icon></button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+        </table>
     </form>
 
 </div>

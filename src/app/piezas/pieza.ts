@@ -5,7 +5,7 @@ import { Producto } from '../productos/producto';
 
 export class Pieza {
     id: number;
-    nombre: string;
+    nombrePieza: string;
     observacion: string;
     color: Color;
     material: Material;
