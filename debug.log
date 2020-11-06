@@ -1,0 +1,7 @@
+[1019/092220.852:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
+[1022/121301.925:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
+[1102/093913.139:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
+[1103/105849.220:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
+[1103/212517.152:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\jorgeleonardo\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\adb8bd7b-17f9-4c4c-8102-78a69f531a4a: El sistema no puede encontrar la ruta especificada. (0x3)
+[1104/084055.759:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
+[1106/085621.328:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)

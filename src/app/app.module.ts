@@ -79,7 +79,7 @@ import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle
 import { BodegaInventarioComponent } from './bodega-inventario/bodega-inventario.component';
 import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-inventario/form-bodega-inventario.component';
 import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -175,7 +175,8 @@ const routes: Routes = [
     MatMomentDateModule,
     MatDatepickerModule,
     NgxMaterialTimepickerModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSnackBarModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

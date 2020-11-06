@@ -24,11 +24,11 @@
         <table mat-table [dataSource]="datos" matSort (matSortChange)="Reordenar($event)" width="100%">
             <ng-container matColumnDef="producto">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Producto</th>
-                <!--<td mat-cell *matCellDef="let elemento"> {{elemento.producto.nombre}} Ref: {{elemento.producto.referencia}} </td>-->
+                <td mat-cell *matCellDef="let elemento"> {{elemento.producto.nombre}} Ref: {{elemento.producto.referencia}}</td>
             </ng-container>
             <ng-container matColumnDef="talla">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Talla</th>
-                <td mat-cell *matCellDef="let elemento"> {{elemento.talla}} </td>
+                <td mat-cell *matCellDef="let elemento"> {{elemento.talla.talla}} </td>
             </ng-container>
             <ng-container matColumnDef="cantidad">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Cantidad</th>

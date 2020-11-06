@@ -1,8 +1,14 @@
 import { ReferenciaProducto } from '../referenciaProducto/referencia-producto';
+import { Producto } from '../productos/producto';
+import { Talla } from '../tallas/talla';
 export class BodegaInventario {
     id: number;
     cantidad: number;
     estadoDescuento: boolean;
     descuento: number;
-    referenciaProducto: ReferenciaProducto[];
+    producto: Producto;
+    talla: Talla;
+
+    constructor(){
+    }
 }

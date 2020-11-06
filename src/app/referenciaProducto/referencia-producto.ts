@@ -4,4 +4,9 @@ export class ReferenciaProducto {
     id: number;
     producto: Producto;
     talla: Talla;
+
+
+    constructor(){
+    }
+
 }

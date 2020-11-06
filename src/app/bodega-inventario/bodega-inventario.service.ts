@@ -45,7 +45,8 @@ export class BodegaInventarioService {
   }
   // Actualizar Bodega Inventario
   ActualizarBodegaInventario(bodegaInventario: BodegaInventario): Observable<BodegaInventario> {
-    return this.http.put<BodegaInventario>(`${this.urlBodegaInventario}/${bodegaInventario.id}`, bodegaInventario, {headers: this.httpHeaders}).pipe(
+    return this.http.put<BodegaInventario>(`${this.urlBodegaInventario}/${bodegaInventario.id}`,
+     bodegaInventario, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');
