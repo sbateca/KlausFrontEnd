@@ -1,4 +1,3 @@
-import { ReferenciaProducto } from '../referenciaProducto/referencia-producto';
 import { Producto } from '../productos/producto';
 import { Talla } from '../tallas/talla';
 export class BodegaInventario {

@@ -52,7 +52,7 @@ export class FormBodegaInventarioComponent implements OnInit {
     this.CargarTipoTalla();
     this.CrearFormularioBodegaInventario();
     this.indice = 0;
-    this.i=0;
+    this.i = 0;
   }
 
   // Cargar Producto
@@ -129,7 +129,7 @@ AgregarComponentesInventario(): void {
   // console.log(this.camposFormularioBodegaInventario.get('estadoDescuento').value);
   this.listaComponentesInventario = this.camposFormularioBodegaInventario.get('listaComponentesInventario') as FormArray;
   this.listaComponentesInventario.push(this.CrearComponentesDeInventario());
- 
+
   // agrego el componente pongo en nulo los Campos
   this.camposFormularioBodegaInventario.get('talla').setValue(null);
   this.camposFormularioBodegaInventario.get('cantidad').setValue(null);
@@ -144,6 +144,8 @@ AgregarComponentesInventario(): void {
 // Lista tipo de Tallas Seleccionada
 ArrayTipoTallaSeleccionada(event): void {
   this.eventoTipoTalla = event;
+  console.log("evento")
+  console.log(event);
   this.listaTalla = event.value.tallas;
 }
 

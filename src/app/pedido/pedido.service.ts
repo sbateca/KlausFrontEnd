@@ -39,7 +39,7 @@ export class PedidoService {
   }
 
   // Crear Pedido
-  CrearPedido(pedido: Pedido): Observable<Pedido> {// recibe el onjeto cliente en json
+  CrearPedido(pedido: Pedido): Observable<any> {// recibe el onjeto cliente en json
     return this.http.post<Pedido>(`${this.urlPedido}`, pedido, {headers: this.httpHeaders}).pipe(
       catchError(e => {
       swal.fire(e.error.mensaje, e.error.error, 'error');
