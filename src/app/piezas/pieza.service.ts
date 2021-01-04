@@ -50,6 +50,8 @@ export class PiezaService {
   agregarPieza( pieza: Pieza): Observable<any> {
     console.log('-------------- pieza POST -------------------');
     console.log(pieza);
+    console.log('-------------- ruta POST -------------------');
+    console.log(this.rutaEndPoint);
     return this.httpCliente.post(this.rutaEndPoint, pieza, {headers: this.cabeceraHttp}).pipe(
       catchError( e => {
         console.log(e.error.mensaje);

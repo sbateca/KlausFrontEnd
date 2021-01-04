@@ -77,6 +77,9 @@ import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-c
 import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
 import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { UnidadesMedidasComponent } from './UnidadesMedidas/unidades-medidas.component';
+import { UnidadMedidaFormComponent } from './UnidadesMedidas/unidadMedidaForm/unidadmedida-form.component';
+import { UnidadMedidaDetalleComponent } from './UnidadesMedidas/unidadMediaDetalle/unidad-medida-detalle.component';
 
 
 
@@ -98,6 +101,7 @@ const routes: Routes = [
     {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent},
     {path: 'pedido', component: PedidoComponent},
     {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
+    {path: 'UnidadMedida', component: UnidadesMedidasComponent},
 ];
 
 @NgModule({
@@ -143,7 +147,10 @@ const routes: Routes = [
     EstadoEnvioCiudadComponent,
     FormEstadoEnvioCiudadComponent,
     DetalleEstadoEnvioCiudadComponent,
-    EstadoEnvioCiudadComponent
+    EstadoEnvioCiudadComponent,
+    UnidadesMedidasComponent,
+    UnidadMedidaFormComponent,
+    UnidadMedidaDetalleComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,8 @@
 import { Pieza } from '../piezas/pieza';
 import { ProductoPieza } from '../productoPieza/ProductoPieza';
+import { EntityGenerico } from '../common/EntityGenerico';
 
-export class Producto {
+export class Producto implements EntityGenerico {
     id: number;
     nombre: string;
     referencia: string;
@@ -9,4 +10,6 @@ export class Producto {
     precioVenta: number;
     activo: boolean;
     piezas: Pieza[];
+    fotoHashCode: number;
+    nombreFoto: string;
 }

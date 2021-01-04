@@ -1,0 +1,44 @@
+<h3 mat-dialog-title>{{tituloVentana}}</h3>
+
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="card-body">
+
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Categoría</mat-label>
+                <mat-select name="categoria" id="categoria" (selectionChange)="asignarCategoria($event)" formControlName="categoria">
+                    <mat-option *ngFor="let categoria of listaCategorias" [value]="categoria">{{categoria}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="campoNoValido('categoria')">Seleccione una categoría</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Nombre</mat-label>
+                <input matInput name="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+                <mat-error *ngIf="campoNoValido('nombre')">Escriba el nombre</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Abreviatura</mat-label>
+                <input matInput name="abreviatura" placeholder="Abreviatura" type="text" formControlName="abreviatura">
+                <mat-error *ngIf="campoNoValido('abreviatura')">Escriba la abreviatura</mat-error>
+            </mat-form-field>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<mat-dialog-actions>
+
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.idUnidadMedida" [disabled]="!this.formulario.valid">Enviar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="this.idUnidadMedida" [disabled]="!this.formulario.valid">Editar</button>
+
+</mat-dialog-actions>

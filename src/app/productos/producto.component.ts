@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ɵConsole } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ɵConsole } from '@angular/core';
 import { Producto } from './producto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -13,6 +13,7 @@ import { PiezaService } from '../piezas/pieza.service';
 import { ProductoPiezaService } from '../productoPieza/producto-pieza.service';
 import { ProductoPieza } from '../productoPieza/ProductoPieza';
 import { Pieza } from '../piezas/pieza';
+import { CommonService } from '../common/common.service';
 
 
 
@@ -60,11 +61,15 @@ listaProductos: Producto[];
 producto: Producto;
 productoConID: Producto;
 
+// en esta variable se asignará la foto del ProductoService (variable compartida)
+foto: File;
+
+
 
 productoPieza: ProductoPieza = new ProductoPieza();
 piezasConID = new Array<Pieza>();
 
-  constructor(private productoService: ProductoService,
+  constructor(protected productoService: ProductoService,
               private piezaService: PiezaService,
               private productoPiezaService: ProductoPiezaService,
               public ventanaModal: MatDialog) { }
@@ -88,7 +93,7 @@ piezasConID = new Array<Pieza>();
     Retorna: nada
   */
  listarProductoPaginado(): void {
-  this.productoService.obtenerProductosPaginado(this.paginaIndex.toString(), this.tamanoPagina.toString()).subscribe( respuesta => {
+  this.productoService.obtenerElementosPaginado(this.paginaIndex.toString(), this.tamanoPagina.toString()).subscribe( respuesta => {
 
     // establecemos los nuevos valores de la paginación de acuerdo al contenido de la respuesta
     this.listaProductos = respuesta.content as Producto[];
@@ -183,7 +188,10 @@ abrirVentanaEditar(idProducto: number): void {
 
   referenciaVentanamodal.afterClosed().subscribe(resultado => {
     this.producto = resultado;
+    // this.producto.nombreFoto = this.productoService.getNombrefoto; // lo asigno acá porque no hace parte del formulario
     this.producto.id = idProducto;
+    console.log('la información que se envía al cerrar ventana:');
+    console.log(this.producto);
     this.editarProducto();
   });
 }
@@ -205,35 +213,65 @@ abrirVentanaDetalle(idProducto: number): void {
 
 agregarProducto(): void {
 
-  /*
-    En el Backend el producto está relacionado con PiezaProducto y NO con las piezas.
-    Al realizar el POST de producto, el resultado es un producto sin las piezas,
-    es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
-    componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
-  */
-    this.productoService.agregarProducto(this.producto).subscribe( resultado => {
-    this.productoConID = resultado.producto; // sobreescribo el producto porque el que viene del backend tiene el ID
+  if (this.productoService.obtenerFoto == null) {
 
-    /*
-      Asigno el ID al producto porque al ser un producto nuevo es necesario
-      insertarlo primero para luego usarlo en los insert de las demás tablas
-    */
+      /*
+      En el Backend el producto está relacionado con PiezaProducto y NO con las piezas.
+      Al realizar el POST de producto, el resultado es un producto sin las piezas,
+      es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
+      componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
+      */
+       this.productoService.agregarElemento(this.producto).subscribe( resultado => {
+
+
+        console.log("resultado de insertar producto: ");
+        console.log(resultado);
+
+        this.productoConID = resultado.elemento; // sobreescribo el producto porque el que viene del backend tiene el ID
+      /*
+       Asigno el ID al producto porque al ser un producto nuevo es necesario
+       insertarlo primero para luego usarlo en los insert de las demás tablas
+       */
+        this.producto.id = this.productoConID.id;
+        this.producto.piezas.forEach( pieza => {
+
+          pieza.producto = this.producto; // asocio el producto ya con ID a cada una de las piezas
+
+          // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
+          pieza.producto.piezas = [];
+          this.piezaService.agregarPieza(pieza).subscribe(r => {});
+
+      });
+
+        alertasSweet.fire('Nuevo producto', resultado.mensaje, 'success');
+        this.listarProductoPaginado();
+      });
+
+
+  } else {
+
+    this.productoService.agregarProductoConfoto(this.producto, this.productoService.obtenerFoto).subscribe( resultado => {
+    this.productoConID = resultado.elemento; // sobreescribo el producto porque el que viene del backend tiene el ID
     this.producto.id = this.productoConID.id;
 
+    console.log(this.producto.piezas);
+
     this.producto.piezas.forEach( pieza => {
-
         pieza.producto = this.producto; // asocio el producto ya con ID a cada una de las piezas
-
         // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
         pieza.producto.piezas = [];
-        this.piezaService.agregarPieza(pieza).subscribe(r => {});
-
+        this.piezaService.agregarPieza(pieza).subscribe(r => {
+          console.log("resultado de piezas");
+          console.log(r);
+        });
     });
-
     alertasSweet.fire('Nuevo producto', resultado.mensaje, 'success');
     this.listarProductoPaginado();
-
   });
+
+  }
+
+
 
 
 
@@ -246,20 +284,88 @@ agregarProducto(): void {
 
 editarProducto(): void {
 
-  console.log('entrta a modificar');
+  // el producto no tiene foto y sólo se modificará la información
+  if (this.productoService.obtenerFoto == null && !this.productoService.getEstadoEliminarFoto) {
+  
+    console.log("primer IF");
 
-  this.productoService.modificarProducto(this.producto).subscribe(resultado => {
+    this.productoService.editarElemento(this.producto).subscribe(resultado => {
 
-    this.producto.piezas.forEach( pieza => {
-      if (!pieza.id) {
-        pieza.producto = this.producto; // asigno el producto a la pieza
-        pieza.producto.piezas = []; // limpio para evitar bucle infinito
-        this.piezaService.agregarPieza(pieza).subscribe(respuesta => console.log(respuesta));
-      }
+      this.producto.piezas.forEach( pieza => {
+        if (!pieza.id) { // sólo van a a ser agregadas las piezas nuevas
+          pieza.producto = this.producto; // asigno el producto a la pieza
+          pieza.producto.piezas = []; // limpio para evitar bucle infinito
+          
+          console.log("pieza que va a ser guardada:");
+          console.log(pieza.producto);
+
+          this.piezaService.agregarPieza(pieza).subscribe(respuesta => console.log(respuesta));
+        }
+      });
+      alertasSweet.fire('Producto actualizado', resultado.mensaje, 'success');
+      this.listarProductoPaginado();
     });
-    alertasSweet.fire('Producto actualizado', resultado.mensaje, 'success');
-    this.listarProductoPaginado();
-  });
+
+
+  } 
+  
+  // el producto tiene foto (se puede modificar) y se modificará la información
+  if (this.productoService.obtenerFoto != null && !this.productoService.getEstadoEliminarFoto) {
+
+    console.log("segundo IF");
+    console.log(this.productoService.obtenerFoto as File);
+    let arch: File = this.productoService.obtenerFoto as File
+    
+    
+    if(arch != null)this.producto.nombreFoto = arch.name;
+    // se modifica el producto
+    this.productoService.modificarProductoConfoto(this.producto, arch).subscribe(resultado => {
+
+      // se recorre el array de piezas para insertarlas
+      this.producto.piezas.forEach( pieza => {
+        if (!pieza.id) {
+          pieza.producto = this.producto; // asigno el producto a la pieza
+          pieza.producto.piezas = []; // limpio para evitar bucle infinito
+          this.piezaService.agregarPieza(pieza).subscribe(respuesta => console.log(respuesta));
+        }
+      });
+      alertasSweet.fire('Producto actualizado', resultado.mensaje, 'success');
+      this.listarProductoPaginado();
+    });
+  }
+
+
+
+  // el producto tiene foto, va a ser eliminada y se va a modificar la información
+  if (this.productoService.obtenerFoto == null && this.productoService.getEstadoEliminarFoto) {
+    
+    console.log("tercer IF");
+
+    console.log(this.productoService.obtenerFoto as File);
+    let arch: File = this.productoService.obtenerFoto as File
+
+
+    if(arch != null)this.producto.nombreFoto = arch.name;
+    
+    // se modifica el producto
+    this.productoService.modificarProductoFotoNull(this.producto).subscribe(resultado => {
+      // se recorre el array de piezas para insertarlas
+      this.producto.piezas.forEach( pieza => {
+        if (!pieza.id) {
+          pieza.producto = this.producto; // asigno el producto a la pieza
+          pieza.producto.piezas = []; // limpio para evitar bucle infinito
+          this.piezaService.agregarPieza(pieza).subscribe(respuesta => console.log(respuesta));
+        }
+      });
+      alertasSweet.fire('Producto actualizado', resultado.mensaje, 'success');
+      this.listarProductoPaginado();
+    });
+
+}
+
+
+
+
 }
 
 
@@ -280,7 +386,7 @@ eliminarProducto(producto: Producto): void {
         this.piezaService.eliminarPieza(pieza).subscribe();
       });
 
-      this.productoService.eliminarProducto(producto).subscribe(respuesta => {
+      this.productoService.eliminaElemento(producto.id).subscribe(respuesta => {
         alertasSweet.fire(
           'Eliminado!',
           'El producto <strong>' + producto.nombre + '</strong> ha sido eliminado exitosamente',

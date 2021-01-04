@@ -17,6 +17,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { Pieza } from '../../piezas/pieza';
 import { PiezaService } from '../../piezas/pieza.service';
+import { RUTA_BASE } from '../../config/app';
+import { Producto } from '../producto';
+import { CommonService } from '../../common/common.service';
 
 
 
@@ -31,7 +34,7 @@ import { PiezaService } from '../../piezas/pieza.service';
 
 export class ProductoFormComponent implements OnInit {
 
-
+  rutaBase = RUTA_BASE + '/producto';
 
   formulario: FormGroup;
   formularioPiezasGeneral: FormGroup;
@@ -44,8 +47,6 @@ export class ProductoFormComponent implements OnInit {
   piezasEliminar = new Array <Pieza>();
 
   funcionalidad = 'Agregar producto';
-
-
 
   // listado de colores
   listaColores = new Array<Color>();
@@ -60,11 +61,17 @@ export class ProductoFormComponent implements OnInit {
   myControl = new FormControl();
   campoMaterialAutoComplete = new FormControl();
 
-  pocisionArray = -1;
+  // esta variable almacena la foto que ha sido seleccionada en el formulario
+  private fotoSeleccionada: File;
+
+  producto: Producto = new Producto();
+
+  // esta variable se utiliza como una bandera para controlar la aparición o no del campo de typo File en el formulario
+  cambiarFoto = false;
 
   constructor(public referenciaVentanaModal: MatDialogRef<ProductoFormComponent>,
               @Inject(MAT_DIALOG_DATA) public idProducto,
-              private productoService: ProductoService,
+              protected productoService: ProductoService,
               private colorService: ColorService,
               private materialService: MaterialService,
               private constructorFormulario: FormBuilder,
@@ -84,6 +91,9 @@ export class ProductoFormComponent implements OnInit {
     }
   }
 
+
+
+  // El método crearFormulario llena el FormGroup con las variablables que controlarán el formulario
   crearFormulario(): void {
     this.formulario = this.constructorFormulario.group({
       nombre: ['', Validators.required],
@@ -95,6 +105,10 @@ export class ProductoFormComponent implements OnInit {
       piezas: this.constructorFormulario.array([])
     });
 
+    /*
+      Estos campos son auxiliares. Se encuentran en el formulario pero sirven sólamente
+      para ir llenando el Array de Piezas que si hacen parte del formulario principal
+    */
     this.formularioPiezasGeneral = this.constructorFormulario.group({
       nombrePiezaGeneral: ['', Validators.required],
       colorGeneral: ['', Validators.required],
@@ -104,6 +118,11 @@ export class ProductoFormComponent implements OnInit {
 
   }
 
+  /*
+    El método crearPieza() instancia y genera los valores para una pieza.
+    Por defecto, al ser creados se asignan los valores del formulario auxiliar, esto con
+    la finalidad de ayudar en la creación de piezas a través del formulario
+  */
   crearPieza(): FormGroup {
     return this.constructorFormulario.group({
       id: [''],
@@ -115,30 +134,47 @@ export class ProductoFormComponent implements OnInit {
   }
 
 
+  /*
+    El método agregarPieza() agrega un FormGroup de pieza al Array de piezas.
+  */
   agregarPieza(): void {
     this.piezas = this.formulario.get('piezas') as FormArray;
     this.piezas.push(this.crearPieza());
-
-    // agrego variables al array arrayControlesPiezas el cual contiene
-    // variables que controlan los nuevos campos dinámicos que se han creado (formControl)
-
-    this.agregarControl();
   }
 
 
 
-
-  agregarControl(): void {
-    this.arrayControlesPiezas.push(new FormGroup({
-      colorControl: new FormControl(),
-      materialControl: new FormControl()
-    }));
-
-  }
 
 
   cargarInformacionFormulario(): void {
-    this.productoService.obtenerProductoPorID(this.idProducto).subscribe(resultado => {
+
+
+
+    this.productoService.obtenerElementoPorID(this.idProducto).subscribe(resultado => {
+
+        this.producto = resultado;
+
+
+        // revisamos si tiene foto registrada para obtenerla, pues necesitamos mostrar el nombre y usar el archivo
+
+        if (this.producto.fotoHashCode) {
+
+          this.productoService.obtenerFotoProductoPorID(this.idProducto).subscribe( res => {
+            
+            // necesitamos asignar sólamente el cuerpo de la respuesta (la imagen)
+            this.productoService.setFoto(this.convierteBlobAFile(res.body, resultado.nombreFoto)); // asignamos el archivo en la variable del service
+            
+            // asignamos el nombre extrayendo este atributo en el header de la petición
+            //this.producto.nombreFoto = res.headers.get('Content-Disposition');
+
+            console.log('producto cargado en formulario: ');
+            console.log(this.producto);
+
+            console.log('foto obtenida del service : ');
+            console.log(this.productoService.obtenerFoto);
+          });
+
+        }
 
 
         this.piezas = this.formulario.get('piezas') as FormArray; // le asigno el FormArray
@@ -166,8 +202,6 @@ export class ProductoFormComponent implements OnInit {
         });
 
     });
-
-    console.log(this.formulario.value);
   }
 
   cargarPiezasformulario(): FormArray {
@@ -182,6 +216,22 @@ export class ProductoFormComponent implements OnInit {
   }
 
 
+  seleccionarFoto(evento: Event): void {
+    this.fotoSeleccionada = (evento.target as HTMLInputElement).files[0];
+
+    // asigno la foto en el service para compartirla entre componentes
+    this.productoService.setFoto(this.fotoSeleccionada);
+    
+    // establezco el estado para controlar si se debe eliminar la foto existente
+    this.productoService.setEstadoEliminarFoto(false);
+  }
+
+
+  get obtenerFoto(): File {
+    return this.fotoSeleccionada;
+  }
+
+
   guardar(): void {
 
   if (this.piezas == null) {
@@ -193,9 +243,10 @@ export class ProductoFormComponent implements OnInit {
         if (this.formulario.invalid) {
           this.formulario.markAllAsTouched();
         } else {
-
           /*
-            En esta parte se eliminan las piezas de base de datos
+            El Array piezasEliminar contiene las piezas que se eliminaron en el formulario de modificar
+            pieza. Esto obliga a que estas piezas deban ser eliminadas de la base de datos antes de
+            agregar las nuevas piezas para el producto.
           */
           this.piezasEliminar.forEach( pieza => {
             console.log('pieza a eliminar');
@@ -203,7 +254,17 @@ export class ProductoFormComponent implements OnInit {
             this.piezaService.eliminarPieza(pieza).subscribe(respuesta => console.log(respuesta));
           });
 
-          this.referenciaVentanaModal.close(this.formulario.value);
+
+
+
+          this.producto.nombre = this.formulario.get('nombre').value;
+          this.producto.referencia = this.formulario.get('referencia').value;
+          this.producto.costo = this.formulario.get('costo').value;
+          this.producto.precioVenta = this.formulario.get('precioVenta').value;
+          this.producto.activo = this.formulario.get('activo').value;
+          this.producto.piezas = this.formulario.get('piezas').value;
+
+          this.referenciaVentanaModal.close(this.producto);
         }
       }
     }
@@ -377,5 +438,25 @@ export class ProductoFormComponent implements OnInit {
             this.myControl.value !== '' &&
             (this.campoMaterialAutoComplete.value !== '');
   }
+
+
+  resetearCampoImagen(): void {
+    this.cambiarFoto = true;
+    this.productoService.setEstadoEliminarFoto(true);
+    this.productoService.setFoto(null);
+  }
+
+
+
+  convierteBlobAFile(theBlob: Blob, fileName:string): File  {
+    var b: any = theBlob;
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+
+    //Cast to a File() type
+    return <File>theBlob;
+}
+
 
 }

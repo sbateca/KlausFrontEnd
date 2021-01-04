@@ -33,9 +33,20 @@
                 <mat-error *ngIf="precioInvalido">Debe digitar el precio</mat-error>
             </mat-form-field>
 
-            <mat-slide-toggle formControlName="activo">Activo</mat-slide-toggle>
+
+            <div class="form-group" *ngIf="!this.idProducto || !this.producto.fotoHashCode || this.cambiarFoto">
+                <mat-label for="archivoFoto">Imagen del producto</mat-label>
+                <input id="archivoFoto" type="file" name="archivo" class="form-control-file" (change)="seleccionarFoto($event)">
+            </div>
+
+            <mat-form-field class="dosPartes" *ngIf="this.idProducto && this.producto.fotoHashCode && !this.cambiarFoto">
+                <mat-label>Imagen</mat-label>
+                <input matInput placeholder="Imagen" [value]="this.producto.nombreFoto" disabled>
+            </mat-form-field>
+            <button mat-icon-button *ngIf="!this.cambiarFoto" color="basic" matTooltip="Eliminar" (click)="resetearCampoImagen()"><mat-icon>delete</mat-icon></button>
 
 
+            <mat-slide-toggle formControlName="activo" class="dosPartes">Activo</mat-slide-toggle>
 
         </div>
 

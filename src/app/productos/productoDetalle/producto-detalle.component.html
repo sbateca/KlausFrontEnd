@@ -9,6 +9,9 @@
             <tr>
                 <th scope="row">Nombre</th>
                 <td>{{producto.nombre}}</td>
+                <th rowspan="5" *ngIf="producto.fotoHashCode">
+                    <img class="img-thumbnail" style="width: 200px; height: 200px;" [src]="rutaBase + '/productoFoto/' + producto.id">
+                </th>
             </tr>
             <tr>
                 <th scope="row">Rererencia</th>
