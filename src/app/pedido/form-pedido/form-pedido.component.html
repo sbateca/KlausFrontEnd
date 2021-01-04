@@ -9,43 +9,55 @@
     <form [formGroup]="camposFormulario">
         <div class="card-body col-sm-12">
 
-            <mat-form-field class="tresPartes">
+            <mat-form-field class="cuatroPartes">
                 <mat-label>Cliente</mat-label>
                 <mat-select formControlName="cliente" [compareWith]="compararCliente">
                     <mat-option *ngIf="!listaClientes else ExisteAlmenosUnCliente">No hay Clientes Registrados, debe registrar uno</mat-option>
                     <ng-template #ExisteAlmenosUnCliente>
-                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}}</mat-option>
+                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}} {{cliente.apellidos}}</mat-option>
                     </ng-template>
                 </mat-select>
                 <mat-error>Debe seleccionar el Cliente</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="tresPartes">
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
                 <mat-label>Valor Iva (Entero)</mat-label>
                 <input type="number" min="1" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
                 <mat-error>Debe digitar el Valor del Iva</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="tresPartes">
-                <mat-label>Observaciones</mat-label>
-                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Valor Descuento (%)</mat-label>
+                <input type="number" min="1" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
+                <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
-                <mat-label>Producto De Bodega Inventario</mat-label>
-                <mat-select formControlName="productoBodega" (selectionChange)="ProductoBodegaSeleccionado($event)">
-                    <mat-option [value]="productoBodega" *ngFor="let productoBodega of listaBodegaInventario">Ref: {{productoBodega.producto.referencia}}, Producto: {{productoBodega.producto.nombre}}, Talla: {{productoBodega.talla.talla}}, Cantidad: {{productoBodega.cantidad}}</mat-option>
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Producto</mat-label>
+                <mat-select formControlName="producto" (selectionChange)="ProductoSeleccionado($event)">
+                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">
+                        <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
                 </mat-select>
-                <mat-error>Debe seleccionar el producto de bodega</mat-error>
+                <mat-error>Debe seleccionar El producto</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Talla</mat-label>
+                <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event)">
+                    <mat-option [value]="talla" *ngFor="let talla of listaTalla">{{talla.talla}}</mat-option>
+                </mat-select>
+                <mat-error>Debe seleccionar la Talla</mat-error>
+            </mat-form-field>
+            <mat-form-field class="cuatroPartes">
                 <mat-label>Cantidad</mat-label>
                 <input type="number" #box (keyup)="onKey(box.value)" min="1" pattern="^[0-9]+" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
                 <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
             </mat-form-field>
-
-
 
             <h4>Agregar Cotizacion <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
 
@@ -87,14 +99,14 @@
                             </td>
 
                             <td>
-                                {{ listaCotizacion.value[i].bodegaInventario.producto.precioVenta - (listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.valorIva/100)}}
+                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100))}}
                             </td>
                             <td>
-                                {{(listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.valorIva/100)}}
+                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100)}}
                             </td>
 
                             <td>
-                                {{listaCotizacion.value[i].cantidad*listaCotizacion.value[i].bodegaInventario.producto.precioVenta}}
+                                {{ FormatoSeparadorDecimal(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100))}}
                             </td>
                             <td>
                                 <mat-action-row>
@@ -110,7 +122,7 @@
                     </thead>
                     <tbody>
                         <td>
-                            {{importe}}
+                            {{FormatoSeparadorDecimal(importe)}}
                         </td>
                     </tbody>
                 </div>

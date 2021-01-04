@@ -38,4 +38,11 @@ export class ProductoDetalleComponent implements OnInit {
     this.referenciaVentanaModal.close();
   }
 
+  // Separador de decimales
+  public FormatoSeparadorDecimal(n): any {
+    let sep = n || "."; // Por defecto, el punto como separador decimal
+    return n.toLocaleString().split(sep)[0];
+   }
+
+
 }

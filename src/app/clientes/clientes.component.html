@@ -28,7 +28,7 @@
             <!-- Columna documento -->
             <ng-container matColumnDef="documento">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Documento</th>
-                <td mat-cell *matCellDef="let cliente"> {{cliente.documento}} </td>
+                <td mat-cell *matCellDef="let cliente"> {{ FormatoSeparadorDecimal(cliente.documento)}} </td>
             </ng-container>
             <!-- Columna documento -->
             <ng-container matColumnDef="nombres">

@@ -28,6 +28,13 @@ export class DetalleBodegaInventarioComponent implements OnInit {
       });
     }
   }
+
+ // Separador de decimales por "."
+ public FormatoSeparadorDecimal(n): any {
+  let sep = n || "."; // Por defecto, el punto como separador decimal
+  return n.toLocaleString().split(sep)[0];
+ }
+
   // Cerrar Ventana Modal De Detalle
   CerrarVentanDetalle(): void {
     this.referenciaVentanaModalDetalle.close();

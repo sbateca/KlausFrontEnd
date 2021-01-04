@@ -38,7 +38,7 @@ export class PedidoComponent implements OnInit {
   // Variables con valores iniciales para el paginador
   totalRegistros = 0;
   paginaActual = 0;
-  totalPorPaginas = 25;
+  totalPorPaginas = 100;
   pageSizeOptions: number[] = [3, 5, 10, 25, 100];
   @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
@@ -56,6 +56,12 @@ export class PedidoComponent implements OnInit {
     });
     this.listarPaginado();
   }
+
+  // Separador de decimales
+  public FormatoSeparadorDecimal(n): any {
+    let sep = n || "."; // Por defecto, el punto como separador decimal
+    return n.toLocaleString().split(sep)[0];
+   }
 
   // Se Carga el cliente
   CargarCliente(): void {
@@ -140,35 +146,22 @@ export class PedidoComponent implements OnInit {
       ActualizarBodegaInventarioPorPedido(formulario): void {
 
         // Recorremos el la lista Cotizacion
-        console.log("formulario");
-        console.log(formulario);
-
         formulario.listaCotizacion.forEach( (cotizacion) => {
-          console.log("cotizacion");
-          console.log(cotizacion);
-
+          
           this.bodegaInventario = cotizacion.bodegaInventario;
           this.bodegaInventario.id = cotizacion.bodegaInventario.id;
 
           // Suastraemos de Bodega la cantidad pedida y asignamos a bodega la nueva cantidad 
           this.bodegaInventario.cantidad = cotizacion.bodegaInventario.cantidad - cotizacion.cantidad;
-          console.log("bodegaInventario Cantidad");
-          console.log(cotizacion.bodegaInventario.cantidad - cotizacion.cantidad);
 
           // Actualizamos bodegaInventario
           this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe( resp => {
           });
-          console.log("bodegaInventario");
-          console.log(this.bodegaInventario);
-
       });
       }
 
       // Crea Pedido
       public CrearPedido(FormularioBodegaInventario): void {
-/* 
-        console.log("FormularioBodegaInventario");
-        console.log(FormularioBodegaInventario); */
 
         this.pedido.observaciones = FormularioBodegaInventario.observaciones;
         this.pedido.valorIva = FormularioBodegaInventario.valorIva;
@@ -185,16 +178,14 @@ export class PedidoComponent implements OnInit {
           this.pedido.listaCotizacion.forEach( cotizacion => {
 
             cotizacion.pedido = this.pedido;
-            cotizacion.importe = cotizacion.bodegaInventario.producto.precioVenta * cotizacion.cantidad;
+            cotizacion.importe = (cotizacion.bodegaInventario.producto.precioVenta-(cotizacion.bodegaInventario.producto.precioVenta*FormularioBodegaInventario.descuento/100)) * cotizacion.cantidad;
             totalPedido = cotizacion.importe + totalPedido;
-
-            // cotizacion.bodegaInventario.cantidad = cotizacion.bodegaInventario.cantidad - cotizacion.cantidad;
 
             // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
             cotizacion.pedido.listaCotizacion = [];
 
             this.cotizacionService.CrearCotizacion(cotizacion).subscribe(rta => {
-              /* console.log(rta); */
+              
               this.pedidoService.ActualizarPedido(this.pedido).subscribe(r => {
                 this.listarPaginado();
               });

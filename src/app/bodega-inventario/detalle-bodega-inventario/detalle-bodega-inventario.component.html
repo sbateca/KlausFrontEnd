@@ -16,12 +16,12 @@
                     <th class="text-dark"><small>{{bodegaInventario?.producto.referencia}}</small></th>
                 </tr>
                 <tr>
-                    <th class="text-secondary font-weight-normal">Costo:</th>
-                    <th class="text-dark"><small>{{bodegaInventario?.producto.costo}}</small></th>
+                    <th class="text-secondary font-weight-normal">Costo(COP $):</th>
+                    <th class="text-dark"><small>{{FormatoSeparadorDecimal(bodegaInventario.producto.costo)}}</small></th>
                 </tr>
                 <tr>
-                    <th class="text-secondary font-weight-normal">Precio de Venta:</th>
-                    <th class="text-dark"><small>{{bodegaInventario?.producto.precioVenta}}</small></th>
+                    <th class="text-secondary font-weight-normal">Precio de Venta(COP $):</th>
+                    <th class="text-dark"><small>{{FormatoSeparadorDecimal(bodegaInventario.producto.precioVenta)}}</small></th>
                 </tr>
                 <tr *ngIf="bodegaInventario?.producto.activo">
                     <th class="text-secondary font-weight-normal">Listado de Componentes del Producto:</th>

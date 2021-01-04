@@ -9,7 +9,8 @@
             <mat-form-field class="cuatroPartes">
                 <mat-label>Producto</mat-label>
                 <mat-select formControlName="producto" [compareWith]="CompararProducto">
-                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">{{producto.nombre}} Ref: {{producto.referencia}}</mat-option>
+                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">
+                        <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
                 </mat-select>
                 <mat-error>Debe seleccionar El producto</mat-error>
             </mat-form-field>
@@ -51,7 +52,7 @@
             <table class="table table-sm table-hover">
                 <thead *ngIf="listaComponentesInventario">
                     <tr class="thead-light">
-                        <th>#</th>
+                        <th> No.</th>
                         <th>Talla</th>
                         <th>Cantidad</th>
                         <th>Estado Descuento</th>

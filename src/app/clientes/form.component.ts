@@ -57,15 +57,16 @@ export class FormClientesComponent implements OnInit {
    CrearFormulario(): void {
      this.camposformulario = this.constructorFormulario.group(
        {
-         documento:  ['', [Validators.required, Validators.minLength(8), Validators.maxLength(10)]],
+         documento:  ['', [/* Validators.required,  */Validators.minLength(6), Validators.maxLength(10)]],
          nombres: ['', Validators.required],
          apellidos: ['', Validators.required],
          numero_contacto: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(10)]],
+         fijo: ['', [/* Validators.required, */ Validators.minLength(4), Validators.maxLength(10)]],
          departamento: ['', Validators.required],
          ciudad: ['', Validators.required],
-         direccion: ['', Validators.required],
-         correo: ['', Validators.email],
-         codigo_postal: ['', [Validators.minLength(6), Validators.maxLength(6)]]
+         direccion: ['', Validators.required]
+         // correo: [''/*,  Validators.email */],
+         // codigo_postal: ['', [Validators.minLength(6), Validators.maxLength(6)]]
       }
      );
    }
@@ -193,11 +194,12 @@ compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
               nombres: this.cliente.nombres,
               apellidos: this.cliente.apellidos,
               numero_contacto: this.cliente.numero_contacto,
-              correo: this.cliente.correo,
+              fijo: this.cliente.fijo,
+              // correo: this.cliente.correo,
               departamento: this.cliente.ciudad.departamento, // Se carga el objeto Departamento completo
               ciudad: this.cliente.ciudad, // Se carga el objeto Ciudad completo
               direccion: this.cliente.direccion,
-              codigo_postal: this.cliente.codigo_postal
+              // codigo_postal: this.cliente.codigo_postal
             });
             });
         }

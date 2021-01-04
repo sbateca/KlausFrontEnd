@@ -41,10 +41,10 @@ columnasTabla: string[] = ['nombre', 'referencia', 'estado', 'acciones'];
 
 
 // variables para el paginador
-tamanoPagina = 5;
+tamanoPagina = 25;
 paginaIndex = 0;
 totalRegistros = 0;
-tamanosPagina = [5, 10, 15, 20, 25];
+tamanosPagina = [5, 10, 15, 20, 25, 50, 100, 300, 500];
 
 @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
 

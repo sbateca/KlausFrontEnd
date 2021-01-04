@@ -29,8 +29,14 @@ export class ProductoService {
     const parametros = new HttpParams()
     .set('page', paginaActual)
     .set('size', tamanoPagina);
-
     return this.httpCliente.get(this.rutaEndPoint + '/' + 'pagina' , {params: parametros});
+  }
+
+  ListarProductosBodegaInventario(paginaActual: string, tamanoPagina: string): Observable <any> {
+    const parametros = new HttpParams()
+    .set('page', paginaActual)
+    .set('size', tamanoPagina);
+    return this.httpCliente.get(this.rutaEndPoint + '/bodega' + '/pagina' , {params: parametros});
   }
 
 

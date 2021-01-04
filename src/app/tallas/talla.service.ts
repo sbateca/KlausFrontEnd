@@ -85,6 +85,15 @@ export class TallaService {
  }
 
 
+ 
+ ObtenerTallasPorProductoEnBodega(id: number): Observable<any> {
+  return this.httpCliente.get<Talla>(`${this.rutaEndPointTallas}/bodega/producto/${id}`).pipe(
+    catchError( e => {
+      alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.error.error);
+      return throwError(e);
+    })
+  );
+ }
 
 
 

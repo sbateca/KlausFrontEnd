@@ -12,6 +12,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
 
+
 import { MatTooltipModule } from '@angular/material/tooltip'; // Tooltips
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
@@ -22,6 +23,8 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
+import { Pedido } from '../pedido/pedido';
+import { PedidoComponent } from '../pedido/pedido.component';
 
 @Component({
   selector: 'app-clientes',
@@ -41,8 +44,8 @@ export class ClientesComponent implements OnInit {
  // Variables con valores iniciales para el paginador
   totalRegistros = 0;
   paginaActual = 0;
-  totalPorPaginas = 3;
-  pageSizeOptions: number[] = [3, 5, 10, 25, 100];
+  totalPorPaginas = 100;
+  pageSizeOptions: number[] = [3, 5, 10, 25, 100, 200, 300];
   @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
 
@@ -167,6 +170,12 @@ reordenar(sort: Sort) {
    this.clienteService.obtenerClentesCiudadId(id).subscribe(clienteciudad => {
      this.cliente = clienteciudad; // Dibuja ciudad en la tabla
    });
+ }
+
+ // Separador de decimales por "."
+ public FormatoSeparadorDecimal(n): any {
+  let sep = n || "."; // Por defecto, el punto como separador decimal
+  return n.toLocaleString().split(sep)[0];
  }
 
  // Ejecuta el metodo eliminar cliente, retorna- nada

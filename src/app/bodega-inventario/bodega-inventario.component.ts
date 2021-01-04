@@ -23,7 +23,7 @@ export class BodegaInventarioComponent implements OnInit {
   public listaBodegaInventario = new Array<BodegaInventario>();
   public contador = new Array( this.listaBodegaInventario.length);
   public listaBodegaInventarioActualizada = new Array<BodegaInventario>();
-
+public total = 0;
   private bodegaInventarioAgregar = new BodegaInventario();
 
   // Tabla
@@ -36,6 +36,17 @@ export class BodegaInventarioComponent implements OnInit {
 
     this.bodegaInventarioService.ListaBodegaInventario().subscribe( bodegaInventario => {
       this.listaBodegaInventario = bodegaInventario;
+      this.listaBodegaInventario.forEach(elemento => {
+      this.total = this.total + elemento.cantidad;
+      /* console.log("Total");
+      console.log(this.total);
+      console.log("Base en Dinero");
+      console.log(this.total*52000);
+      console.log("ganancia estimada en Dinero");
+      console.log(this.total*(80500-52000));
+      console.log("15%");
+      console.log(this.total*52000*15/100); */
+      });
     });
     this.ListarPaginado();
   }
@@ -96,7 +107,7 @@ CrearBodegaInventario(inventarioFormulario): void {
           }
 
           inventarioFormulario.listaComponentesInventario.forEach( (elementoFormulario, index2) => {
-            if (index < 1 )  {
+            if (index < 1 )  { // Para que una sola vez se iniciallice en cero 
               this.contador[index2] = 0;
             }
 
@@ -228,8 +239,8 @@ AplicarFiltro(event: Event) {
 // Variables con valores iniciales para el paginador
 totalRegistros = 0;
 paginaActual = 0;
-totalPorPaginas = 10;  
-pageSizeOptions: number[] = [3, 5, 10, 25, 100];
+totalPorPaginas = 200;  
+pageSizeOptions: number[] = [3, 5, 10, 25, 100, 200, 500];
 @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
 // datos: MatTableDataSource<BodegaInventario>;
 

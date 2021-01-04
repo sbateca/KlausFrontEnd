@@ -28,7 +28,7 @@
             <!-- Columna Valor Final de la Venta -->
             <ng-container matColumnDef="valorFinalVenta">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Valor Final de la Venta</th>
-                <td mat-cell *matCellDef="let elemento"> {{elemento.valorFinalVenta}} </td>
+                <td mat-cell *matCellDef="let elemento">$ {{FormatoSeparadorDecimal(elemento?.valorFinalVenta)}} </td>
             </ng-container>
             <!-- Columna documento -->
             <ng-container matColumnDef="cliente">

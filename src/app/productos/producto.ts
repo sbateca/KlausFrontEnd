@@ -6,6 +6,7 @@ export class Producto {
     nombre: string;
     referencia: string;
     costo: number;
+    /* precioAlPorMayor: number; */
     precioVenta: number;
     activo: boolean;
     piezas: Pieza[];
