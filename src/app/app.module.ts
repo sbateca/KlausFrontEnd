@@ -80,8 +80,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UnidadesMedidasComponent } from './UnidadesMedidas/unidades-medidas.component';
 import { UnidadMedidaFormComponent } from './UnidadesMedidas/unidadMedidaForm/unidadmedida-form.component';
 import { UnidadMedidaDetalleComponent } from './UnidadesMedidas/unidadMediaDetalle/unidad-medida-detalle.component';
-
-
+import { BodegaInventarioComponent } from './bodega-inventario/bodega-inventario.component';
+import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-inventario/form-bodega-inventario.component';
+import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -102,6 +103,7 @@ const routes: Routes = [
     {path: 'pedido', component: PedidoComponent},
     {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
     {path: 'UnidadMedida', component: UnidadesMedidasComponent},
+    {path: 'bodegaInventario', component: BodegaInventarioComponent}
 ];
 
 @NgModule({
@@ -150,7 +152,10 @@ const routes: Routes = [
     EstadoEnvioCiudadComponent,
     UnidadesMedidasComponent,
     UnidadMedidaFormComponent,
-    UnidadMedidaDetalleComponent
+    UnidadMedidaDetalleComponent,
+    BodegaInventarioComponent,
+    FormBodegaInventarioComponent,
+    DetalleBodegaInventarioComponent
   ],
   imports: [
     BrowserModule,
@@ -177,7 +182,8 @@ const routes: Routes = [
     MatDatepickerModule,
     NgxMaterialTimepickerModule,
     MatSnackBarModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSnackBarModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

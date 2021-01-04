@@ -14,7 +14,6 @@
             <mat-form-field class="tresPartes">
                 <mat-label>Documento</mat-label>
                 <input type="text" name="documento" matInput placeholder="Documento" formControlName="documento">
-                <!--{{cliente.documento}}-->
                 <mat-error *ngIf="documentoNoValido">Debe Digitar el documento </mat-error>
             </mat-form-field>
 
@@ -37,11 +36,16 @@
             </mat-form-field>
 
             <mat-form-field class="dosPartes">
-                <mat-label>Correo</mat-label>
-                <input type="text" name="correo" matInput placeholder="Correo" formControlName="correo">
+                <mat-label>Numero de Telefono Fijo</mat-label>
+                <input type="text" name="fijo" matInput placeholder="fijo" formControlName="fijo">
+                <mat-error>Debe digitar el numero de telefono fijo</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
+            <!-- <mat-form-field class="dosPartes">
+                <mat-label>Correo</mat-label>
+                <input type="text" name="correo" matInput placeholder="Correo" formControlName="correo">
+            </mat-form-field> -->
+            <mat-form-field class="tresPartes">
                 <mat-label>Departamento</mat-label>
                 <mat-select formControlName="departamento" [compareWith]="compararDepartamentos" (selectionChange)="cargarCiudadDeptId($event)">
                     <mat-option [value]="departamento" *ngFor="let departamento of listaDepartamentos">{{departamento.nombre}}</mat-option>
@@ -49,7 +53,7 @@
                 <mat-error>Debe seleccionar el Departamento</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
+            <mat-form-field class="tresPartes">
                 <mat-label>Ciudad</mat-label>
                 <mat-select formControlName="ciudad" [compareWith]="compararCiudades">
                     <mat-option [value]="ciudad" *ngFor="let ciudad of listaCiudades">{{ciudad.nombre}}</mat-option>
@@ -57,15 +61,15 @@
                 <mat-error>Debe seleccionar la Ciudad</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
+            <mat-form-field class="tresPartes">
                 <mat-label>Dirección</mat-label>
                 <input type="text" name="direccion" matInput placeholder="Dirección" formControlName="direccion">
                 <mat-error>Debe digitar la dirección</mat-error>
             </mat-form-field>
-            <mat-form-field class="dosPartes">
+            <!-- <mat-form-field class="dosPartes">
                 <mat-label>Codigo Postal</mat-label>
                 <input type="text" name="codigo_postal" matInput placeholder="Codigo Postal" formControlName="codigo_postal">
-            </mat-form-field>
+            </mat-form-field> -->
 
         </div>
     </form>

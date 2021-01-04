@@ -24,10 +24,16 @@ export class DetallePedidoComponent implements OnInit {
     if (idPedido) {
       this.pedidoService.VerPedidoPorId(idPedido).subscribe( pedido => {
         this.pedido = pedido;
-        console.log(pedido.horaPedido);
       });
     }
   }
+
+  // Separador de decimales con "."
+  public FormatoSeparadorDecimal(n): any {
+    let sep = n || "."; // Por defecto, el punto como separador decimal
+    return n.toLocaleString().split(sep)[0];
+   }
+
   // Cerrar Ventana Modal De Detalle
   CerrarVentanDetalle(): void {
     this.ventanaModalDetalle.close();

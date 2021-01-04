@@ -1,10 +1,10 @@
 import { Cliente } from '../clientes/cliente';
+import { Cotizacion } from '../cotizacion/cotizacion';
 export class Pedido {
     id: number;
-    fechaPedido: Date;
-    horaPedido: Date;
     valorIva: number;
     valorFinalVenta: number;
     observaciones: string;
     cliente: Cliente;
+    listaCotizacion: Cotizacion[];
 }

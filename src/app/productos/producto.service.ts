@@ -29,6 +29,13 @@ export class ProductoService extends CommonService<Producto> {
     super(enrutador,http);
   }
 
+  ListarProductosBodegaInventario(paginaActual: string, tamanoPagina: string): Observable <any> {
+    const parametros = new HttpParams()
+    .set('page', paginaActual)
+    .set('size', tamanoPagina);
+    return this.httpCliente.get(this.rutaEndPoint + '/bodega' + '/pagina' , {params: parametros});
+  }
+
 
   obtenerFotoProductoPorID( idProducto: number): Observable<any> {
     return this.httpCliente.get(this.rutaEndPoint + '/' + 'productoFoto' + '/' + idProducto,

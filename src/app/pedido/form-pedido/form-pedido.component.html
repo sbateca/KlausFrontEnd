@@ -9,55 +9,131 @@
     <form [formGroup]="camposFormulario">
         <div class="card-body col-sm-12">
 
-            <mat-form-field color="accent" class="tresPartes">
-                <input matInput [matDatepicker]="picker" name="fechaPedido" placeholder="Fecha Pedido" formControlName="fechaPedido">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field class="tresPartes" appendToInput=true>
-                <mat-label>Hora de Pedido</mat-label>
-                <input matInput aria-label="Hora de Pedido" name="horaPedido" [format]="12" [ngxTimepicker]="defaultValue" formControlName="horaPedido" readonly/>
-                <mat-error>Debe digitar la Hora Pedido </mat-error>
-                <ngx-material-timepicker #defaultValue>
-                </ngx-material-timepicker>
-            </mat-form-field>
-
-            <mat-form-field class="tresPartes">
-                <mat-label>Valor Iva</mat-label>
-                <input type="number" min="1" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
-                <mat-error>Debe digitar el Valor Iva</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="tresPartes">
-                <mat-label>Valor Final de La Venta</mat-label>
-                <input type="number" min="1" pattern="^[0-9]+" name="valorfinalVenta" matInput placeholder="Valor Final De La Venta" formControlName="valorFinalVenta">
-                <mat-error>Debe digitar el Valor Final de la Venta </mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="tresPartes">
-                <mat-label>Observaciones</mat-label>
-                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
-            </mat-form-field>
-
-            <mat-form-field class="tresPartes">
+            <mat-form-field class="cuatroPartes">
                 <mat-label>Cliente</mat-label>
                 <mat-select formControlName="cliente" [compareWith]="compararCliente">
                     <mat-option *ngIf="!listaClientes else ExisteAlmenosUnCliente">No hay Clientes Registrados, debe registrar uno</mat-option>
                     <ng-template #ExisteAlmenosUnCliente>
-                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}}</mat-option>
+                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}} {{cliente.apellidos}}</mat-option>
                     </ng-template>
                 </mat-select>
                 <mat-error>Debe seleccionar el Cliente</mat-error>
             </mat-form-field>
 
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Valor Iva (Entero)</mat-label>
+                <input type="number" min="1" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
+                <mat-error>Debe digitar el Valor del Iva</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Valor Descuento (%)</mat-label>
+                <input type="number" min="1" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
+                <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Producto</mat-label>
+                <mat-select formControlName="producto" (selectionChange)="ProductoSeleccionado($event)">
+                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">
+                        <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
+                </mat-select>
+                <mat-error>Debe seleccionar El producto</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Talla</mat-label>
+                <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event)">
+                    <mat-option [value]="talla" *ngFor="let talla of listaTalla">{{talla.talla}}</mat-option>
+                </mat-select>
+                <mat-error>Debe seleccionar la Talla</mat-error>
+            </mat-form-field>
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Cantidad</mat-label>
+                <input type="number" #box (keyup)="onKey(box.value)" min="1" pattern="^[0-9]+" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
+                <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
+            </mat-form-field>
+
+            <h4>Agregar Cotizacion <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
+
+            <div class="example-headers-align" formArrayName="listaCotizacion">
+
+
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr class="thead-light">
+                            <th>No.</th>
+                            <th>Referencia</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Iva</th>
+                            <th>SubTotal</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngFor="let componenteInventario of ObtenerListaCotizacion.controls; let i = index;" [formGroupName]="i">
+                        <tr>
+
+                            <td>
+                                <div>
+                                    <div>
+                                        {{i+1}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {{listaCotizacion.value[i].bodegaInventario.producto.referencia}}
+                            </td>
+                            <td>
+                                {{listaCotizacion.value[i].bodegaInventario.producto.nombre}} ref:{{listaCotizacion.value[i].bodegaInventario.producto.referencia}} Talla: {{listaCotizacion.value[i].bodegaInventario.talla.talla}}
+                            </td>
+                            <td>
+                                {{listaCotizacion.value[i].cantidad}}
+                            </td>
+
+                            <td>
+                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100))}}
+                            </td>
+                            <td>
+                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100)}}
+                            </td>
+
+                            <td>
+                                {{ FormatoSeparadorDecimal(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100))}}
+                            </td>
+                            <td>
+                                <mat-action-row>
+                                    <button mat-icon-button color="basic" matTooltip="Eliminar Componente de Inventario" (click)="EliminarComponenteInventarioArray(i)"><mat-icon>delete</mat-icon></button>
+                                </mat-action-row>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-md-4" *ngIf="listaCotizacion">
+                    <thead>
+                        <th>Total</th>
+                    </thead>
+                    <tbody>
+                        <td>
+                            {{FormatoSeparadorDecimal(importe)}}
+                        </td>
+                    </tbody>
+                </div>
+            </div>
         </div>
     </form>
 </div>
 <!-- botones de acciones -->
 <mat-dialog-actions>
     <button mat-button (click)="CancelarOperacion()">Cancelar</button>
-    <button mat-button color="primary" (click)="EnviarFormulario()">Enviar</button>
+    <button mat-button color="primary" (click)="EnviarFormularioCotizacion()">Enviar</button>
 </mat-dialog-actions>
 
 <!--{{camposFormulario.value | json}}-->

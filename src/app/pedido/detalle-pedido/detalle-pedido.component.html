@@ -7,25 +7,51 @@
     <div>
         <table class="table table-sm">
             <div>
+
+
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr class="thead-light">
+                            <th>No.</th>
+                            <th>Referencia</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let dato of pedido.listaCotizacion; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{dato.bodegaInventario.producto.referencia}}</td>
+                            <td>
+                                {{dato.bodegaInventario.producto.nombre}}
+                                <!-- <span>{{dato.bodegaInventario.producto.nombre}}</span> <span>{dato.bodegaInventario.producto.referencia}}</span> <span>{{dato.bodegaInventario.talla.talla}}</span> -->
+                            </td>
+                            <td>{{ dato.cantidad }}</td>
+                            <td>$ {{ FormatoSeparadorDecimal(dato.bodegaInventario.producto.precioVenta - (dato.bodegaInventario.producto.precioVenta*(pedido.valorIva/100))) }}</td>
+                            <td>$ {{ FormatoSeparadorDecimal(dato.cantidad*dato.bodegaInventario.producto.precioVenta - (dato.cantidad*dato.bodegaInventario.producto.precioVenta*(pedido.valorIva/100))) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
                 <tr>
-                    <th class="text-secondary font-weight-normal">Fecha De Pedido:</th>
-                    <th class="text-dark"><small>{{pedido?.fechaPedido}}</small></th>
+                    <th class="text-secondary font-weight-normal">SubTotal:</th>
+                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorFinalVenta- (pedido?.valorIva/100*pedido?.valorFinalVenta)) }}</small></th>
                 </tr>
-                <tr>
-                    <th class="text-secondary font-weight-normal">Hora De Pedido:</th>
-                    <th class="text-dark"><small>{{pedido?.horaPedido}}</small></th>
-                </tr>
+
                 <tr>
                     <th class="text-secondary font-weight-normal">Iva:</th>
-                    <th class="text-dark"><small>{{pedido?.valorIva}}</small></th>
+                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorIva/100*pedido?.valorFinalVenta) }}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Valor General:</th>
-                    <th class="text-dark"><small>{{pedido?.valorFinalVenta}}</small></th>
+                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorFinalVenta) }}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Observaciones:</th>
-                    <th class="text-dark"><small>{{pedido?.observaciones}}</small></th>
+                    <th class="text-dark"><small>{{ pedido?.observaciones }}</small></th>
                 </tr>
             </div>
             <br>
@@ -37,7 +63,7 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">NIT:</th>
-                    <th class="text-dark"><small>{{pedido?.cliente.documento}}</small></th>
+                    <th class="text-dark"><small>{{ FormatoSeparadorDecimal(pedido?.cliente.documento)}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Dirección:</th>

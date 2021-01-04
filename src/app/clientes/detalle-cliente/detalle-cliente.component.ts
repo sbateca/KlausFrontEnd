@@ -35,6 +35,13 @@ export class DetalleClienteComponent implements OnInit {
     this.clienteService.getCliente(idcliente).subscribe(cliente => this.cliente = cliente);
   }
 }
+
+// Separador de decimales por "."
+public FormatoSeparadorDecimal(n): any {
+  let sep = n || "."; // Por defecto, el punto como separador decimal
+  return n.toLocaleString().split(sep)[0];
+ }
+
 /*
     El método cerrarVentana() cierra la ventana modal
   */

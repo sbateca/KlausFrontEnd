@@ -139,7 +139,9 @@ export class ProductoFormComponent implements OnInit {
   */
   agregarPieza(): void {
     this.piezas = this.formulario.get('piezas') as FormArray;
+    //console.log(this.piezas);
     this.piezas.push(this.crearPieza());
+    //console.log(this.piezas);
   }
 
 
@@ -280,6 +282,7 @@ export class ProductoFormComponent implements OnInit {
 
   // este método es un getter del Array piezas
   get obtenerPiezas() {
+    // console.log(this.formulario.get('piezas') as FormArray);
     return this.formulario.get('piezas') as FormArray;
   }
 
