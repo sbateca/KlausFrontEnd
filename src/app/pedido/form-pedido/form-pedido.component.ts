@@ -234,7 +234,7 @@ CrearFormulario(): void {
     cliente: ['', Validators.required],
     observaciones: ['', Validators.required],
     valorIva: ['19', Validators.required],
-    descuento: ['0', Validators.required],
+    descuento: ['0', [Validators.required, Validators.max(100)]],
     producto: ['', Validators.required],
     talla: ['', Validators.required],
     cantidad: ['', Validators.required],
@@ -305,6 +305,11 @@ get FormularioNoValido(): boolean {
   if (this.camposFormulario.invalid || this.desactivado) {
     return true;
   }
+}
+
+porcentajeInvalido(): boolean {
+  return this.camposFormulario.get('descuento').errors.required &&
+          this.camposFormulario.get('descuento').touched;
 }
 
   ProductoBodegaSeleccionado(event): void {

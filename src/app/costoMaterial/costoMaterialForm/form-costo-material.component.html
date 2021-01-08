@@ -1,0 +1,86 @@
+<h3 mat-dialog-title>{{funcionalidad}}</h3>
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="card-body">
+
+            <mat-form-field class="cincoPartes">
+                <mat-label>Cantidad</mat-label>
+                <input matInput name="cantidad" placeholder="Cantidad" type="number" min="0" formControlName="cantidadGeneral">
+                <mat-error *ngIf="campoNoValido('cantidadGeneral')">Debe digitar la cantidad de unidades de material</mat-error>
+                <mat-error *ngIf="campoNoMayorCero('cantidadGeneral')">La cantidad debe ser mayor a cero</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cincoPartes">
+                <mat-label>Unidad de medida</mat-label>
+                <mat-select formControlName="unidadMedidaGeneral">
+                    <mat-option [value]="unidadMedida" *ngFor="let unidadMedida of listaUnidadMedida">{{unidadMedida.nombre}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="campoNoValido('unidadMedidaGeneral')">Debe seleccionar una unidad de medida</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cincoPartes">
+                <mat-label>Material</mat-label>
+                <mat-select formControlName="materialGeneral">
+                    <mat-option [value]="material" *ngFor="let material of listaMaterial">{{material.nombre}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="campoNoValido('materialGeneral')">Debe seleccionar un material</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cincoPartes">
+                <mat-label>costo</mat-label>
+                <input matInput name="costo" placeholder="Costo" type="number" formControlName="costoGeneral">
+                <mat-error *ngIf="campoNoValido('costoGeneral')">Debe digitar el costo</mat-error>
+                <mat-error *ngIf="campoNoMayorCero('costoGeneral')">El costo debe ser mayor a cero</mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <!--la validación *ngIf="!this.idCostoMaterial" pues la tabla debe aparecer sólo en el agregar, No en el modificar -->
+        <div *ngIf="!this.idCostoMaterial" class="card-body">
+
+            <h4>Agregar costo de material <button mat-icon-button [disabled]="this.formulario.invalid" color="basic" matTooltip="Agregar costo de material" (click)="agregarCostoMaterialFormulario()"><mat-icon>add_circle</mat-icon></button></h4>
+
+            <table class="table table-sm table-hover" formArrayName="listaCostoMaterial">
+                <thead>
+                    <tr class="thead-light">
+                        <th>No.</th>
+                        <th>Cantidad</th>
+                        <th>Unidad de medida</th>
+                        <th>Material</th>
+                        <th>Costo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let costoMaterial of obtenerFormArrayFormulario().controls; let i = index;">
+                        <td>{{i+1}}</td>
+                        <td>{{costoMaterial.value.cantidad}}</td>
+                        <td>{{costoMaterial.value.unidadMedida.nombre}}</td>
+                        <td>{{costoMaterial.value.material.nombre}}</td>
+                        <td>{{costoMaterial.value.costo | number:'0.2-5'}}</td>
+                        <td><button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarCostoMaterialFormulario(i)"><mat-icon>delete</mat-icon></button></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+    </form>
+
+</div>
+
+
+
+<mat-dialog-actions>
+
+    <button mat-button (click)="cancelarOperacion()">Cancelar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="!this.idCostoMaterial" [disabled]="obtenerFormArrayFormulario().controls.length==0">Enviar</button>
+    <button mat-button color="primary" (click)="guardar()" *ngIf="this.idCostoMaterial" [disabled]="this.formulario.invalid">Editar</button>
+
+</mat-dialog-actions>

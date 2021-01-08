@@ -1,0 +1,18 @@
+.unaParte {
+    width: 100%;
+}
+
+.dosPartes {
+    width: 50%;
+    padding-right: 5px;
+}
+
+.tresPartes {
+    width: 33%;
+    padding-right: 5px;
+}
+
+.cincoPartes {
+    width: 25%;
+    padding-right: 5px;
+}

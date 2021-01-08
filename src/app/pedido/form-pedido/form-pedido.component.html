@@ -33,8 +33,8 @@
 
             <mat-form-field class="cuatroPartes">
                 <mat-label>Valor Descuento (%)</mat-label>
-                <input type="number" min="1" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
-                <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
+                <input type="number" min="0" pattern="^[0-9]+" max="100" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
+                <mat-error *ngIf="porcentajeInvalido">Debe digitar el Valor del descuento en (%)</mat-error>
             </mat-form-field>
 
             <mat-form-field class="cuatroPartes">

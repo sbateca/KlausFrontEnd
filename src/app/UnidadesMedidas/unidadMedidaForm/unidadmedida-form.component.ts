@@ -20,7 +20,7 @@ export class UnidadMedidaFormComponent implements OnInit {
   tituloVentana = '';
 
   // listado de categorías para el campo select del formulario
-  listaCategorias: string[] = ['Longitud', 'Masa', 'Capacidad', 'Conteo'];
+  listaCategorias: string[] = ['Longitud', 'Superficie', 'Masa', 'Capacidad', 'Conteo'];
 
   // variable unidad de medida en la cual se almacenará la unidad cargada en formulario
   unidadMedida = new UnidadMedida();
