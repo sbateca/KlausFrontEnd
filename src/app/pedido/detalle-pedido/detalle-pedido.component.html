@@ -13,32 +13,39 @@
                     <thead>
                         <tr class="thead-light">
                             <th>No.</th>
-                            <th>Referencia</th>
                             <th>Producto</th>
+                            <th>Referencia</th>
+                            <th>Talla</th>
+                            <th>Precio <br> Inicial</th>
+                            <th>Descuento <br> (%)</th>
+                            <th>Precio <br> Unitario</th>
+                            <th>Iva</th>
+                            <th>Precio <br> (IVA incluído)</th>
                             <th>Cantidad</th>
-                            <th>Precio</th>
                             <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        <tr *ngFor="let dato of pedido.listaCotizacion; let i = index">
+                        <tr *ngFor="let cotizacion of pedido.listaCotizacion; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td>{{dato.bodegaInventario.producto.referencia}}</td>
-                            <td>
-                                {{dato.bodegaInventario.producto.nombre}}
-                                <!-- <span>{{dato.bodegaInventario.producto.nombre}}</span> <span>{dato.bodegaInventario.producto.referencia}}</span> <span>{{dato.bodegaInventario.talla.talla}}</span> -->
-                            </td>
-                            <td>{{ dato.cantidad }}</td>
-                            <td>$ {{ FormatoSeparadorDecimal(dato.bodegaInventario.producto.precioVenta - (dato.bodegaInventario.producto.precioVenta*(pedido.valorIva/100))) }}</td>
-                            <td>$ {{ FormatoSeparadorDecimal(dato.cantidad*dato.bodegaInventario.producto.precioVenta - (dato.cantidad*dato.bodegaInventario.producto.precioVenta*(pedido.valorIva/100))) }}</td>
+                            <td>{{cotizacion.bodegaInventario.producto.nombre}}</td>
+                            <td>{{cotizacion.bodegaInventario.producto.referencia}}</td>
+                            <td>{{cotizacion.bodegaInventario.talla.talla}}</td>
+                            <td>$ {{FormatoSeparadorDecimal(cotizacion.bodegaInventario.producto.precioVenta)}}</td>
+                            <td>{{cotizacion.descuento}}</td>
+                            <td>$ {{ FormatoSeparadorDecimal((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))-((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*pedido.valorIva/100))}}</td>
+                            <td>$ {{((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*pedido.valorIva/100) | number}}</td>
+                            <td>$ {{ FormatoSeparadorDecimal(cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100))) }}</td>
+                            <td>{{ cotizacion.cantidad }}</td>
+                            <td>$ {{ ((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*cotizacion.cantidad) | number:'0.2-5' }}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <tr>
-                    <th class="text-secondary font-weight-normal">SubTotal:</th>
-                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorFinalVenta- (pedido?.valorIva/100*pedido?.valorFinalVenta)) }}</small></th>
+                    <th class="text-secondary font-weight-normal">SubTotal Valor Unitario:</th>
+                    <th class="text-dark"><small>$  {{ pedido?.valorFinalVenta- (pedido?.valorIva/100*pedido?.valorFinalVenta) | number }}</small></th>
                 </tr>
 
                 <tr>

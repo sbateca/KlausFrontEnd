@@ -12,7 +12,7 @@ export class DetallePedidoComponent implements OnInit {
 
   public pedido: Pedido;
   constructor(public ventanaModalDetalle: MatDialogRef<DetallePedidoComponent>,
-              public pedidoService: PedidoService,
+              private pedidoService: PedidoService,
               @Inject(MAT_DIALOG_DATA) public idPedido: number) { }
 
   ngOnInit(): void {

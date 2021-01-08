@@ -1,19 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { BodegaInventario } from '../bodega-inventario';
 import { Producto } from '../../productos/producto';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { BodegaInventarioService } from '../bodega-inventario.service';
 import { ProductoService } from '../../productos/producto.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TipoTalla } from '../../tiposTallas/TipoTalla';
-import { tick } from '@angular/core/testing';
 import { TipoTallaService } from '../../tiposTallas/tipo-talla.service';
 import { Talla } from '../../tallas/talla';
 import { TallaService } from '../../tallas/talla.service';
-import {MatSlideToggleChange, MatSlideToggleModule} from '@angular/material/slide-toggle'
-import { Console } from 'console';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle'
 import { MatSelectChange } from '@angular/material/select';
-// import { ComponentesInventario } from '../componentes-inventario';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -122,11 +119,11 @@ EliminarComponenteInventarioArray(posicion: number): void {
   }
 // Componentes de Inventario
 AgregarComponentesInventario(): void {
-  // console.log(this.camposFormularioBodegaInventario.get('estadoDescuento').value);
+
   if (this.camposFormularioBodegaInventario.get('estadoDescuento').value == null) {
     this.camposFormularioBodegaInventario.get('estadoDescuento').setValue(false);
   }
-  // console.log(this.camposFormularioBodegaInventario.get('estadoDescuento').value);
+
   this.listaComponentesInventario = this.camposFormularioBodegaInventario.get('listaComponentesInventario') as FormArray;
   this.listaComponentesInventario.push(this.CrearComponentesDeInventario());
 
@@ -136,16 +133,12 @@ AgregarComponentesInventario(): void {
   this.camposFormularioBodegaInventario.get('estadoDescuento').setValue(null);
   this.camposFormularioBodegaInventario.get('descuento').setValue(null);
   this.estadoDescuento = false;
-  // console.log(this.listaTalla);
   this.listaTalla.splice(this.indice, 1); // 1 es la cantidad de elemento a eliminar
-  // console.log(this.listaTalla);
 }
 
 // Lista tipo de Tallas Seleccionada
 ArrayTipoTallaSeleccionada(event): void {
   this.eventoTipoTalla = event;
-  console.log("evento")
-  console.log(event);
   this.listaTalla = event.value.tallas;
 }
 

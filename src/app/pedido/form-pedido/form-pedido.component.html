@@ -27,15 +27,17 @@
 
             <mat-form-field class="cuatroPartes">
                 <mat-label>Valor Iva (Entero)</mat-label>
-                <input type="number" min="1" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
+                <input type="number" min="1" max="100" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
                 <mat-error>Debe digitar el Valor del Iva</mat-error>
             </mat-form-field>
 
+
             <mat-form-field class="cuatroPartes">
                 <mat-label>Valor Descuento (%)</mat-label>
-                <input type="number" min="1" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
+                <input type="number" min="0" max="100" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
                 <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
             </mat-form-field>
+
 
             <mat-form-field class="cuatroPartes">
                 <mat-label>Producto</mat-label>
@@ -59,6 +61,13 @@
                 <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
             </mat-form-field>
 
+            <div class="alert alert-light" role="alert" *ngIf="precioVentaForm != 0">
+                Precio de venta: $ {{FormatoSeparadorDecimal(precioVentaForm)}}
+                <br> SubTotal: $ {{FormatoSeparadorDecimal(subTotal)}}
+            </div>
+
+
+
             <h4>Agregar Cotizacion <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
 
             <div class="example-headers-align" formArrayName="listaCotizacion">
@@ -68,11 +77,13 @@
                     <thead>
                         <tr class="thead-light">
                             <th>No.</th>
-                            <th>Referencia</th>
                             <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
+                            <th>Precio <br> Inicial</th>
+                            <th>Descuento</th>
+                            <th>Precio <br> Unitario</th>
                             <th>Iva</th>
+                            <th>Precio <br> Venta</th>
+                            <th>Cantidad</th>
                             <th>SubTotal</th>
                             <th>Borrar</th>
                         </tr>
@@ -89,24 +100,29 @@
                                 </div>
                             </td>
                             <td>
-                                {{listaCotizacion.value[i].bodegaInventario.producto.referencia}}
+                                {{listaCotizacion.value[i].bodegaInventario.producto.nombre}} ref:{{listaCotizacion.value[i].bodegaInventario.producto.referencia}} Talla: {{listaCotizacion.value[i].bodegaInventario.talla.talla}}
                             </td>
                             <td>
-                                {{listaCotizacion.value[i].bodegaInventario.producto.nombre}} ref:{{listaCotizacion.value[i].bodegaInventario.producto.referencia}} Talla: {{listaCotizacion.value[i].bodegaInventario.talla.talla}}
+                                {{FormatoSeparadorDecimal(listaCotizacion.value[i].bodegaInventario.producto.precioVenta)}}
+                            </td>
+                            <td>
+                                {{(listaCotizacion.value[i].descuento)}}
+                            </td>
+                            <td>
+                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)*camposFormulario.value.valorIva/100))}}
+                            </td>
+
+                            <td>
+                                {{ ((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)*camposFormulario.value.valorIva/100) | number}}
+                            </td>
+                            <td>
+                                {{FormatoSeparadorDecimal(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)}}
                             </td>
                             <td>
                                 {{listaCotizacion.value[i].cantidad}}
                             </td>
-
                             <td>
-                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100))}}
-                            </td>
-                            <td>
-                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100)*camposFormulario.value.valorIva/100)}}
-                            </td>
-
-                            <td>
-                                {{ FormatoSeparadorDecimal(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*camposFormulario.value.descuento/100))}}
+                                {{ FormatoSeparadorDecimal(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100))}}
                             </td>
                             <td>
                                 <mat-action-row>

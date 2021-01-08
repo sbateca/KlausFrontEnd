@@ -44,11 +44,11 @@ export class PedidoComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
 
   constructor(public ventanaModal: MatDialog,
-              public cotizacionService: CotizacionService,
-              public clienteService: ClienteService,
-              public bodegaInventarioService: BodegaInventarioService,
+              private cotizacionService: CotizacionService,
+              private clienteService: ClienteService,
+              private bodegaInventarioService: BodegaInventarioService,
               private router: Router,
-              public pedidoService: PedidoService) { }
+              private pedidoService: PedidoService) { }
 
   ngOnInit(): void {
     this.pedidoService.VerListaPedidos().subscribe(pedidos => {
@@ -105,7 +105,7 @@ export class PedidoComponent implements OnInit {
   }
 
   // Paginar Lista Pedido
-  private listarPaginado(): void {
+  listarPaginado(): void {
 
     this.pedidoService.ListarPedidosPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion => {
@@ -135,9 +135,10 @@ export class PedidoComponent implements OnInit {
           position: {left: '30%', top: '60px'}
         });
       referenciaVentanaModal.afterClosed().subscribe( resultado => {
+
           if (resultado != null) {
-            this.ActualizarBodegaInventarioPorPedido(resultado);
             this.CrearPedido(resultado);
+            this.ActualizarBodegaInventarioPorPedido(resultado);
           }
         });
       }
@@ -155,67 +156,60 @@ export class PedidoComponent implements OnInit {
           this.bodegaInventario.cantidad = cotizacion.bodegaInventario.cantidad - cotizacion.cantidad;
 
           // Actualizamos bodegaInventario
-          this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe( resp => {
-          });
-      });
+          this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe( resp => {});
+        });
       }
 
+      
       // Crea Pedido
       public CrearPedido(FormularioBodegaInventario): void {
-
+        // Pasamos las variables del Formulario a Pedido
         this.pedido.observaciones = FormularioBodegaInventario.observaciones;
         this.pedido.valorIva = FormularioBodegaInventario.valorIva;
         this.pedido.cliente = FormularioBodegaInventario.cliente;
         this.pedido.listaCotizacion = FormularioBodegaInventario.listaCotizacion;
+        this.pedido.valorFinalVenta = 0;
+        this.pedido.id = null; // El id se pone nulo para que se cree un pedido nuevo
+        
 
-        let totalPedido = 0;
-
+        // Se Recorro la lista, para Calcular el valorFinalVenta
+        this.pedido.listaCotizacion.forEach( cotizacion => {
+         
+          cotizacion.importe = (cotizacion.bodegaInventario.producto.precioVenta-(cotizacion.bodegaInventario.producto.precioVenta*cotizacion.descuento/100)) * cotizacion.cantidad;
+          
+          // Sumatoria de los importes
+          this.pedido.valorFinalVenta = cotizacion.importe + this.pedido.valorFinalVenta;
+        });
+        // Crear Pedido
         this.pedidoService.CrearPedido(this.pedido).subscribe(respuesta => {
 
-          this.pedidoConId = respuesta.pedido;
-          this.pedido.id = this.pedidoConId.id;
+           // Le ponemos la id que se crea al pedido
+          this.pedido.id = respuesta.pedido.id;
 
-          this.pedido.listaCotizacion.forEach( cotizacion => {
+          // Se desplaza por la lista Cotizacion de Pedido
+          this.pedido.listaCotizacion.forEach( (cotizacion,index) => {
 
+            // Se llena el campo Pedido en Cotizacion
             cotizacion.pedido = this.pedido;
-            cotizacion.importe = (cotizacion.bodegaInventario.producto.precioVenta-(cotizacion.bodegaInventario.producto.precioVenta*FormularioBodegaInventario.descuento/100)) * cotizacion.cantidad;
-            totalPedido = cotizacion.importe + totalPedido;
 
-            // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
+            // Se limpia la lista de cotizacion del atributo Pedido para evitar bucle infinito en el JSON
             cotizacion.pedido.listaCotizacion = [];
 
-            this.cotizacionService.CrearCotizacion(cotizacion).subscribe(rta => {
-              
-              this.pedidoService.ActualizarPedido(this.pedido).subscribe(r => {
-                this.listarPaginado();
-              });
-            });
-            this.pedido.valorFinalVenta = totalPedido;
-          });
-        });
+            // Se crea la cotizacion
+            this.cotizacionService.CrearCotizacion(cotizacion).subscribe(rta => { });
 
-        swal.fire ({
-          title: '¿Estas seguro?',
-          text: 'Pedido Nuevo, '+ this.pedido.cliente.nombres +' ?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#ad3333',
-          confirmButtonText: 'Si, Cargar!'
-         }).then((result) => {
-           if (result.value) {
-            // this.router.navigate(['clientes']);
-           }
-           window.location.reload();
           });
+          this.listarPaginado();
+        });
+        alertasSweet.fire('Nuevo pedido', this.pedido.cliente.nombres , 'success'); 
       }
 
       // Ventana Detalle
       AbrirVentanaDetalle(idPedido): void {
         this.ventanaModal.open(DetallePedidoComponent, {
-          width: '60%',
+          width: '70%',
           height: 'auto',
-          position: {left: '30%', top: '60px'},
+          position: {left: '25%', top: '60px'},
           data: idPedido
         });
       }

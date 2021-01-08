@@ -5,12 +5,9 @@ import { BodegaInventario } from './bodega-inventario';
 import { BodegaInventarioService } from './bodega-inventario.service';
 import swal from 'sweetalert2';
 import { DetalleBodegaInventarioComponent } from './detalle-bodega-inventario/detalle-bodega-inventario.component';
-// import alertasSweet from 'sweetalert2';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-/* import { Talla } from '../tallas/talla';
-import { TipoTalla } from '../tiposTallas/TipoTalla'; */
 
 @Component({
   selector: 'app-bodega-inventario',
@@ -38,14 +35,6 @@ public total = 0;
       this.listaBodegaInventario = bodegaInventario;
       this.listaBodegaInventario.forEach(elemento => {
       this.total = this.total + elemento.cantidad;
-      /* console.log("Total");
-      console.log(this.total);
-      console.log("Base en Dinero");
-      console.log(this.total*52000);
-      console.log("ganancia estimada en Dinero");
-      console.log(this.total*(80500-52000));
-      console.log("15%");
-      console.log(this.total*52000*15/100); */
       });
     });
     this.ListarPaginado();
@@ -137,17 +126,17 @@ CrearBodegaInventario(inventarioFormulario): void {
 
               if (this.contador[index2] === listaInventarioBD.length || contador1 === listaInventarioBD.length ) {
 
-                this.bodegaInventarioService.CrearBodegaInventario(objetoInventario).subscribe( resultadoAgregar => {
-                  this.ListarPaginado();
-                  swal.fire('Nuevo Producto en Bodega Inventario',
-                     `Bodega Inventario ${objetoInventario.producto.nombre} creado con exito!`, 'success');
-                });
+                this.bodegaInventarioService.CrearBodegaInventario(objetoInventario).subscribe( resultadoAgregar => { });
                 contador1 = 0;
               }
             }
-          });
+            
+        swal.fire('Nuevo Producto en Bodega Inventario',
+           `Bodega Inventario ${ objetoInventario.producto.nombre} creado con exito!`, 'success');
         });
-
+          });
+          
+          this.ListarPaginado();
       }
   });
 }

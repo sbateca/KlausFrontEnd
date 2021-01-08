@@ -6,4 +6,5 @@ export class Cotizacion {
     bodegaInventario: BodegaInventario;
     cantidad: number;
     pedido: Pedido;
+    descuento: number;
 }

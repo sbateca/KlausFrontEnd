@@ -108,8 +108,6 @@ CargarTallas(id): void {
           // Con id por que la lista talla tiene la estructura diferente
           if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){
 
-            /* console.log("productoIgual");
-            console.log(this.eventoProducto.value); */
           
             if(elementoTalla.id != elementoCotizacion.bodegaInventario.talla.id){
               // Cuenta las tallas si no se selecciona del mismo Producto 
@@ -125,10 +123,10 @@ CargarTallas(id): void {
             } 
           } else {// Si No es el producto se suma la talla tampoco se selecciona
               this.contador1[j] ++;
-              if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){
+              /* if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){
                 console.log("productoIgual");
             console.log(this.eventoProducto.value);
-              }
+              } */
               
           }
 
@@ -141,10 +139,6 @@ CargarTallas(id): void {
               this.listaTalla1=[];
             } 
             contador2++;
-      
-            /* console.log("longitud");
-            console.log(this.listaTalla.length-1);
-            console.log(contador2); */
 
             // lleno la lista con los elementos tallas no seleccionada
             this.listaTalla1.push(elementoTalla);
@@ -165,13 +159,9 @@ CargarTallas(id): void {
 // Evento Select de Producto
 ProductoSeleccionado(evento){
   this.eventoProducto = evento;
-  // this.ExtraerTalla(evento);
-
-  
+   
   // Cargo Lista de Talla apartir del id del producto de Bodega Inventario
   this.CargarTallas(evento.value.id);
-
-  
 }
 
 // Se Carga el Bodega Inventario
@@ -188,14 +178,31 @@ CrearArrayConTallasNoSeleccionadas(event): void {
   this.indice = this.listaTalla.indexOf(event.value);
 }
 
+// Se inicializa 
+descuentoForm = 0;
+precioVentaForm = 0;
+cantidadForm = 0;
+subTotal = 0;
+
 // Evento input captura los numeros en value
 onKey(value: number): boolean {
 
+  // Valor Descuento
+  this.descuentoForm = this.camposFormulario.value.descuento;
+  // Valor Cantidad
+  this.cantidadForm = this.camposFormulario.value.cantidad;
+  
   // Me desplazo por cada elemento de bodega y detecto el mismo apartir de Producto y Talla
   this.listaBodegaInventario.forEach(elementoBodegaInventario => {
     if(elementoBodegaInventario.producto.id === (this.eventoProducto.value.id)){
       if(elementoBodegaInventario.talla.id === (this.eventoTallaSeleccionada.value.id)) {
         this.bodegaInventario = elementoBodegaInventario;
+        
+        // Precio de Venta
+        this.precioVentaForm = this.bodegaInventario.producto.precioVenta - (((this.descuentoForm)/100)*(this.bodegaInventario.producto.precioVenta));
+        
+        // Sub Total
+        this.subTotal = this.precioVentaForm * this.cantidadForm;
       }
     } 
   });
@@ -233,8 +240,8 @@ CrearFormulario(): void {
   {
     cliente: ['', Validators.required],
     observaciones: ['', Validators.required],
-    valorIva: ['19', Validators.required],
-    descuento: ['0', Validators.required],
+    valorIva: ['19', [Validators.required, Validators.max(19)]],
+    descuento: ['0', [Validators.required, Validators.max(100)]],
     producto: ['', Validators.required],
     talla: ['', Validators.required],
     cantidad: ['', Validators.required],
@@ -246,7 +253,8 @@ CrearFormulario(): void {
 CrearListaCotizacion(): FormGroup {
   return this.constructorFormulario.group({
     bodegaInventario: this.bodegaInventario,
-    cantidad: this.camposFormulario.get("cantidad").value
+    cantidad: this.camposFormulario.get("cantidad").value,
+    descuento: this.camposFormulario.get("descuento").value
   });
 }
 
@@ -257,21 +265,24 @@ AgregarListaCotizacion(): void {
   this.listaCotizacion = this.camposFormulario.get('listaCotizacion') as FormArray;
   
   this.listaCotizacion.push(this.CrearListaCotizacion());
-  
+
+  // Limpia input
+  this.camposFormulario.get('descuento').setValue(0);  
   this.camposFormulario.get('talla').setValue(null);
   this.camposFormulario.get('cantidad').setValue(null);
+
+  // Inicializo una vez agrego
+  this.precioVentaForm = 0;
+  this.subTotal = 0;
 
   // Utiliza la posicion(indice) del objeto seleccionado y saca el mismo del la lista
   this.listaTalla.splice(this.indice, 1);
 
+  
   // Importe suma los subtotales de cada pedido
-  this.importe = this.importe + (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta*this.camposFormulario.value.descuento/100))*(this.camposFormulario.value.listaCotizacion[this.contador].cantidad);
+  this.importe = this.importe + (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[this.contador].descuento/100))*(this.camposFormulario.value.listaCotizacion[this.contador].cantidad);
   this.contador++;
-  console.log("ContadorEnAgregar");
-  console.log( this.contador);
-  console.log("Importe");
-  console.log(this.importe);
-
+ 
 }
 
 // Obtener Lista Cotizacion
@@ -281,6 +292,14 @@ get ObtenerListaCotizacion() {
   
 // Enviar Formulario
 EnviarFormularioCotizacion() {
+  /* console.log("Cotizacion");
+  console.log(this.listaCotizacion); */
+ /*  if(this.listaCotizacion.value.length === 0) {
+    this.alertaSnackBar.open('Debe Agregar como minimo un Producto!!', 'Cerrar', {
+      duration: 5000
+    });
+
+  } else { */
   if (this.listaCotizacion == null && this.camposFormulario.invalid === true) {
     this.alertaSnackBar.open('Debe Agregar como minimo un Producto!!', 'Cerrar', {
      duration: 5000
@@ -298,6 +317,7 @@ EnviarFormularioCotizacion() {
         this.referenciaVentanaModal.close(this.camposFormulario.value);
       }
     }
+  /* } */
   }
 
 // Desctiva el boton Agregar Cotizacion
@@ -321,7 +341,7 @@ EliminarComponenteInventarioArray(posicion: number): void {
  this.listaBodegaInventario.push(this.listaCotizacion.value[posicion].bodegaInventario);
 
   // Le resto al total el articulo que saco de la lista de pedido
- this.importe = this.importe - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta*this.camposFormulario.value.descuento/100))*(this.camposFormulario.value.listaCotizacion[posicion].cantidad);
+ this.importe = this.importe - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[posicion].descuento/100))*(this.camposFormulario.value.listaCotizacion[posicion].cantidad);
 
  // Evita que le adicione la talla eliminada la lista detallas de otro Producto 
   if(!this.eventoProducto.value.id != this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.id ){
