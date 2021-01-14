@@ -62,8 +62,9 @@
             </mat-form-field>
 
             <div class="alert alert-light" role="alert" *ngIf="precioVentaForm != 0">
-                Precio de venta: $ {{FormatoSeparadorDecimal(precioVentaForm)}}
-                <br> SubTotal: $ {{FormatoSeparadorDecimal(subTotal)}}
+                Cantidad Total En Bodega: {{bodegaInventario.cantidad}}
+                <br> Precio de venta: $ {{(precioVentaForm) | number}}
+                <br> SubTotal: $ {{(subTotal) | number}}
             </div>
 
 
@@ -79,7 +80,7 @@
                             <th>No.</th>
                             <th>Producto</th>
                             <th>Precio <br> Inicial</th>
-                            <th>Descuento</th>
+                            <th>Descuento <br> (%)</th>
                             <th>Precio <br> Unitario</th>
                             <th>Iva</th>
                             <th>Precio <br> Venta</th>
@@ -103,26 +104,26 @@
                                 {{listaCotizacion.value[i].bodegaInventario.producto.nombre}} ref:{{listaCotizacion.value[i].bodegaInventario.producto.referencia}} Talla: {{listaCotizacion.value[i].bodegaInventario.talla.talla}}
                             </td>
                             <td>
-                                {{FormatoSeparadorDecimal(listaCotizacion.value[i].bodegaInventario.producto.precioVenta)}}
+                                {{(listaCotizacion.value[i].bodegaInventario.producto.precioVenta)|number}}
                             </td>
                             <td>
                                 {{(listaCotizacion.value[i].descuento)}}
                             </td>
                             <td>
-                                {{ FormatoSeparadorDecimal((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)*camposFormulario.value.valorIva/100))}}
+                                {{ ((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)-((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)*camposFormulario.value.valorIva/100))|number}}
                             </td>
 
                             <td>
                                 {{ ((listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)*camposFormulario.value.valorIva/100) | number}}
                             </td>
                             <td>
-                                {{FormatoSeparadorDecimal(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)}}
+                                {{(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100)|number}}
                             </td>
                             <td>
                                 {{listaCotizacion.value[i].cantidad}}
                             </td>
                             <td>
-                                {{ FormatoSeparadorDecimal(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100))}}
+                                {{(listaCotizacion.value[i].cantidad*(listaCotizacion.value[i].bodegaInventario.producto.precioVenta-listaCotizacion.value[i].bodegaInventario.producto.precioVenta*listaCotizacion.value[i].descuento/100))|number}}
                             </td>
                             <td>
                                 <mat-action-row>
@@ -138,7 +139,7 @@
                     </thead>
                     <tbody>
                         <td>
-                            {{FormatoSeparadorDecimal(importe)}}
+                            {{(importe)|number}}
                         </td>
                     </tbody>
                 </div>
@@ -149,7 +150,7 @@
 <!-- botones de acciones -->
 <mat-dialog-actions>
     <button mat-button (click)="CancelarOperacion()">Cancelar</button>
-    <button mat-button color="primary" (click)="EnviarFormularioCotizacion()">Enviar</button>
+    <button mat-button color="primary" (click)="EnviarFormularioCotizacion()" [disabled]="this.camposFormulario.get('listaCotizacion').value.length==0"> Enviar</button>
 </mat-dialog-actions>
 
 <!--{{camposFormulario.value | json}}-->

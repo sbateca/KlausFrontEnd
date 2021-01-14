@@ -26,9 +26,11 @@ export class FormBodegaInventarioComponent implements OnInit {
   public tipoTalla: TipoTalla;
   public listaTipoTalla: TipoTalla[];
   public listaTalla: Talla[];
+  public listaTalla1: Talla[];
   public estadoDescuento: boolean;
   public indice: number;
   public i: number;
+  public eventoProducto: MatSelectChange;
   public eventoTipoTalla: MatSelectChange;
   public eventoTallasNoSeleccionadas: MatSelectChange;
 
@@ -46,7 +48,10 @@ export class FormBodegaInventarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.CargarProducto();
+    // Al seleccionar tipoTalla tenga la listaTalla
+    this.CargarTalla();
     this.CargarTipoTalla();
+    
     this.CrearFormularioBodegaInventario();
     this.indice = 0;
     this.i = 0;
@@ -57,6 +62,17 @@ export class FormBodegaInventarioComponent implements OnInit {
     this.productoService.listarElementos().subscribe( productos => {
       this.listaProductos = productos;
     });
+  }
+   // Evento Producto
+   EventoProducto(Evento): void {  
+      // Cargo la Talla cada vez que cambio de Producto
+    /* this.CargarTalla();   */
+    this.eventoProducto = Evento;
+    this.camposFormularioBodegaInventario.get('tipoTalla').setValue(null);
+    this.camposFormularioBodegaInventario.get('talla').setValue(null);
+    this.camposFormularioBodegaInventario.get('cantidad').setValue(null);
+     // Mientas no se seleccione el tipoTalla no hay listaTalla
+    this.listaTalla1 = [];
   }
 
   // Cargar Tipo Talla
@@ -73,80 +89,116 @@ export class FormBodegaInventarioComponent implements OnInit {
     });
   }
 
+  // Lista tipo de Tallas Seleccionada
+  ArrayTipoTallaSeleccionada(event): void {
+    this.eventoTipoTalla = event;
+
+    // Calcula las tallas Disponibles
+    this.TallasDisponibles(event);
+  }  
+
+// Crea Array Con las Tallas que no se han Seleccionado
+CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
+  this.eventoTallasNoSeleccionadas = event;
+}
+
+  // Calcula las tallas Disponibles por Producto, recive el eventoTipoTalla
+  TallasDisponibles(Evento): void{
+
+    // Se carga la lista para que se inicie siempre con la misma lista de tallas en eventoTipoTalla
+    this.CargarTalla();
+
+    // Se comparamos la lista original de Tallas con la lista de tallas de el tipoTalla
+    this.listaTalla.forEach(tallaLista => {
+      Evento.value.tallas.forEach(tallaEvent => {
+        if(tallaEvent.id === tallaLista.id) {
+          this.listaTalla1.push(tallaLista);
+        }
+      });
+    });
+
+
+    // Lista de Componentes de Bodega
+    let listaComponenteBodega = this.camposFormularioBodegaInventario.get('listaComponentesInventario').value;
+    // Producto Seleccionado
+    let ProductoSelec = this.camposFormularioBodegaInventario.get('producto').value;
+
+ 
+    if(this.camposFormularioBodegaInventario.get('listaComponentesInventario').value.length != 0) {
+ 
+       // Recorro la lista Componente Bodega
+       listaComponenteBodega.forEach( (elementoBodega, index2) => {
+
+        // Recorro la lista De Tallas
+        this.listaTalla1.forEach( (elementoTalla, index1) => {
+ 
+         // Preginto si el producto seleccionado es igual al producto en lista Componente
+         if(this.eventoProducto.value.id == elementoBodega.producto.id){
+             
+           if(elementoTalla.id == elementoBodega.talla.id){// Las tallas seleccionadas por producto
+           
+             this.indice = this.listaTalla1.indexOf(elementoTalla);
+             this.listaTalla1.splice(this.indice, 1);
+             
+       
+           } 
+         }
+       });
+       
+      });
+    
+    }
+
+  }
+  
+ 
+
   // Crear Formulario Bodega Inventario
   CrearFormularioBodegaInventario(): void {
     this.camposFormularioBodegaInventario = this.constructorFormularioBodegaInventario.group(
       {
         tipoTalla: ['', Validators.required],
         producto: ['', Validators.required],
-        talla: [''],
-        cantidad: [''],
-        estadoDescuento: [false],
-        descuento: [''],
+        talla: ['', Validators.required],
+        cantidad: ['', Validators.required],
         listaComponentesInventario: this.constructorFormularioBodegaInventario.array([])
       }
     );
   }
 
-  // Crea Formulario Componetes
+  // Crea Formulario Lista Componentes Inventario
   CrearComponentesDeInventario(): FormGroup {
     return this.constructorFormularioBodegaInventario.group({
-      talla_: this.camposFormularioBodegaInventario.get("talla").value,
-      cantidad_: this.camposFormularioBodegaInventario.get("cantidad").value,
-      estadoDescuento_: this.camposFormularioBodegaInventario.get("estadoDescuento").value,
-      descuento_: this.camposFormularioBodegaInventario.get("descuento").value
-    });
+      talla: this.camposFormularioBodegaInventario.get("talla").value,
+      cantidad: this.camposFormularioBodegaInventario.get("cantidad").value,
+      producto: this.camposFormularioBodegaInventario.get("producto").value,
+      });
   }
 
 // Quitar Lista de Componente inventario
 EliminarComponenteInventarioArray(posicion: number): void {
-  this.listaTalla.push(this.listaComponentesInventario.value[posicion].talla_);
+  this.listaTalla1.push(this.listaComponentesInventario.value[posicion].talla);
   this.listaComponentesInventario.removeAt(posicion);
+  // Mientas no se seleccione el tipoTalla no hay listaTalla
+  this.listaTalla1 = [];
 }
 
- // Seleccion de MatSlideToggleChange
- SeleccionEstadoDescuento(evento: MatSlideToggleChange) {
-  let listaCamposForm: FormArray;
-  listaCamposForm = this.camposFormularioBodegaInventario.get('listaComponentesInventario') as FormArray;
-  if (evento.checked) {
-    this.estadoDescuento = evento.checked; // true
-  } else {
-    this.estadoDescuento = false;
-  }
-  if (listaCamposForm.length !== 0) {
-    listaCamposForm.value[listaCamposForm.length - 1].descuento = ''; // Pone en descuento un vacio
-  }
-  }
 // Componentes de Inventario
 AgregarComponentesInventario(): void {
-
-  if (this.camposFormularioBodegaInventario.get('estadoDescuento').value == null) {
-    this.camposFormularioBodegaInventario.get('estadoDescuento').setValue(false);
-  }
 
   this.listaComponentesInventario = this.camposFormularioBodegaInventario.get('listaComponentesInventario') as FormArray;
   this.listaComponentesInventario.push(this.CrearComponentesDeInventario());
 
   // agrego el componente pongo en nulo los Campos
+  this.camposFormularioBodegaInventario.get('tipoTalla').setValue(null);
   this.camposFormularioBodegaInventario.get('talla').setValue(null);
   this.camposFormularioBodegaInventario.get('cantidad').setValue(null);
-  this.camposFormularioBodegaInventario.get('estadoDescuento').setValue(null);
-  this.camposFormularioBodegaInventario.get('descuento').setValue(null);
-  this.estadoDescuento = false;
-  this.listaTalla.splice(this.indice, 1); // 1 es la cantidad de elemento a eliminar
+  // Mientas no se seleccione el tipoTalla no hay listaTalla
+  this.listaTalla1 = [];
+
 }
 
-// Lista tipo de Tallas Seleccionada
-ArrayTipoTallaSeleccionada(event): void {
-  this.eventoTipoTalla = event;
-  this.listaTalla = event.value.tallas;
-}
 
-// Crea Array Con las Tallas que no se han Seleccionado
-CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
-  this.eventoTallasNoSeleccionadas = event;
-  this.indice = this.listaTalla.indexOf(event.value);
-}
 
   get ObtenerListaComponentesInventario() {
     return this.camposFormularioBodegaInventario.get('listaComponentesInventario') as FormArray;
@@ -198,55 +250,6 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
     ? false : TT1.id === TT2.id;
   }
 
-  get FormularioNoValido(): boolean {
-    let inValida: boolean;
-    inValida = true;
-
-    if (this.camposFormularioBodegaInventario.invalid === true) {
-      // console.log("Formulario Invalido debe seleccionar Producto y Tipo talla");
-
-     } else {
-       // console.log("Se a Seleccionado Producto y Talla");
-
-       if (this.camposFormularioBodegaInventario.get('talla').value === '' ||
-       this.camposFormularioBodegaInventario.get('talla').value == null ) {
-
-        if (this.camposFormularioBodegaInventario.get('cantidad').value === '' ||
-        this.camposFormularioBodegaInventario.get('cantidad').value == null) {
-          // console.log("La talla y Cantidad No Seleccionada");
-        } else {
-          // console.log("Talla Seleccionada y Cantidad No Seleccionada");
-        }
-
-       } else {
-        if (this.camposFormularioBodegaInventario.get('cantidad').value == '' ||
-        this.camposFormularioBodegaInventario.get('cantidad').value == null) {
-          // console.log("La talla Seleccionada y Cantidad No Seleccionada");
-        } else {
-          // console.log("Talla y Cantidad Seleccionadas");
-          if (this.camposFormularioBodegaInventario.get('estadoDescuento').value == true) {
-            // console.log("hay descuento: "+this.camposFormularioBodegaInventario.get('estadoDescuento').value);
-            if (this.camposFormularioBodegaInventario.get('descuento').value == '' ||
-            this.camposFormularioBodegaInventario.get('descuento').value == null) {
-              // console.log("Debe llenar el Descuento");
-            } else {
-              // console.log("Talla, Cantidad y Descuento son Validos");
-              // console.log("El Formulario Es Valido");
-              inValida = false;
-              // console.log("Invalida"+inValida);
-            }
-          } else {
-           // console.log("No hay descuento: "+(this.camposFormularioBodegaInventario.get('estadoDescuento').value));
-           inValida = false;
-           // console.log("El Formulario Es Valido");
-           // console.log("Invalida"+inValida);
-          }
-        }
-      }
-     }
-
-    return inValida;
-  }
 
   get TipoTallaNoValido(): boolean {
     return this.camposFormularioBodegaInventario.get('talla').invalid &&

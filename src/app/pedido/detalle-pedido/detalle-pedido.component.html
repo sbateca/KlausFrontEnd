@@ -32,11 +32,11 @@
                             <td>{{cotizacion.bodegaInventario.producto.nombre}}</td>
                             <td>{{cotizacion.bodegaInventario.producto.referencia}}</td>
                             <td>{{cotizacion.bodegaInventario.talla.talla}}</td>
-                            <td>$ {{FormatoSeparadorDecimal(cotizacion.bodegaInventario.producto.precioVenta)}}</td>
+                            <td>$ {{(cotizacion.bodegaInventario.producto.precioVenta)|number}}</td>
                             <td>{{cotizacion.descuento}}</td>
-                            <td>$ {{ FormatoSeparadorDecimal((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))-((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*pedido.valorIva/100))}}</td>
+                            <td>$ {{ ((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))-((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*pedido.valorIva/100))|number}}</td>
                             <td>$ {{((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*pedido.valorIva/100) | number}}</td>
-                            <td>$ {{ FormatoSeparadorDecimal(cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100))) }}</td>
+                            <td>$ {{ (cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100))) |number}}</td>
                             <td>{{ cotizacion.cantidad }}</td>
                             <td>$ {{ ((cotizacion.bodegaInventario.producto.precioVenta - (cotizacion.bodegaInventario.producto.precioVenta*(cotizacion.descuento/100)))*cotizacion.cantidad) | number:'0.2-5' }}</td>
                         </tr>
@@ -50,11 +50,11 @@
 
                 <tr>
                     <th class="text-secondary font-weight-normal">Iva:</th>
-                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorIva/100*pedido?.valorFinalVenta) }}</small></th>
+                    <th class="text-dark"><small>$  {{ (pedido?.valorIva/100*pedido?.valorFinalVenta)|number }}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Valor General:</th>
-                    <th class="text-dark"><small>$  {{ FormatoSeparadorDecimal(pedido?.valorFinalVenta) }}</small></th>
+                    <th class="text-dark"><small>$  {{ (pedido?.valorFinalVenta)|number }}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Observaciones:</th>
@@ -70,7 +70,7 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">NIT:</th>
-                    <th class="text-dark"><small>{{ FormatoSeparadorDecimal(pedido?.cliente.documento)}}</small></th>
+                    <th class="text-dark"><small>{{ (pedido?.cliente.documento)|number}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Dirección:</th>

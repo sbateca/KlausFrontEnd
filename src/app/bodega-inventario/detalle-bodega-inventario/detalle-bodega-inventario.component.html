@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Costo(COP $):</th>
-                    <th class="text-dark"><small>{{FormatoSeparadorDecimal(bodegaInventario.producto.costo)}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario.producto.costo) | number}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Precio de Venta(COP $):</th>
@@ -41,7 +41,7 @@
                             <tbody>
                                 <tr *ngFor="let pieza of bodegaInventario.producto.piezas; let i = index">
                                     <th scope="row">{{i+1}}</th>
-                                    <td>{{pieza.nombre}}</td>
+                                    <td>{{pieza.nombrePieza}}</td>
                                     <td>{{pieza.material.nombre}}</td>
                                     <td>{{pieza.color.nombre}}</td>
                                     <td>{{pieza.observacion}}</td>

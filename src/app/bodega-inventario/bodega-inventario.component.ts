@@ -5,9 +5,12 @@ import { BodegaInventario } from './bodega-inventario';
 import { BodegaInventarioService } from './bodega-inventario.service';
 import swal from 'sweetalert2';
 import { DetalleBodegaInventarioComponent } from './detalle-bodega-inventario/detalle-bodega-inventario.component';
+// import alertasSweet from 'sweetalert2';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
+/* import { Talla } from '../tallas/talla';
+import { TipoTalla } from '../tiposTallas/TipoTalla'; */
 
 @Component({
   selector: 'app-bodega-inventario',
@@ -20,7 +23,7 @@ export class BodegaInventarioComponent implements OnInit {
   public listaBodegaInventario = new Array<BodegaInventario>();
   public contador = new Array( this.listaBodegaInventario.length);
   public listaBodegaInventarioActualizada = new Array<BodegaInventario>();
-public total = 0;
+  public total = 0;
   private bodegaInventarioAgregar = new BodegaInventario();
 
   // Tabla
@@ -31,14 +34,20 @@ public total = 0;
 
   ngOnInit(): void {
 
-    this.bodegaInventarioService.ListaBodegaInventario().subscribe( bodegaInventario => {
-      this.listaBodegaInventario = bodegaInventario;
-      this.listaBodegaInventario.forEach(elemento => {
-      this.total = this.total + elemento.cantidad;
-      });
-    });
+    this.CargarBodegaInventario();
     this.ListarPaginado();
   }
+
+// Cargar Bodega Inventario
+CargarBodegaInventario(): void{
+  this.bodegaInventarioService.ListaBodegaInventario().subscribe( bodegaInventario => {
+    this.listaBodegaInventario = bodegaInventario;
+    this.listaBodegaInventario.forEach(elemento => {
+      // Sumatoria de cantidad
+      this.total = this.total + elemento.cantidad;
+    });
+  });
+}
 
 // Abrir Formulario Bodega Inventario
 AbrirFormularioBodegaInventario(): void {
@@ -49,7 +58,7 @@ AbrirFormularioBodegaInventario(): void {
       position: {left: '30%', top: '60px'}
  });
   VentanaModal.afterClosed().subscribe( inventarioFormulario => {
-  // no hay resultados cuando se cancela la operación (se cierra la ventana modal)
+  // No hay resultados cuando se cancela la operación (se cierra la ventana modal)
   if (inventarioFormulario != null) {
     this.CrearBodegaInventario(inventarioFormulario);
   }
@@ -60,97 +69,96 @@ AbrirFormularioBodegaInventario(): void {
 // Crear Bodega Inventario
 CrearBodegaInventario(inventarioFormulario): void {
 
+  // Recorremos la lista que viene de Base de Datos para tomar cada uno de los productos y
+  // compararlo con el que viene del formulario
   this.bodegaInventarioService.ListaBodegaInventario().subscribe( listaInventarioBD => {
 
-      /*
-        recorremos la lista que viene de base de datos para tomar cada uno de los productos y
-        compararlo con el que viene del formulario
-      */
-
+      // Por primera vez
       if (listaInventarioBD.length === 0) {
+        
+        // Recorro la listaComponenteInventario de Formulario
         inventarioFormulario.listaComponentesInventario.forEach( elementoFormulario => {
-          const objetoInventario = new BodegaInventario();
-          objetoInventario.producto = inventarioFormulario.producto;
-          objetoInventario.cantidad = elementoFormulario.cantidad_;
-          objetoInventario.estadoDescuento = elementoFormulario.estadoDescuento_;
-          objetoInventario.descuento = elementoFormulario.descuento_;
-          objetoInventario.talla = elementoFormulario.talla_;
-          objetoInventario.talla.tipoTalla = inventarioFormulario.tipoTalla;
+          
 
-          this.bodegaInventarioService.CrearBodegaInventario(objetoInventario).subscribe( resultadoAgregar => {
-            this.ListarPaginado();
+          this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {
+            this.ListarPaginado(); 
             swal.fire('Nuevo Producto en Bodega Inventario',
-               `Bodega Inventario ${objetoInventario.producto.nombre} creado con exito!`, 'success');
+           `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
           });
+          
         });
-      } else {
+      } else { // si ya hay algo en la lista
 
         let contador1 = 0;
 
 
-        listaInventarioBD.forEach((elementoInventarioBD: BodegaInventario, index: number, array: BodegaInventario[]) => {
-          // recorremos la lista de tallas del formulario para compararlas con el elemento de inventario de turno
-
+        // Recorremos la lista de tallas del formulario para compararlas con el elemento de inventario de turno
+        listaInventarioBD.forEach((elementoInventarioBD, index) => {
+          
+          // Cuando solo hay un Producto en listaComponenteBodega
           if (inventarioFormulario.listaComponentesInventario.length === 1) {
+            // Cuenta los que no estan en base de Datos
             contador1++;
+            console.log("contador1");
+            console.log(contador1);
           }
 
+          // Se Recorre listaComponente
           inventarioFormulario.listaComponentesInventario.forEach( (elementoFormulario, index2) => {
-            if (index < 1 )  { // Para que una sola vez se iniciallice en cero 
+            // Para que la primera pocicion del array Contador se iniciallice en cero
+            if (index < 1 )  {  
               this.contador[index2] = 0;
             }
-
-            const objetoInventario = new BodegaInventario();
-            objetoInventario.producto = inventarioFormulario.producto;
-            objetoInventario.cantidad = elementoFormulario.cantidad_;
-            objetoInventario.estadoDescuento = elementoFormulario.estadoDescuento_;
-            objetoInventario.descuento = elementoFormulario.descuento_;
-            objetoInventario.talla = elementoFormulario.talla_;
-            objetoInventario.talla.tipoTalla = inventarioFormulario.tipoTalla;
-
-            const hayTalla = this.comprobarExisteTallaEnBD(elementoInventarioBD, objetoInventario);
-
+            
+            // Variable resultado de la comparacion de Formulario con lo que hay en Base de Datos
+            const hayTalla = this.comprobarExisteTallaEnBD(elementoInventarioBD, elementoFormulario);
+            
+            // Si esta en BD
             if (hayTalla) {
+              
+              // Adiciono la id de Base De Datos
+              elementoFormulario.id = elementoInventarioBD.id;
+             
+              // Sumo las cantidades del mismo Producto
+              elementoFormulario.cantidad = elementoInventarioBD.cantidad + elementoFormulario.cantidad;
 
-              objetoInventario.id = elementoInventarioBD.id;
-              objetoInventario.cantidad = elementoInventarioBD.cantidad + elementoFormulario.cantidad_;
-              this.bodegaInventarioService.ActualizarBodegaInventario(objetoInventario).subscribe( resultadoAgregar => {
-                this.ListarPaginado();
-                swal.fire('Nuevo Producto en Bodega Inventario',
-                   `Bodega Inventario ${objetoInventario.producto.nombre} creado con exito!`, 'success');
-              });
+              // Actualizo
+              this.bodegaInventarioService.ActualizarBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => { });
               contador1 = 0;
+              this.ListarPaginado(); 
+              swal.fire('Nuevo Producto en Bodega Inventario',
+               `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
             } else {
 
+              // Array Contador por talla
               this.contador[index2]++;
 
+              // 
               if (this.contador[index2] === listaInventarioBD.length || contador1 === listaInventarioBD.length ) {
 
-                this.bodegaInventarioService.CrearBodegaInventario(objetoInventario).subscribe( resultadoAgregar => { });
+                this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {});
                 contador1 = 0;
               }
             }
-            
-        swal.fire('Nuevo Producto en Bodega Inventario',
-           `Bodega Inventario ${ objetoInventario.producto.nombre} creado con exito!`, 'success');
-        });
+           
           });
-          
-          this.ListarPaginado();
+        });
       }
+      this.ListarPaginado();
+      swal.fire('Nuevo Producto en Bodega Inventario',
+               `Bodega Inventario creado con exito!`, 'success'); 
   });
+   
 }
 
-comprobarExisteTallaEnBD(elementoBD: BodegaInventario, elementoABuscar: BodegaInventario): boolean {
-// comprobarExisteTallaEnBD(): boolean {
+// Consulta si el producto ya esta en base de Datos y le pone true
+comprobarExisteTallaEnBD(elementoBD, elementoABuscar): boolean {
     if (elementoBD.producto.id === elementoABuscar.producto.id) {
-      if (elementoBD.talla.tipoTalla.id === elementoABuscar.talla.tipoTalla.id) {
         if (elementoBD.talla.id === elementoABuscar.talla.id) {
           return true;
         } else {
           return false;
         }
-      }
     }
 
 }

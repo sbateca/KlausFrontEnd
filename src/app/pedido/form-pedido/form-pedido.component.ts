@@ -122,12 +122,7 @@ CargarTallas(id): void {
               }
             } 
           } else {// Si No es el producto se suma la talla tampoco se selecciona
-              this.contador1[j] ++;
-              /* if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){
-                console.log("productoIgual");
-            console.log(this.eventoProducto.value);
-              } */
-              
+              this.contador1[j] ++;             
           }
 
           // Si la cantidad de tallas sin seleccionar es igual a la longitud de la lista cotizada, 
@@ -249,7 +244,7 @@ CrearFormulario(): void {
    });
 }
 
-// Crea Formulario Componetes
+// Crea Formulario Lista Cotizacion
 CrearListaCotizacion(): FormGroup {
   return this.constructorFormulario.group({
     bodegaInventario: this.bodegaInventario,
@@ -289,17 +284,15 @@ AgregarListaCotizacion(): void {
 get ObtenerListaCotizacion() {
   return this.camposFormulario.get('listaCotizacion') as FormArray;
 }
-  
+
+activar = true;
 // Enviar Formulario
 EnviarFormularioCotizacion() {
-  /* console.log("Cotizacion");
-  console.log(this.listaCotizacion); */
- /*  if(this.listaCotizacion.value.length === 0) {
-    this.alertaSnackBar.open('Debe Agregar como minimo un Producto!!', 'Cerrar', {
-      duration: 5000
-    });
 
-  } else { */
+  if(this.listaCotizacion == undefined){
+    this.activar = false;
+  }
+
   if (this.listaCotizacion == null && this.camposFormulario.invalid === true) {
     this.alertaSnackBar.open('Debe Agregar como minimo un Producto!!', 'Cerrar', {
      duration: 5000

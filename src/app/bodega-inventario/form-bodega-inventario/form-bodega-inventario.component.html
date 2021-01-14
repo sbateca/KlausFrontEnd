@@ -5,46 +5,37 @@
 </ng-template>
 <div mat-dialog-content>
     <form [formGroup]="camposFormularioBodegaInventario">
-        <div class="card-body col-sm-12">
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Producto</mat-label>
-                <mat-select formControlName="producto" [compareWith]="CompararProducto">
-                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">
-                        <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
-                </mat-select>
-                <mat-error>Debe seleccionar El producto</mat-error>
-            </mat-form-field>
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Tipo Talla</mat-label>
-                <mat-select formControlName="tipoTalla" [compareWith]="CompararTipoTalla" (selectionChange)="ArrayTipoTallaSeleccionada($event)">
-                    <mat-option [value]="tipoTalla" *ngFor="let tipoTalla of listaTipoTalla">{{tipoTalla.tipoTalla}}</mat-option>
-                </mat-select>
-                <mat-error>Debe seleccionar El producto</mat-error>
-            </mat-form-field>
-        </div>
+        <mat-form-field class="cuatroPartes">
+            <mat-label>Producto</mat-label>
+            <mat-select formControlName="producto" [compareWith]="CompararProducto" (selectionChange)="EventoProducto($event)">
+                <mat-option [value]="producto" *ngFor="let producto of listaProductos">
+                    <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
+            </mat-select>
+            <mat-error>Debe seleccionar El producto</mat-error>
+        </mat-form-field>
+        <mat-form-field class="cuatroPartes">
+            <mat-label>Tipo Talla</mat-label>
+            <mat-select formControlName="tipoTalla" [compareWith]="CompararTipoTalla" (selectionChange)="ArrayTipoTallaSeleccionada($event)">
+                <mat-option [value]="tipoTalla" *ngFor="let tipoTalla of listaTipoTalla">{{tipoTalla.tipoTalla}}</mat-option>
+            </mat-select>
+            <mat-error>Debe seleccionar El producto</mat-error>
+        </mat-form-field>
+
         <mat-form-field class="cuatroPartes">
             <mat-label>Talla</mat-label>
             <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event, i)">
-                <mat-option [value]="talla" *ngFor="let talla of listaTalla">{{talla.talla}}</mat-option>
+                <mat-option [value]="talla" *ngFor="let talla of listaTalla1">{{talla.talla}}</mat-option>
             </mat-select>
             <mat-error>Debe seleccionar la Talla</mat-error>
         </mat-form-field>
 
         <mat-form-field class="cuatroPartes">
             <mat-label>Cantidad</mat-label>
-            <input type="number" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
+            <input type="number" name="cantidad" pattern="^[0-9]+" matInput placeholder="Cantidad" formControlName="cantidad">
             <mat-error>Debe digitar la Cantidad</mat-error>
         </mat-form-field>
 
-        <mat-slide-toggle class="cuatroPartes primary" formControlName="estadoDescuento" (change)="SeleccionEstadoDescuento($event)">Descuento</mat-slide-toggle>
-
-        <mat-form-field class="cuatroPartes" *ngIf="estadoDescuento">
-            <mat-label>Descuento</mat-label>
-            <input type="number" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
-            <mat-error>Debe digitar el porcentaje de descuento</mat-error>
-        </mat-form-field>
-
-        <h4>Agregar talla <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarComponentesInventario()"><mat-icon>add_circle</mat-icon></button></h4>
+        <h4>Agregar talla <button mat-icon-button color="basic" [disabled]="this.camposFormularioBodegaInventario.invalid" matTooltip="Agregar Componentes de Inventario" (click)="AgregarComponentesInventario()"><mat-icon>add_circle</mat-icon></button></h4>
 
         <div class="example-headers-align" formArrayName="listaComponentesInventario">
 
@@ -53,42 +44,24 @@
                 <thead *ngIf="listaComponentesInventario">
                     <tr class="thead-light">
                         <th> No.</th>
+                        <th>Producto</th>
                         <th>Talla</th>
                         <th>Cantidad</th>
-                        <th>Estado Descuento</th>
-                        <th>Descuento</th>
                         <th>Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let componenteInventario of ObtenerListaComponentesInventario.controls; let i = index;" [formGroupName]="i">
 
-                        <td>
-                            <div>
-                                <div>
-                                    Componente No. {{i+1}}
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            {{componenteInventario.get("talla_").value.talla}}
-                        </td>
-                        <td>
-                            {{componenteInventario.get('cantidad_').value}}
-                        </td>
-                        <td>
-                            {{componenteInventario.get('estadoDescuento_').value==true ? 'Si':'No'}}
-                        </td>
-                        <td>
-                            {{componenteInventario.get('descuento_').value}}
-                        </td>
+                        <td>{{i+1}}</td>
+                        <td>{{componenteInventario.get('producto').value.referencia}} </td>
+                        <td>{{componenteInventario.get("talla").value.talla}}</td>
+                        <td>{{componenteInventario.get('cantidad').value}}</td>
                         <td>
                             <mat-action-row>
                                 <button mat-icon-button color="basic" matTooltip="Eliminar Componente de Inventario" (click)="EliminarComponenteInventarioArray(i)"><mat-icon>delete</mat-icon></button>
                             </mat-action-row>
                         </td>
-
-
                     </tr>
                 </tbody>
             </table>
