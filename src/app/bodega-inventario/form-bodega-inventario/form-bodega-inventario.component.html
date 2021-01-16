@@ -23,7 +23,7 @@
 
         <mat-form-field class="cuatroPartes">
             <mat-label>Talla</mat-label>
-            <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event, i)">
+            <mat-select formControlName="talla" [compareWith]="CompararTalla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event, i)">
                 <mat-option [value]="talla" *ngFor="let talla of listaTalla1">{{talla.talla}}</mat-option>
             </mat-select>
             <mat-error>Debe seleccionar la Talla</mat-error>

@@ -114,7 +114,7 @@ AbrirFormularioEmpresaTransportadora(): void {
   if (resultado != null) {
       // el resultado es que se ha llenado en el formulario
       this.empresaTransportadora = resultado;
-      console.log(resultado);
+      /* console.log(resultado); */
       this.CrearEmpresaTransportadora();
   }
 });

@@ -27,6 +27,7 @@ export class FormBodegaInventarioComponent implements OnInit {
   public listaTipoTalla: TipoTalla[];
   public listaTalla: Talla[];
   public listaTalla1: Talla[];
+  public talla1: Talla;
   public estadoDescuento: boolean;
   public indice: number;
   public i: number;
@@ -55,6 +56,7 @@ export class FormBodegaInventarioComponent implements OnInit {
     this.CrearFormularioBodegaInventario();
     this.indice = 0;
     this.i = 0;
+    this.CargarFormularioBodegaInventario();
   }
 
   // Cargar Producto
@@ -66,7 +68,6 @@ export class FormBodegaInventarioComponent implements OnInit {
    // Evento Producto
    EventoProducto(Evento): void {  
       // Cargo la Talla cada vez que cambio de Producto
-    /* this.CargarTalla();   */
     this.eventoProducto = Evento;
     this.camposFormularioBodegaInventario.get('tipoTalla').setValue(null);
     this.camposFormularioBodegaInventario.get('talla').setValue(null);
@@ -126,8 +127,8 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
  
     if(this.camposFormularioBodegaInventario.get('listaComponentesInventario').value.length != 0) {
  
-       // Recorro la lista Componente Bodega
-       listaComponenteBodega.forEach( (elementoBodega, index2) => {
+      // Recorro la lista Componente Bodega
+      listaComponenteBodega.forEach( (elementoBodega, index2) => {
 
         // Recorro la lista De Tallas
         this.listaTalla1.forEach( (elementoTalla, index1) => {
@@ -139,8 +140,6 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
            
              this.indice = this.listaTalla1.indexOf(elementoTalla);
              this.listaTalla1.splice(this.indice, 1);
-             
-       
            } 
          }
        });
@@ -166,6 +165,47 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
     );
   }
 
+  // Cargar Formulario Bodega Inventario
+  CargarFormularioBodegaInventario(): void {
+    if (this.idBodegaInventario) {
+      this.bodegaInventarioService.VerBodegaInventarioPorId(this.idBodegaInventario).subscribe(bodegaInventario => {
+        this.bodegaInventario = bodegaInventario;
+        // Se hace una lista de un solo elemento talla 
+        this.listaTalla1= [];
+        this.listaTalla.forEach(talla => {
+          if(talla.id == this.bodegaInventario.talla.id){
+            this.listaTalla1.push(talla);
+          }
+        })
+        // Se hace una lista de un solo producto
+        let listaProducto1= this.listaProductos; 
+        this.listaProductos = []; 
+        listaProducto1.forEach( producto => {
+          if(producto.id == this.bodegaInventario.producto.id){
+            this.listaProductos.push(producto);
+          }
+        })
+        // Se hace una lista con un solo lista detalle
+        let listaTipoTalla = this.listaTipoTalla;
+        this.listaTipoTalla = [];
+        listaTipoTalla.forEach( tipoTalla => {
+          if( tipoTalla.id == this.bodegaInventario.talla.tipoTalla.id )
+          this.listaTipoTalla.push(tipoTalla);
+        })
+
+     /*    this.listaTalla = this.talla1; */
+        /* this.listaTalla1 = this.listaTalla;  */// Cargo litaTallas para poder seleccionarla por defecto
+        this.camposFormularioBodegaInventario.setValue({
+          producto: this.bodegaInventario.producto,
+          tipoTalla: this.bodegaInventario.talla.tipoTalla,
+          talla: this.bodegaInventario.talla,
+          cantidad: this.bodegaInventario.cantidad,
+          listaComponentesInventario: []
+        });
+      });
+    }
+  }
+
   // Crea Formulario Lista Componentes Inventario
   CrearComponentesDeInventario(): FormGroup {
     return this.constructorFormularioBodegaInventario.group({
@@ -181,6 +221,14 @@ EliminarComponenteInventarioArray(posicion: number): void {
   this.listaComponentesInventario.removeAt(posicion);
   // Mientas no se seleccione el tipoTalla no hay listaTalla
   this.listaTalla1 = [];
+
+  // Para Actualizar
+  if(this.idBodegaInventario){
+     // Elimino de la lista y cargo el producto que habia por defecto
+    this.CargarFormularioBodegaInventario();
+    this.listaTipoTalla = [];
+   
+  }
 }
 
 // Componentes de Inventario
@@ -195,6 +243,11 @@ AgregarComponentesInventario(): void {
   this.camposFormularioBodegaInventario.get('cantidad').setValue(null);
   // Mientas no se seleccione el tipoTalla no hay listaTalla
   this.listaTalla1 = [];
+
+  // Para Actualizar
+  if(this.idBodegaInventario){
+    this.listaTipoTalla = [];
+  }
 
 }
 
@@ -250,25 +303,21 @@ AgregarComponentesInventario(): void {
     ? false : TT1.id === TT2.id;
   }
 
+  // Comparar Talla
+  CompararTalla( T1: Talla, T2: Talla): boolean {
+    if (T1 === undefined && T2 === undefined) { // ET1, ET2  identico undefined
+      return true;
+    }
+    return ( T1 === null || T2 === null || T1 === undefined || T2 === undefined )
+    ? false : T1.id === T2.id;
+  }
+
 
   get TipoTallaNoValido(): boolean {
     return this.camposFormularioBodegaInventario.get('talla').invalid &&
     this.camposFormularioBodegaInventario.get('talla').touched ;
   }
 
-  // Cargar Formulario Bodega Inventario
-  /*CargarFormularioBodegaInventario(): void {
-    if (this.idBodegaInventario) {
-    this.bodegaInventarioService.VerBodegaInventarioPorId(this.idBodegaInventario).subscribe(bodegaInventario => {
-      this.bodegaInventario = bodegaInventario;
-      this.camposFormularioBodegaInventario.setValue({
-        cantidad: this.bodegaInventario.cantidad ,
-        talla: this.bodegaInventario.referenciaProducto.talla,
-        estadoDescuento: this.bodegaInventario.estadoDescuento,
-        descuento: this.bodegaInventario.descuento ,
-        producto: this.bodegaInventario.referenciaProducto
-      });
-    });
-  }
-}*/
+  
+
 }

@@ -27,7 +27,7 @@ export class BodegaInventarioComponent implements OnInit {
   private bodegaInventarioAgregar = new BodegaInventario();
 
   // Tabla
-  columnasTabla: string [] = ['producto', 'talla', 'cantidad', 'acciones'];
+  columnasTabla: string [] = ['producto', 'referencia', 'talla', 'cantidad', 'acciones'];
 
   constructor(private ventanaModal: MatDialog,
               private bodegaInventarioService: BodegaInventarioService) { }
@@ -80,11 +80,9 @@ CrearBodegaInventario(inventarioFormulario): void {
         inventarioFormulario.listaComponentesInventario.forEach( elementoFormulario => {
           
 
-          this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {
-            this.ListarPaginado(); 
-            swal.fire('Nuevo Producto en Bodega Inventario',
-           `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
-          });
+          this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {this.ListarPaginado(); });
+          swal.fire('Nuevo Producto en Bodega Inventario',
+          `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
           
         });
       } else { // si ya hay algo en la lista
@@ -99,8 +97,6 @@ CrearBodegaInventario(inventarioFormulario): void {
           if (inventarioFormulario.listaComponentesInventario.length === 1) {
             // Cuenta los que no estan en base de Datos
             contador1++;
-            console.log("contador1");
-            console.log(contador1);
           }
 
           // Se Recorre listaComponente
@@ -123,11 +119,10 @@ CrearBodegaInventario(inventarioFormulario): void {
               elementoFormulario.cantidad = elementoInventarioBD.cantidad + elementoFormulario.cantidad;
 
               // Actualizo
-              this.bodegaInventarioService.ActualizarBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => { });
-              contador1 = 0;
-              this.ListarPaginado(); 
+              this.bodegaInventarioService.ActualizarBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {this.ListarPaginado(); });
+              contador1 = 0; 
               swal.fire('Nuevo Producto en Bodega Inventario',
-               `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
+              `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
             } else {
 
               // Array Contador por talla
@@ -136,7 +131,7 @@ CrearBodegaInventario(inventarioFormulario): void {
               // 
               if (this.contador[index2] === listaInventarioBD.length || contador1 === listaInventarioBD.length ) {
 
-                this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {});
+                this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => { this.ListarPaginado();});
                 contador1 = 0;
               }
             }
@@ -144,7 +139,7 @@ CrearBodegaInventario(inventarioFormulario): void {
           });
         });
       }
-      this.ListarPaginado();
+     
       swal.fire('Nuevo Producto en Bodega Inventario',
                `Bodega Inventario creado con exito!`, 'success'); 
   });
@@ -174,18 +169,20 @@ public AbrirVentanaDetalle(idBodegaInventario): void {
    });
 }
 
-// Abrir Ventana Actualizar Bodega Inventario
+// Abrir Ventana Modal Actualizar Bodega Inventario
 AbrirVentanaEditarBodegaInventario(idBodegaInventario): void {
   const referenciaVentanaModal = this.ventanaModal.open(FormBodegaInventarioComponent, {
     width: '60%',
     height: 'auto',
     position: {left: '30%', top: '60px'},
-    data: idBodegaInventario
+    data: idBodegaInventario // Envio el id por medio de data
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     if (resultado) {
-      this.bodegaInventario = resultado;
-      this.bodegaInventario.id = idBodegaInventario;
+      this.bodegaInventario = resultado.listaComponentesInventario[0];// Paso el primer comp de la lista Bodega
+      this.bodegaInventario.id = idBodegaInventario;// El id por que es actualizar 
+     /*  console.log("BodegaInventario");
+      console.log(resultado.listaComponentesInventario[0]); */
       this.ActualizarBodegaInventario();
     }
   });
@@ -196,10 +193,11 @@ ActualizarBodegaInventario(): void {
     this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario)
     .subscribe(respuesta => {
       this.ListarPaginado();
-      // swal.fire('Producto Bodega-Inventario Actializado',
-      // Producto Bodega-Inventario ${this.bodegaInventario.producto.nombre} actualizado con éxito!`, 'success');
-    });
+      swal.fire('Producto Actualizado de Bodega-Inventario!', 
+      'Producto <strong>' + this.bodegaInventario.producto.referencia + '</strong> Actualizado con éxito.', 'success');
+    }); 
   }
+  
 // Eliminar Bodega Inventario
 EliminarBodegaInventario(bodegaInventario: BodegaInventario): void {
   swal.fire ({
@@ -217,8 +215,8 @@ EliminarBodegaInventario(bodegaInventario: BodegaInventario): void {
      if (result.value) {
        this.bodegaInventarioService.EliminarBodegaInventario(bodegaInventario.id).subscribe(respuesta => {
         this.ListarPaginado();
-      // alertasSweet.fire('Producto Eliminado de Bodega-Inventario!', 
-      // 'Producto <strong>' + bodegaInventario.producto.nombre + '</strong> Eliminado con éxito.', 'success');
+        swal.fire('Producto Eliminado de Bodega-Inventario!', 
+        'Producto <strong>' + bodegaInventario.producto.nombre + '</strong> Eliminado con éxito.', 'success');
         });
      }
     });

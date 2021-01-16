@@ -73,6 +73,7 @@ export class FormenviociudadComponent implements OnInit {
         });
       });
       this.listatipoenvio = FiltroListaTipoEnvio;
+      console.log("ListaTipoEnvio");
       console.log(this.listatipoenvio);
 
     });
@@ -128,9 +129,12 @@ export class FormenviociudadComponent implements OnInit {
     // Cargar Envio Ciudad en formulario editar
     cargarEnvioCiudad(): void {
       if (this.idEnvioCiudad) {
+        console.log("idEnvio");
         console.log(this.idEnvioCiudad);
         this.enviociudadservice.verEnvioCiudadPorId(this.idEnvioCiudad).subscribe(enviociudad => {
           this.envioCiudad = enviociudad;
+          console.log("envioCiudad");
+          console.log(this.envioCiudad);
           this.CargarListaCiudadesPorDefecto(this.envioCiudad.ciudad.departamento);
           this.camposformularioEnviociudad.setValue({
              tipoEnvio: this.envioCiudad.tipoEnvio, // Se carga el objeto TipoEnvio completo
