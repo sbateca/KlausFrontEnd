@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
-// import swal from 'sweetalert2';
 import swal from 'sweetalert2'; // implementamos
 import alertasSweet from 'sweetalert2';
 import { Ciudad } from '../ciudades/ciudad';
@@ -12,19 +11,11 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
 
-
-import { MatTooltipModule } from '@angular/material/tooltip'; // Tooltips
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-
-/*
-  Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog)
-*/
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+/* Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog) */
+import { MatDialog} from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
-import { Pedido } from '../pedido/pedido';
-import { PedidoComponent } from '../pedido/pedido.component';
+
 
 @Component({
   selector: 'app-clientes',

@@ -14,9 +14,6 @@ import { Talla } from '../../tallas/talla';
 import { ProductoService } from '../../productos/producto.service';
 import { TallaService } from '../../tallas/talla.service';
 import { MatSelectChange } from '@angular/material/select';
-import { Cotizacion } from '../../cotizacion/cotizacion';
-
-
 
 
 @Component({
@@ -35,11 +32,12 @@ export class FormPedidoComponent implements OnInit {
   public listaProductos: Producto[];
   public listaTipoTalla: TipoTalla[];
   public listaTalla: Talla[];
-  tallaEliminada: Talla;
+  public tallaEliminada: Talla;
   public listaTalla1 = new Array<Talla>();
   public eventoProducto: MatSelectChange;
   public eventoTipoTalla: MatSelectChange;
   public eventoTallaSeleccionada: MatSelectChange;
+  public eventoInput = 0;
   public indice = 0;
   public importe = 0;
   public contador = 0;
@@ -178,19 +176,21 @@ descuentoForm = 0;
 precioVentaForm = 0;
 cantidadForm = 0;
 subTotal = 0;
+calculadora = false;
 
-// Evento input captura los numeros en value
-onKey(value: number): boolean {
-
+// Calcula Cuenta Pedido y
+CalcularCuentaPedido(){
+  this.calculadora = true;
   // Valor Descuento
   this.descuentoForm = this.camposFormulario.value.descuento;
   // Valor Cantidad
   this.cantidadForm = this.camposFormulario.value.cantidad;
   
-  // Me desplazo por cada elemento de bodega y detecto el mismo apartir de Producto y Talla
+  // Me desplazo por la lista de bodega y se busca el mismo elemento a partir de seleccionar Producto y Talla
   this.listaBodegaInventario.forEach(elementoBodegaInventario => {
     if(elementoBodegaInventario.producto.id === (this.eventoProducto.value.id)){
       if(elementoBodegaInventario.talla.id === (this.eventoTallaSeleccionada.value.id)) {
+        // Bodega Inventario 
         this.bodegaInventario = elementoBodegaInventario;
         
         // Precio de Venta
@@ -201,6 +201,20 @@ onKey(value: number): boolean {
       }
     } 
   });
+
+  return this.calculadora;
+}
+
+
+
+// Evento input captura los numeros en value
+onKey(value: number): boolean {
+
+  // Se busca el elemento de Bodega Inventario Seleccionado en el Formulario (this.bodegaInventario)
+  this.CalcularCuentaPedido();
+
+  // Siempre que digito una cantidad calculadora se pone false para no mostrar el calculo
+  this.calculadora = false;
 
   // Observa si el valor del input de la cantidad de pedido es menor a la cantidad de producto en Bodega
   if (value <= this.bodegaInventario.cantidad) {
@@ -277,6 +291,9 @@ AgregarListaCotizacion(): void {
   // Importe suma los subtotales de cada pedido
   this.importe = this.importe + (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[this.contador].descuento/100))*(this.camposFormulario.value.listaCotizacion[this.contador].cantidad);
   this.contador++;
+
+  // Siempre que agrego pongo calculadora en false para no mostrar el calculo
+  this.calculadora = false;
  
 }
 

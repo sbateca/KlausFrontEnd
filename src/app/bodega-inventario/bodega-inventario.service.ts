@@ -40,7 +40,7 @@ export class BodegaInventarioService extends CommonService<BodegaInventario> {
     );
   }
   // Guardar Bodega Inventario
-  CrearBodegaInventario(bodegaInventario: BodegaInventario): Observable<BodegaInventario> {
+  CrearBodegaInventario(bodegaInventario: BodegaInventario): Observable<any> {
     return this.httpCliente.post<BodegaInventario>(`${this.urlBodegaInventario}`, bodegaInventario, {headers: this.httpHeaders}).pipe(
       catchError(e => {
       swal.fire(e.error.mensaje, e.error.error, 'error');

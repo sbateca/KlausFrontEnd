@@ -61,14 +61,36 @@
                 <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
             </mat-form-field>
 
-            <div class="alert alert-light" role="alert" *ngIf="precioVentaForm != 0">
-                Cantidad Total En Bodega: {{bodegaInventario.cantidad}}
-                <br> Precio de venta: $ {{(precioVentaForm) | number}}
-                <br> SubTotal: $ {{(subTotal) | number}}
+            <button class=" text-center" *ngIf="!FormularioNoValido" mat-button button-hover color="primary" (click)="CalcularCuentaPedido()"><strong>Calcular Precio</strong> </button>
+
+            <!-- Calculadora-->
+            <div *ngIf="calculadora">
+                <div class="w-100 text-center">
+                    Hay <strong>{{(bodegaInventario.cantidad) | number}}</strong> unidades de Zapatos {{bodegaInventario.producto.referencia}}-{{bodegaInventario.talla.talla}} En Bodega
+                </div>
+
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr class="thead-light">
+                            <th>Precio Venta</th>
+                            <th>Cantidad Pedido</th>
+                            <th>SubTotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$ {{(precioVentaForm) | number}}</td>
+                            <td>{{(cantidadForm)|number}}</td>
+                            <td>$ {{(subTotal) | number}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
+            <br>
 
 
+            <!-- Boton Agregar Cotizacion-->
             <h4>Agregar Cotizacion <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
 
             <div class="example-headers-align" formArrayName="listaCotizacion">

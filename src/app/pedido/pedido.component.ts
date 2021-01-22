@@ -16,6 +16,8 @@ import { Cliente } from '../clientes/cliente';
 import { ClienteService } from '../clientes/cliente.service';
 import { Router } from '@angular/router';
 import { BodegaInventarioService } from '../bodega-inventario/bodega-inventario.service';
+import { Movimiento } from '../movimientos/movimiento';
+import { MovimientoService } from '../movimientos/movimiento.service';
 
 
 @Component({
@@ -30,6 +32,7 @@ export class PedidoComponent implements OnInit {
   public pedidoConId: Pedido;
   public listaClientes: Cliente[];
   public bodegaInventario: BodegaInventario;
+  public movimiento = new Movimiento();
 
   // Titulos de cada Columna
   columnasTabla: string [] = ['valorFinalVenta', 'cliente', 'acciones'];
@@ -47,6 +50,7 @@ export class PedidoComponent implements OnInit {
               private cotizacionService: CotizacionService,
               private clienteService: ClienteService,
               private bodegaInventarioService: BodegaInventarioService,
+              private movimientoService: MovimientoService,
               private router: Router,
               private pedidoService: PedidoService) { }
 
@@ -143,7 +147,7 @@ export class PedidoComponent implements OnInit {
         });
       }
 
-      // Se actualiza la Bodega Inventario cada vez que se haga un pedido
+      // Se actualiza la Bodega Inventario cada vez que se haga un Pedido
       ActualizarBodegaInventarioPorPedido(formulario): void {
 
         // Recorremos el la lista Cotizacion
@@ -185,6 +189,15 @@ export class PedidoComponent implements OnInit {
 
            // Le ponemos la id que se crea al pedido
           this.pedido.id = respuesta.pedido.id;
+          
+          // Llenamos el campo 
+          this.movimiento.pedido = this.pedido;
+          this.movimiento.dinero = this.pedido.valorFinalVenta;
+          // Tipo de Movimiento Salida de Bodega # 2
+          this.movimiento.tipo = 2;
+
+          this.movimientoService.agregarElemento(this.movimiento).subscribe( agregarMovimiento => {this.listarPaginado()});
+
 
           // Se desplaza por la lista Cotizacion de Pedido
           this.pedido.listaCotizacion.forEach( (cotizacion,index) => {
@@ -197,13 +210,18 @@ export class PedidoComponent implements OnInit {
 
             // Se crea la cotizacion
             this.cotizacionService.CrearCotizacion(cotizacion).subscribe(rta => { });
-
+           
           });
-          this.listarPaginado();
+          
+       
         });
+        this.listarPaginado();
+         
         alertasSweet.fire('Nuevo pedido', this.pedido.cliente.nombres , 'success'); 
+        
       }
 
+    
       // Ventana Detalle
       AbrirVentanaDetalle(idPedido): void {
         this.ventanaModal.open(DetallePedidoComponent, {
@@ -216,6 +234,7 @@ export class PedidoComponent implements OnInit {
 
       // Eliminar Pedido
       EliminarPedido(pedido: Pedido): void {
+
         swal.fire ({
           title: '¿Estas seguro?',
           text: '¿Seguro que desea Eliminar el Pedido, '+ pedido.cliente.nombres +' ?',
@@ -225,19 +244,66 @@ export class PedidoComponent implements OnInit {
           cancelButtonColor: '#ad3333',
           cancelButtonText: 'No, cancelar!',
           confirmButtonText: 'Si, eliminar!'
-         }).then((result) => {
+        }).then((result) => {
+           
            if (result.value) {
-             pedido.listaCotizacion.forEach(elemento => {
-              this.cotizacionService.EliminarCotizacion(elemento.id).subscribe( respuesta => {
+
+            // Se  Actualiza Bodega Inventario Al Eliminar Un Pedido
+            this.ActualizarBodegaInventarioAlEliminarUnPedido(pedido);
+
+            // Se recorre la lista de Cotizacion 
+            pedido.listaCotizacion.forEach(cotizacion => {
+
+              // Se Consulta la lista de Movimientos
+              this.movimientoService.listarElementos().subscribe(movimientos => {
+                
+                // Se Recorre la lista de Movimientos
+                movimientos.forEach(elementoMovimiento => {
+
+                  // Los Movimientos Tipo Pedidos    
+                  if(elementoMovimiento.pedido != null){
+                  
+                    // Se dectecta el Pedido a Eliminar en Pedido y en Movimiento se cambia el Tipo(estado eliminado)
+                    if(pedido.id == elementoMovimiento.pedido.id){
+                  
+                       // Le pongo Tipo(# 3 de Eliminado manual)
+                       this.movimiento = elementoMovimiento;
+                       this.movimiento.tipo = 3;
+                   
+                       // Actualizo Tipo(# 3 Eliminado manual) en Movimientos
+                       this.movimientoService.editarElemento(this.movimiento).subscribe(resp => { this.listarPaginado();});
+                    }
+                  }
+                }) 
               });
-             });
-             this.pedidoService.EliminarPedido(pedido.id).subscribe(respuesta => {
-             this.listarPaginado();
-             alertasSweet.fire('Pedido Eliminado!', 'Pedido <strong>' + pedido.cliente.nombres + '</strong> Eliminado con éxito.', 'success');
-              });
+              
+              // Se Elimina cada Elemento de la lista Cotizacion
+              this.cotizacionService.EliminarCotizacion(cotizacion.id).subscribe( respuesta => {});
+            });
+            
+            // Se Elimina el Pedido
+            this.pedidoService.EliminarPedido(pedido.id).subscribe(respuesta => {this.listarPaginado();});
+            alertasSweet.fire('Pedido Eliminado!', 'Pedido <strong>' + pedido.cliente.nombres + '</strong> Eliminado con éxito.', 'success');
            }
-          });
-    }
+        });
+      }
+
+      // Se  Actualiza Bodega Inventario Al Eliminar Un Pedido
+      ActualizarBodegaInventarioAlEliminarUnPedido(pedido): void {
+
+        // Recorremos el la lista Cotizacion
+        pedido.listaCotizacion.forEach( (cotizacion) => {
+          
+          this.bodegaInventario = cotizacion.bodegaInventario;
+          this.bodegaInventario.id = cotizacion.bodegaInventario.id;
+
+          // Suastraemos de Bodega la cantidad pedida y asignamos a bodega la nueva cantidad 
+          this.bodegaInventario.cantidad = cotizacion.bodegaInventario.cantidad + cotizacion.cantidad;
+
+          // Actualizamos bodegaInventario
+          this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe( resp => {});
+        });
+      }
 
 
     // Abrir ventana Modal Formulario De Pedido

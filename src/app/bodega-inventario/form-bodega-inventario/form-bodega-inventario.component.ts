@@ -121,17 +121,14 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
 
     // Lista de Componentes de Bodega
     let listaComponenteBodega = this.camposFormularioBodegaInventario.get('listaComponentesInventario').value;
-    // Producto Seleccionado
-    let ProductoSelec = this.camposFormularioBodegaInventario.get('producto').value;
-
- 
+     
     if(this.camposFormularioBodegaInventario.get('listaComponentesInventario').value.length != 0) {
  
       // Recorro la lista Componente Bodega
-      listaComponenteBodega.forEach( (elementoBodega, index2) => {
+      listaComponenteBodega.forEach( (elementoBodega) => {
 
         // Recorro la lista De Tallas
-        this.listaTalla1.forEach( (elementoTalla, index1) => {
+        this.listaTalla1.forEach( (elementoTalla) => {
  
          // Preginto si el producto seleccionado es igual al producto en lista Componente
          if(this.eventoProducto.value.id == elementoBodega.producto.id){
@@ -170,14 +167,14 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
     if (this.idBodegaInventario) {
       this.bodegaInventarioService.VerBodegaInventarioPorId(this.idBodegaInventario).subscribe(bodegaInventario => {
         this.bodegaInventario = bodegaInventario;
-        // Se hace una lista de un solo elemento talla 
+        // Se busca la Talla en la lista y se crea la lista con esa sola talla
         this.listaTalla1= [];
         this.listaTalla.forEach(talla => {
           if(talla.id == this.bodegaInventario.talla.id){
             this.listaTalla1.push(talla);
           }
         })
-        // Se hace una lista de un solo producto
+        // Se busca el Producto en la lista y se crea la lista con ese solo Producto
         let listaProducto1= this.listaProductos; 
         this.listaProductos = []; 
         listaProducto1.forEach( producto => {
@@ -185,7 +182,7 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
             this.listaProductos.push(producto);
           }
         })
-        // Se hace una lista con un solo lista detalle
+        // Se busca el tipoTalla en la lista y se crea la lista con ese solo tipoTalla
         let listaTipoTalla = this.listaTipoTalla;
         this.listaTipoTalla = [];
         listaTipoTalla.forEach( tipoTalla => {
@@ -193,8 +190,7 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
           this.listaTipoTalla.push(tipoTalla);
         })
 
-     /*    this.listaTalla = this.talla1; */
-        /* this.listaTalla1 = this.listaTalla;  */// Cargo litaTallas para poder seleccionarla por defecto
+        // Se cargan los Campos del formulario con los valores por defecto
         this.camposFormularioBodegaInventario.setValue({
           producto: this.bodegaInventario.producto,
           tipoTalla: this.bodegaInventario.talla.tipoTalla,
@@ -248,7 +244,6 @@ AgregarComponentesInventario(): void {
   if(this.idBodegaInventario){
     this.listaTipoTalla = [];
   }
-
 }
 
 

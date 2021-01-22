@@ -83,6 +83,8 @@ import { UnidadMedidaDetalleComponent } from './UnidadesMedidas/unidadMediaDetal
 import { BodegaInventarioComponent } from './bodega-inventario/bodega-inventario.component';
 import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-inventario/form-bodega-inventario.component';
 import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
+import { MovimientosComponent } from './movimientos/movimientos/movimientos.component';
+
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -103,7 +105,8 @@ const routes: Routes = [
     {path: 'pedido', component: PedidoComponent},
     {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
     {path: 'UnidadMedida', component: UnidadesMedidasComponent},
-    {path: 'bodegaInventario', component: BodegaInventarioComponent}
+    {path: 'bodegaInventario', component: BodegaInventarioComponent},
+    {path: 'movimiento', component: MovimientosComponent}
 ];
 
 @NgModule({
@@ -155,7 +158,8 @@ const routes: Routes = [
     UnidadMedidaDetalleComponent,
     BodegaInventarioComponent,
     FormBodegaInventarioComponent,
-    DetalleBodegaInventarioComponent
+    DetalleBodegaInventarioComponent,
+    MovimientosComponent
   ],
   imports: [
     BrowserModule,

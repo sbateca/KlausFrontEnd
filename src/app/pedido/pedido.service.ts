@@ -29,7 +29,7 @@ export class PedidoService {
   }
 
   // Buscar Pedido Por Id
-  VerPedidoPorId(id): Observable <Pedido> {
+  VerPedidoPorId(id): Observable <any> {
     return this.http.get<Pedido>(`${this.urlPedido}/${id}`).pipe(
       catchError(e => { // Optenemos el error status
         swal.fire('Error al editar', e.error.mensaje, 'error');
@@ -49,7 +49,7 @@ export class PedidoService {
   }
 
   // Actualizar Pedido
-  ActualizarPedido(pedido: Pedido): Observable <Pedido> {
+  ActualizarPedido(pedido: Pedido): Observable <any> {
     return this.http.put<Pedido>(`${this.urlPedido}/${pedido.id}`, pedido, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         swal.fire(e.error.mensaje, e.error.error, 'error');
