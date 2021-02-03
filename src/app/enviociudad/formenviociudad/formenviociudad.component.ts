@@ -8,7 +8,6 @@ import { Departamento } from '../../departamentos/departamento';
 import { Ciudad } from '../../ciudades/ciudad';
 import { CiudadService } from '../../ciudades/ciudad.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { element } from 'protractor';
 import { EnviociudadService } from '../enviociudad.service';
 import { EmpresaTransportadora } from '../../EmpresaTransportadora/empresa-transportadora';
 import { EmpresaTransportadoraService } from '../../EmpresaTransportadora/empresa-transportadora.service';
@@ -73,9 +72,6 @@ export class FormenviociudadComponent implements OnInit {
         });
       });
       this.listatipoenvio = FiltroListaTipoEnvio;
-      console.log("ListaTipoEnvio");
-      console.log(this.listatipoenvio);
-
     });
   }
   // Obtener Departamento
@@ -129,13 +125,11 @@ export class FormenviociudadComponent implements OnInit {
     // Cargar Envio Ciudad en formulario editar
     cargarEnvioCiudad(): void {
       if (this.idEnvioCiudad) {
-        console.log("idEnvio");
-        console.log(this.idEnvioCiudad);
+  
         this.enviociudadservice.verEnvioCiudadPorId(this.idEnvioCiudad).subscribe(enviociudad => {
           this.envioCiudad = enviociudad;
-          console.log("envioCiudad");
-          console.log(this.envioCiudad);
           this.CargarListaCiudadesPorDefecto(this.envioCiudad.ciudad.departamento);
+          
           this.camposformularioEnviociudad.setValue({
              tipoEnvio: this.envioCiudad.tipoEnvio, // Se carga el objeto TipoEnvio completo
              ciudad: this.envioCiudad.ciudad, // Se carga el objeto Ciudad completo

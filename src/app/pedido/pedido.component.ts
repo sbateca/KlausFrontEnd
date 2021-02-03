@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 import { BodegaInventarioService } from '../bodega-inventario/bodega-inventario.service';
 import { Movimiento } from '../movimientos/movimiento';
 import { MovimientoService } from '../movimientos/movimiento.service';
+import { EnviociudadService } from '../enviociudad/enviociudad.service';
+import { Enviociudad } from '../enviociudad/Enviociudad';
 
 
 @Component({
@@ -51,6 +53,7 @@ export class PedidoComponent implements OnInit {
               private clienteService: ClienteService,
               private bodegaInventarioService: BodegaInventarioService,
               private movimientoService: MovimientoService,
+              private envioCiudadService: EnviociudadService,
               private router: Router,
               private pedidoService: PedidoService) { }
 
@@ -138,20 +141,22 @@ export class PedidoComponent implements OnInit {
           height: 'auto',
           position: {left: '30%', top: '60px'}
         });
-      referenciaVentanaModal.afterClosed().subscribe( resultado => {
+      referenciaVentanaModal.afterClosed().subscribe( pedido => {
 
-          if (resultado != null) {
-            this.CrearPedido(resultado);
-            this.ActualizarBodegaInventarioPorPedido(resultado);
+          if (pedido != null) {
+            this.CrearPedido(pedido);
+            this.ActualizarBodegaInventarioPorPedido(pedido);
           }
         });
       }
 
+  
+
       // Se actualiza la Bodega Inventario cada vez que se haga un Pedido
-      ActualizarBodegaInventarioPorPedido(formulario): void {
+      ActualizarBodegaInventarioPorPedido(pedido): void {
 
         // Recorremos el la lista Cotizacion
-        formulario.listaCotizacion.forEach( (cotizacion) => {
+        pedido.listaCotizacion.forEach( (cotizacion) => {
           
           this.bodegaInventario = cotizacion.bodegaInventario;
           this.bodegaInventario.id = cotizacion.bodegaInventario.id;
@@ -164,18 +169,17 @@ export class PedidoComponent implements OnInit {
         });
       }
 
-      
       // Crea Pedido
-      public CrearPedido(FormularioBodegaInventario): void {
+      public CrearPedido(pedido): void {
+
+        this.pedido = pedido;
+        /* this.AgregarEnvioCiudad(this.pedido.envioCiudad); */
         // Pasamos las variables del Formulario a Pedido
-        this.pedido.observaciones = FormularioBodegaInventario.observaciones;
-        this.pedido.valorIva = FormularioBodegaInventario.valorIva;
-        this.pedido.cliente = FormularioBodegaInventario.cliente;
-        this.pedido.listaCotizacion = FormularioBodegaInventario.listaCotizacion;
+        
+       
         this.pedido.valorFinalVenta = 0;
         this.pedido.id = null; // El id se pone nulo para que se cree un pedido nuevo
         
-
         // Se Recorro la lista, para Calcular el valorFinalVenta
         this.pedido.listaCotizacion.forEach( cotizacion => {
          
@@ -184,12 +188,17 @@ export class PedidoComponent implements OnInit {
           // Sumatoria de los importes
           this.pedido.valorFinalVenta = cotizacion.importe + this.pedido.valorFinalVenta;
         });
+
+        // Le sumo El valor del Envío al Pedido
+        this.pedido.valorFinalVenta = this.pedido.valorFinalVenta + this.pedido.valorEnvio;
+        
         // Crear Pedido
         this.pedidoService.CrearPedido(this.pedido).subscribe(respuesta => {
 
+          
            // Le ponemos la id que se crea al pedido
           this.pedido.id = respuesta.pedido.id;
-          
+         
           // Llenamos el campo 
           this.movimiento.pedido = this.pedido;
           this.movimiento.dinero = this.pedido.valorFinalVenta;
@@ -336,6 +345,7 @@ export class PedidoComponent implements OnInit {
         const textoFiltro = (event.target as HTMLInputElement).value;
         this.datos.filter = textoFiltro.trim().toLowerCase();
      }
+
 
 
 }

@@ -9,6 +9,7 @@
             <div>
 
 
+
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr class="thead-light">
@@ -26,8 +27,7 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        <tr *ngFor="let cotizacion of pedido.listaCotizacion; let i = index">
+                        <tr *ngFor="let cotizacion of pedido?.listaCotizacion; let i = index">
                             <th scope="row">{{i+1}}</th>
                             <td>{{cotizacion.bodegaInventario.producto.nombre}}</td>
                             <td>{{cotizacion.bodegaInventario.producto.referencia}}</td>
@@ -44,17 +44,25 @@
                 </table>
 
                 <tr>
-                    <th class="text-secondary font-weight-normal">SubTotal Valor Unitario:</th>
-                    <th class="text-dark"><small>$  {{ pedido?.valorFinalVenta- (pedido?.valorIva/100*pedido?.valorFinalVenta) | number }}</small></th>
+                    <th class="text-secondary font-weight-normal">SubTotal <br> Valor Unitario:</th>
+                    <th class="text-dark"><small><strong>$  {{ (pedido?.valorFinalVenta-pedido?.valorEnvio) - (pedido?.valorIva/100*(pedido?.valorFinalVenta-pedido?.valorEnvio)) | number }}</strong></small></th>
                 </tr>
 
                 <tr>
                     <th class="text-secondary font-weight-normal">Iva:</th>
-                    <th class="text-dark"><small>$  {{ (pedido?.valorIva/100*pedido?.valorFinalVenta)|number }}</small></th>
+                    <th class="text-dark"><small><strong>$  {{ (pedido?.valorIva/100*(pedido?.valorFinalVenta-pedido?.valorEnvio))|number }}</strong></small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Valor General:</th>
-                    <th class="text-dark"><small>$  {{ (pedido?.valorFinalVenta)|number }}</small></th>
+                    <th class="text-dark"><small><strong>$  {{ (pedido?.valorFinalVenta-pedido?.valorEnvio)|number }}</strong></small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Valor Envío:</th>
+                    <th class="text-dark"><small><strong>$ {{ (pedido?.valorEnvio)|number }}</strong></small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Valor General Total:</th>
+                    <th class="text-dark"><small><strong>$  {{ (pedido?.valorFinalVenta)|number }}</strong></small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Observaciones:</th>
@@ -73,13 +81,50 @@
                     <th class="text-dark"><small>{{ (pedido?.cliente.documento)|number}}</small></th>
                 </tr>
                 <tr>
+                    <th class="text-secondary font-weight-normal">Ciudad:</th>
+                    <th class="text-dark"><small>{{ (pedido?.cliente.ciudad.nombre)}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Departamento:</th>
+                    <th class="text-dark"><small>{{ (pedido?.cliente.ciudad.departamento.nombre)}}</small></th>
+                </tr>
+                <tr>
                     <th class="text-secondary font-weight-normal">Dirección:</th>
-                    <th class="text-dark"><small>{{pedido?.cliente.direccion}}, {{pedido?.cliente.ciudad.nombre}}, {{pedido?.cliente.ciudad.departamento.nombre}} </small></th>
+                    <th class="text-dark"><small>{{pedido?.cliente.direccion}}<!-- , {{pedido.cliente.ciudad.nombre}}, {{pedido.cliente.ciudad.departamento.nombre}} --> </small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Numero De Contacto:</th>
                     <th class="text-dark"><small>{{pedido?.cliente.numero_contacto}}</small></th>
                 </tr>
+            </div>
+            <br>
+            <br>
+            <div>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Tipo De Envio:</th>
+                    <th class="text-dark"><small>{{pedido?.envioCiudad.tipoEnvio.nombre}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Ciudad:</th>
+                    <th class="text-dark"><small>{{pedido?.ciudadEnvio.nombre}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Departamento:</th>
+                    <th class="text-dark"><small>{{pedido?.ciudadEnvio.departamento.nombre}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Dirección:</th>
+                    <th class="text-dark"><small>{{pedido?.direccionEnvio}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Empresa Transportadora:</th>
+                    <th class="text-dark"><small>{{pedido?.envioCiudad.empresaTransportadora.nombre}}</small></th>
+                </tr>
+                <tr>
+                    <th class="text-secondary font-weight-normal">Valor Envío:</th>
+                    <th class="text-dark"><small>{{pedido?.valorEnvio}}</small></th>
+                </tr>
+
             </div>
         </table>
     </div>

@@ -1,5 +1,7 @@
 import { Cliente } from '../clientes/cliente';
 import { Cotizacion } from '../cotizacion/cotizacion';
+import { Enviociudad } from '../enviociudad/Enviociudad';
+import { Ciudad } from '../ciudades/ciudad';
 export class Pedido {
     id: number;
     valorIva: number;
@@ -7,4 +9,9 @@ export class Pedido {
     observaciones: string;
     cliente: Cliente;
     listaCotizacion: Cotizacion[];
+    envioCiudad: Enviociudad;
+    ciudadEnvio: Ciudad;
+    direccionEnvio: string;
+    valorEnvio: number;
+    
 }

@@ -5,6 +5,8 @@ import { MovimientoService } from '../movimiento.service';
 import { Pedido } from '../../pedido/pedido';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Sort, MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { DetalleMovimientosComponent } from '../detalle-movimientos/detalle-movimientos.component';
 
 @Component({
   selector: 'app-movimientos',
@@ -26,10 +28,11 @@ export class MovimientosComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
 
   // Titulos de cada Columna
-  columnasTabla: string [] = ['fecha', 'hora', 'tipo', 'dinero'];
+  columnasTabla: string [] = ['fecha', 'hora', 'tipo', 'dinero', 'acciones'];
   datos: MatTableDataSource<Movimiento>;
 
-  constructor(private movimientoService: MovimientoService) { }
+  constructor(private movimientoService: MovimientoService,
+              public ventanaModal: MatDialog) { }
 
   ngOnInit(): void {
     this.listarPaginado();
@@ -39,6 +42,8 @@ export class MovimientosComponent implements OnInit {
   CargarMovimientos(){
     this.movimientoService.listarElementos().subscribe(movimientos => {
       this.listaMovimientos = movimientos;
+      console.log("movimientos");
+      console.log(this.listaMovimientos);
     });
   }
   
@@ -89,8 +94,6 @@ private listarPaginado() {
     // Para utilizar la Tabla en Angular Material
     // Organiza la la informacion en MatTableDataSource para usar los componentes de Angular
     this.datos = new MatTableDataSource<Movimiento>(this.listaMovimientos);
-   // console.log("datos: ", JSON.stringify(this.datos));
-    this.datos.paginator = this.paginador;
 
     // asigna el sorting al MatTableDataSource
     this.datos.sort = this.ordenadorRegistros;
@@ -130,7 +133,17 @@ reordenar(sort: Sort) {
   }
 
   
+/* La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
+  donde se observa el detalle del proveedor seleccionado */
 
+  abrirVentanaVer(idMovimiento): void {
+    this.ventanaModal.open(DetalleMovimientosComponent, {
+      width: '60%',
+      height: 'auto',
+      position: {left: '30%', top: '60px'},
+      data: idMovimiento
+    });
+  }
    
     
   

@@ -136,8 +136,7 @@ export class FormClientesComponent implements OnInit {
     - Retorna: nada
 */
  cargarCiudadDeptId(evento): void {
-   // console.log(evento.value.id);
-   // console.log(evento.value);
+
    this.ciudadSrvice.obtenerCiudadId(evento.value.id).subscribe(ciud => {
    const FiltroListaCiudades = [];
    ciud.forEach(elemento => {
@@ -206,24 +205,21 @@ compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
   }
 
   cargarCiudadDeptIdporDefecto(departamento: Departamento): void {
-   this.ciudadSrvice.obtenerCiudadId(departamento.id).subscribe(ciud => {
-   const FiltroListaCiudades = [];
-   ciud.forEach(elemento => {
-     FiltroListaCiudades.push(
-       {
-         "id": elemento.id,
-         "nombre": elemento.nombre,
-         "departamento" :
-           {
-             "id": elemento.departamento.id,
-             "nombre": elemento.departamento.nombre
-           }
-       }
-     );
-   });
-   this.listaCiudades = FiltroListaCiudades;
-   // console.log(this.listaCiudades);
-   });
+    this.ciudadSrvice.obtenerCiudadId(departamento.id).subscribe(ciud => {
+      const FiltroListaCiudades = [];
+      ciud.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" :{
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
+      });
+      this.listaCiudades = FiltroListaCiudades;
+    // console.log(this.listaCiudades);
+    });
   }
 
 }

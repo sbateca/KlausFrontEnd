@@ -10,8 +10,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MovimientoService } from '../movimientos/movimiento.service';
 import { Movimiento } from '../movimientos/movimiento';
-import { Pedido } from '../pedido/pedido';
-import { Producto } from '../productos/producto';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PedidoService } from '../pedido/pedido.service';
 
 @Component({
   selector: 'app-bodega-inventario',
@@ -32,6 +32,8 @@ export class BodegaInventarioComponent implements OnInit {
 
   constructor(private ventanaModal: MatDialog,
               private movimientoService: MovimientoService,
+              private alertaSnackBar: MatSnackBar,
+              private pedidoService: PedidoService,
               private bodegaInventarioService: BodegaInventarioService) { }
 
   ngOnInit(): void {
@@ -44,6 +46,8 @@ export class BodegaInventarioComponent implements OnInit {
 CargarBodegaInventario(): void{
   this.bodegaInventarioService.ListaBodegaInventario().subscribe( bodegaInventario => {
     this.listaBodegaInventario = bodegaInventario;
+    console.log("listaBodega");
+    console.log(this.listaBodegaInventario);
     this.listaBodegaInventario.forEach(elemento => {
       // Sumatoria de cantidad
       this.total = this.total + elemento.cantidad;
@@ -105,7 +109,6 @@ CrearBodegaInventario(inventarioFormulario): void {
       } else { // si ya hay algo en la lista
 
         let contador1 = 0;
-
 
         // Recorremos la lista de tallas del formulario para compararlas con el elemento de inventario de turno
         listaInventarioBD.forEach((elementoInventarioBD, index) => {
@@ -212,6 +215,7 @@ public AbrirVentanaDetalle(idBodegaInventario): void {
 
 // Abrir Ventana Modal Actualizar Bodega Inventario
 AbrirVentanaEditarBodegaInventario(idBodegaInventario): void {
+ 
   const referenciaVentanaModal = this.ventanaModal.open(FormBodegaInventarioComponent, {
     width: '60%',
     height: 'auto',
@@ -220,25 +224,64 @@ AbrirVentanaEditarBodegaInventario(idBodegaInventario): void {
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
     if (resultado) {
+
+      let cantidadAnterior;
+      let diferencia;
+      
+      this.bodegaInventarioService.VerBodegaInventarioPorId(idBodegaInventario).subscribe(bodegaBD => {
+        
+      // Cantidad Anterior
+      cantidadAnterior = bodegaBD.cantidad;
+       
+      // se saca la diferencia entre la Cantidad Nueva y la Anterior
+      if(cantidadAnterior>resultado.listaComponentesInventario[0].cantidad){
+
+        diferencia = cantidadAnterior - resultado.listaComponentesInventario[0].cantidad;
+  
+        // La diferencia es n menos al anterior
+        this.movimiento.tipo = 5;
+      } else {
+        
+          diferencia = resultado.listaComponentesInventario[0].cantidad - cantidadAnterior;
+ 
+          // La diferencia es n mas al anterior
+          this.movimiento.tipo = 6;
+      }
+      
+      this.movimiento.bodegaInventario = bodegaBD;
+      this.movimiento.bodegaInventario.cantidad = diferencia;
+      this.movimiento.dinero = bodegaBD.producto.costo * diferencia;
+     
+      this.movimientoService.agregarElemento(this.movimiento).subscribe(respuesta => { });
+
+      });
+
+        
       this.bodegaInventario = resultado.listaComponentesInventario[0];// Paso el primer componente de la lista Bodega
       this.bodegaInventario.id = idBodegaInventario;// El id para  actualizar 
+
+      // Se actualiza Bodega Inventario
       this.ActualizarBodegaInventario();
     }
   });
 }
-
+diferencia = 0;
 // Actualizar Bodega Inventario
 ActualizarBodegaInventario(): void {
-    this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario)
-    .subscribe(respuesta => {
-      this.ListarPaginado();
-      swal.fire('Producto Actualizado de Bodega-Inventario!', 
-      'Producto <strong>' + this.bodegaInventario.producto.referencia + '</strong> Actualizado con éxito.', 'success');
-    }); 
-  }
+
+  // Se actualiza Bodega Inventario
+  this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe(respuesta => {
+    this.ListarPaginado();
+    swal.fire('Producto Actualizado de Bodega-Inventario!', 
+    'Producto <strong>' + this.bodegaInventario.producto.referencia + '</strong> Actualizado con éxito.', 'success');
+  }); 
+}
   
 // Eliminar Bodega Inventario
 EliminarBodegaInventario(bodegaInventario: BodegaInventario): void {
+  let contadorBodegaInventario = 0;
+  /* console.log("contadorI");
+  console.log(contadorBodegaInventario); */
   swal.fire ({
 
     title: '¿Estas seguro?',
@@ -250,42 +293,66 @@ EliminarBodegaInventario(bodegaInventario: BodegaInventario): void {
   cancelButtonText: 'No, cancelar!',
   confirmButtonText: 'Si, eliminar!'
 
-   }).then((result) => {
-     if (result.value) {
+  }).then((result) => {
+    if (result.value) {
        
-       // Se Consulta la lista de Movimientos
-       this.movimientoService.listarElementos().subscribe(movimientos => {
-                
-        // Se Recorre la lista de Movimientos
-        movimientos.forEach(elementoMovimiento => {
-
-          // Los Movimientos Tipo Bodega Inventario    
-          if(elementoMovimiento.bodegaInventario != null){
+      // Se consulta en Pedidio si hay almenos un bodegaInventario
+      this.pedidoService.VerListaPedidos().subscribe( pedido => { 
+        
+        // Recorre listaPedido
+        pedido.forEach(elementoPedido => { 
           
-            // Se dectecta la bodegaInventario a Eliminar en Bodegainventario y en Movimiento se cambia el Tipo(estado eliminado)
-            if(bodegaInventario.id == elementoMovimiento.bodegaInventario.id){
-          
-               // Le pongo Tipo(# 4 de Eliminado Bodega manual)
-               this.movimiento = elementoMovimiento;
-               this.movimiento.tipo = 4;
-
-              console.log("movimiento");
-               console.log(this.movimiento);
-           
-               // Actualizo Tipo(# 4 Eliminado Bodega manual) en Movimientos
-               this.movimientoService.editarElemento(this.movimiento).subscribe(resp => { this.ListarPaginado();});
+          // Recorre ListaCotizacion
+          elementoPedido.listaCotizacion.forEach(elementoCotizacion => {
+            // Cuenta las si esta el producto bodegaInventario en Pedido
+            if(elementoCotizacion.bodegaInventario.id == bodegaInventario.id){
+              contadorBodegaInventario++;      
             }
-          }
+          });
         });
+
+        /* console.log("contador");
+        console.log(contadorBodegaInventario); */
+
+        // Si esta BodegaInventario fue utilizado en Pedido no lo deja Eliminar
+        if(contadorBodegaInventario != 0) {
+          this.alertaSnackBar.open("No se puede Eliminar este Producto Bodega Inventario, Por que hay minimo un Pedido del mismo!!", 'Cerrar', {
+          duration: 8000});
+        } else {
+
+          // Se Consulta la lista de Movimientos
+          this.movimientoService.listarElementos().subscribe(movimientos => {
+                
+            // Se Recorre la lista de Movimientos
+            movimientos.forEach(elementoMovimiento => {
+
+              // Los Movimientos Tipo Bodega Inventario    
+              if(elementoMovimiento.bodegaInventario != null){
+          
+                // Se dectecta la bodegaInventario a Eliminar en Bodegainventario y en Movimiento se cambia el Tipo(estado eliminado)
+                if(bodegaInventario.id == elementoMovimiento.bodegaInventario.id){
+          
+                   // Le pongo Tipo(# 4 de Eliminado Bodega manual)
+                   this.movimiento = elementoMovimiento;
+                   this.movimiento.tipo = 4;
+
+                   // Actualizo Tipo(# 4 Eliminado Bodega manual) en Movimientos
+                   this.movimientoService.editarElemento(this.movimiento).subscribe(resp => { this.ListarPaginado();});
+                }
+              }
+            });
+          });
+
+          // Se Elimina El Producto Bodega Inventario Seleccionado
+          this.bodegaInventarioService.EliminarBodegaInventario(bodegaInventario.id).subscribe(respuesta => {
+            this.ListarPaginado();
+            swal.fire('Producto Eliminado de Bodega-Inventario!', 
+            'Producto <strong>' + bodegaInventario.producto.nombre + '</strong> Eliminado con éxito.', 'success');
+          });
+        }  
       });
-       // Se Elimina El Producto Bodega Inventario Seleccionado
-       this.bodegaInventarioService.EliminarBodegaInventario(bodegaInventario.id).subscribe(respuesta => {
-        this.ListarPaginado();
-        swal.fire('Producto Eliminado de Bodega-Inventario!', 
-        'Producto <strong>' + bodegaInventario.producto.nombre + '</strong> Eliminado con éxito.', 'success');
-        });
-     }
-    });
+    }
+  });
 }
 
 // Buscador

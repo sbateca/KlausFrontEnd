@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { Pedido } from '../pedido';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Cliente } from '../../clientes/cliente';
@@ -14,6 +14,17 @@ import { Talla } from '../../tallas/talla';
 import { ProductoService } from '../../productos/producto.service';
 import { TallaService } from '../../tallas/talla.service';
 import { MatSelectChange } from '@angular/material/select';
+import { DepartamentoService } from '../../departamentos/departamento.service';
+import { Departamento } from '../../departamentos/departamento';
+import { Ciudad } from '../../ciudades/ciudad';
+import { CiudadService } from '../../ciudades/ciudad.service';
+import { EmpresaTransportadoraService } from '../../EmpresaTransportadora/empresa-transportadora.service';
+import { EmpresaTransportadora } from '../../EmpresaTransportadora/empresa-transportadora';
+import { TipoenviosService } from '../../tipoenvios/tipoenvios.service';
+import { TipoEnvio } from '../../tipoenvios/tipoenvios';
+import { EnviociudadService } from '../../enviociudad/enviociudad.service';
+import { Enviociudad } from '../../enviociudad/Enviociudad';
+
 
 
 @Component({
@@ -23,8 +34,9 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class FormPedidoComponent implements OnInit {
 
-  public pedido: Pedido;
+  public pedido = new Pedido();
   public camposFormulario: FormGroup;
+  public camposFormularioEnvio: FormGroup;
   public listaClientes: Cliente[];
   public listaBodegaInventario: BodegaInventario[];
   public bodegaInventario: BodegaInventario;
@@ -43,7 +55,14 @@ export class FormPedidoComponent implements OnInit {
   public contador = 0;
   public desactivado = true;
   public contador1 = new Array();
-
+  public listaDepartamentos: Departamento[];
+  public listaCiudadesPorDep: Ciudad[];
+  public listaEmpresaTransportadora: EmpresaTransportadora[];
+  public listaTipoEnvio: TipoEnvio[];
+  public listaEnvioCiudad: Enviociudad[];
+  public contadorIguales = 0;
+  public envioCiudad = new Enviociudad();
+  
   constructor(@Inject(MAT_DIALOG_DATA) private idPedido: number,
               private pedidoService: PedidoService,
               private constructorFormulario: FormBuilder,
@@ -52,17 +71,28 @@ export class FormPedidoComponent implements OnInit {
               private bodegaInventarioService: BodegaInventarioService,
               private productoService: ProductoService,
               private tallaService: TallaService,
+              private departamentoService: DepartamentoService,
+              private ciudadService: CiudadService,
+              private tipoEnvioService: TipoenviosService,
+              private envioCiudadService: EnviociudadService,
+              private empresaTransportadoraService: EmpresaTransportadoraService,
+              private changeRef: ChangeDetectorRef,
               private referenciaVentanaModal: MatDialogRef<FormPedidoComponent>) { }
 
   ngOnInit(): void {
-
     this.CargarCliente();
     this.CargarBodegaInventario();
     this.CargarProducto();
+    this.ObtenerListaTipoEnvio();
+    this.ObtenerListaDepartamento();
+    this.ObtenerListaEmpresaTransportadora();
+    this.CrearFormularioEnvio();
     this.CrearFormulario();
     this.CargarPedido();  
-
   }
+
+// Quito el error ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'true'. Current value: 'false'.
+ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
 
 // Se Carga el cliente
 CargarCliente(): void {
@@ -169,6 +199,7 @@ CrearArrayConTallasNoSeleccionadas(event): void {
   this.eventoTallaSeleccionada = event;
   // Toma el el indice de la talla seleccionada
   this.indice = this.listaTalla.indexOf(event.value);
+
 }
 
 // Se inicializa 
@@ -210,37 +241,42 @@ CalcularCuentaPedido(){
 // Evento input captura los numeros en value
 onKey(value: number): boolean {
 
-  // Se busca el elemento de Bodega Inventario Seleccionado en el Formulario (this.bodegaInventario)
-  this.CalcularCuentaPedido();
+  // Si hay seleccionado una talla
+  if(this.camposFormulario.value.talla!=0){
 
-  // Siempre que digito una cantidad calculadora se pone false para no mostrar el calculo
-  this.calculadora = false;
 
-  // Observa si el valor del input de la cantidad de pedido es menor a la cantidad de producto en Bodega
-  if (value <= this.bodegaInventario.cantidad) {
-    if (this.bodegaInventario.cantidad === 0) {
-      this.alertaSnackBar.open('Debe Agregar unidades de este Producto por que no hay en Bodega!!', 'Cerrar', {
-      duration: 8000
-      });
-      this.desactivado = true;
-    } else {
-        this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
-        " unidades de este Producto, su Pedido SI se puede hacer efectivo!!", 'Cerrar', {
-        duration: 8000
+    // Se busca el elemento de Bodega Inventario Seleccionado en el Formulario (this.bodegaInventario)
+    this.CalcularCuentaPedido();
+
+    // Siempre que digito una cantidad calculadora se pone false para no mostrar el calculo
+    this.calculadora = false;
+
+    // Observa si el valor del input de la cantidad de pedido es menor a la cantidad de producto en Bodega
+    if (value <= this.bodegaInventario.cantidad) {
+      if (this.bodegaInventario.cantidad === 0) {
+        this.alertaSnackBar.open('Debe Agregar unidades de este Producto por que no hay en Bodega!!', 'Cerrar', {
+          duration: 8000
         });
-        this.desactivado = false;
-
+        this.desactivado = true;
+      } else {
+          this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
+          " unidades de este Producto, su Pedido SI se puede hacer efectivo!!", 'Cerrar', {
+            duration: 8000
+          });
+          this.desactivado = false;
       }
     } else {
-      this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
-      " unidades de este Producto, su Pedido NO se puede hacer efectivo!!", 'Cerrar', {
-        duration: 8000
+        this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
+        " unidades de este Producto, su Pedido NO se puede hacer efectivo!!", 'Cerrar', {
+          duration: 8000
         });
-      this.desactivado = true;
-
+        this.desactivado = true;
     }
     return this.desactivado;
+  } else {
+    this.alertaSnackBar.open("Debe digitar en orden!!", 'Cerrar', { duration: 8000});
   }
+}
 
 
 // Crea El formulario
@@ -254,8 +290,13 @@ CrearFormulario(): void {
     producto: ['', Validators.required],
     talla: ['', Validators.required],
     cantidad: ['', Validators.required],
-    listaCotizacion: this.constructorFormulario.array([])
+    listaCotizacion: this.constructorFormulario.array([]),
    });
+}
+
+// Obtener Lista Cotizacion
+get ObtenerListaCotizacion() {
+  return this.camposFormulario.get('listaCotizacion') as FormArray;
 }
 
 // Crea Formulario Lista Cotizacion
@@ -264,6 +305,18 @@ CrearListaCotizacion(): FormGroup {
     bodegaInventario: this.bodegaInventario,
     cantidad: this.camposFormulario.get("cantidad").value,
     descuento: this.camposFormulario.get("descuento").value
+  });
+}
+
+// FormularioEnvio
+CrearFormularioEnvio(): void {
+  this.camposFormularioEnvio = this.constructorFormulario.group({
+    tipoEnvio: ['', Validators.required],
+    departamento: ['', Validators.required],
+    ciudad: ['', Validators.required],
+    direccion: ['', Validators.required],
+    empresaTransportadora: ['', Validators.required],
+    valorEnvio: ['', Validators.required]    
   });
 }
 
@@ -287,20 +340,18 @@ AgregarListaCotizacion(): void {
   // Utiliza la posicion(indice) del objeto seleccionado y saca el mismo del la lista
   this.listaTalla.splice(this.indice, 1);
 
-  
   // Importe suma los subtotales de cada pedido
   this.importe = this.importe + (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[this.contador].descuento/100))*(this.camposFormulario.value.listaCotizacion[this.contador].cantidad);
   this.contador++;
+
+
 
   // Siempre que agrego pongo calculadora en false para no mostrar el calculo
   this.calculadora = false;
  
 }
 
-// Obtener Lista Cotizacion
-get ObtenerListaCotizacion() {
-  return this.camposFormulario.get('listaCotizacion') as FormArray;
-}
+
 
 activar = true;
 // Enviar Formulario
@@ -312,7 +363,7 @@ EnviarFormularioCotizacion() {
 
   if (this.listaCotizacion == null && this.camposFormulario.invalid === true) {
     this.alertaSnackBar.open('Debe Agregar como minimo un Producto!!', 'Cerrar', {
-     duration: 5000
+      duration: 5000
     });
   } else {
      if (this.listaCotizacion.length === 0 && this.camposFormulario.invalid === true) {
@@ -323,11 +374,62 @@ EnviarFormularioCotizacion() {
         this.alertaSnackBar.open('Ya se puede Guardar!!', 'Cerrar', {
         duration: 5000
         });
+        
+        
+        // El Contador Iguales siempre es 1 por que es unico en Base de Datos
+        // Si es diferente es Se hace el registro nuevo en BD Envio Ciudad
+        if(this.contadorIguales != 1) {
+
+          // Se llena el Objeto Envio ciudad (Tarifas Reales de envío)
+          this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
+          this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
+          this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
+          this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
+          
+          // Se agrega Envio Ciudad en la tabla
+          this.AgregarEnvioCiudad(this.envioCiudad);
+          
+        } else {
+          
+          // Si activo(Checkbox) se Actualiza el Valor de Envío en EnvioCiudad
+          if(this.eventoCheckbox == true) {
+            
+              this.envioCiudad.id = this.pedido.envioCiudad.id
+              this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
+              this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
+              this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
+              this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
+              
+              // Se actualiza el Valor de Envío 
+              this.envioCiudadService.ModificarEnvioCiudad(this.envioCiudad).subscribe( respuesta => {
+                // Se Agrega Envio Ciudad a Pedido Envio Ciudad
+                this.pedido.envioCiudad = respuesta.envioCiudad;
+              });
+          }
+        }
+      
+       this.pedido.ciudadEnvio = this.camposFormularioEnvio.value.ciudad;
+       this.pedido.direccionEnvio = this.camposFormularioEnvio.value.direccion;
+       this.pedido.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
+      
+        // Se prepara el objeto Pedido
+        this.pedido.cliente = this.camposFormulario.value.cliente;
+        this.pedido.observaciones = this.camposFormulario.value.observaciones;
+        this.pedido.listaCotizacion = this.camposFormulario.value.listaCotizacion;
+        this.pedido.valorIva = this.camposFormulario.value.valorIva;
+        
         // Envia el Formulario Cargado
-        this.referenciaVentanaModal.close(this.camposFormulario.value);
-      }
+        this.referenciaVentanaModal.close(this.pedido);
+        }
     }
-  /* } */
+  }
+  // Se Agrega o Registra Envio Ciudad a la tabla Envio Ciudad 
+  AgregarEnvioCiudad(envioCiudadF): any {
+
+    this.envioCiudadService.crearEnviociudad(envioCiudadF).subscribe( respuesta => {
+      // Se Agrega Envio Ciudad a Pedido Envio Ciudad
+      this.pedido.envioCiudad = respuesta.envioCiudad;
+    });
   }
 
 // Desctiva el boton Agregar Cotizacion
@@ -404,5 +506,192 @@ CancelarOperacion(): void {
     return n.toLocaleString().split(sep)[0];
            // + n.toFixed(decimals).split(sep)[1];
    }
+  
+  // Obtener Departamento
+  ObtenerListaDepartamento(): void {
+    this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+      this.listaDepartamentos = departamentos;
+    });
+  }
+  // Obtener Lista de Ciudades de Departamento Seleccionado
+  ObtenerListaCiudadesPorDep(evento): void {
+    this.ciudadService.obtenerCiudadId(evento.value.id).subscribe( ciudades => {
+      const FiltroListaCiudades = [];
+      ciudades.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" : {
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
+      });
+      this.listaCiudadesPorDep = FiltroListaCiudades;
+    });
+  }
 
+  // Obtener Lista Empresa Transportadora
+  ObtenerListaEmpresaTransportadora(): void {
+    this.empresaTransportadoraService.verEmpresaTransportadora().subscribe( empresaTransportadora => {
+      this.listaEmpresaTransportadora = empresaTransportadora;
+    });
+  }
+
+  public datosEnvio= false;
+
+  // Activa el Boton Datos Envío
+  ActivarDatosEnvio(){
+
+    // Al dar click en el Boton Envio Ciudad y se activa el Formulario
+    this.datosEnvio = true;
+
+    // Cargo La lista Ciudades de unDepartamento apartir del Departamento
+    this.cargarCiudadDeptIdporDefecto(this.camposFormulario.get('cliente').value.ciudad.departamento);
+
+    // Deacuerdo al Cliente seleccionado en el Formulario, se carga los Campos Departamento, Ciudad, Dirección Por defecto.
+    this.camposFormularioEnvio.setValue({
+      tipoEnvio: [''],
+      departamento: this.camposFormulario.get('cliente').value.ciudad.departamento, // Se carga el objeto Departamento completo
+      ciudad: this.camposFormulario.get('cliente').value.ciudad, // Se carga el objeto Ciudad completo
+      direccion: this.camposFormulario.get('cliente').value.direccion,
+      empresaTransportadora: [''],
+      valorEnvio: ['']  
+    });
+  }
+
+ 
+  // Evento Tipo Envio Ciudad
+  EventoTipoEnvio(evento){
+    // Calculo de si Tipo Envio y Empresa Transportadora esta en base de datos
+    this.CalculoSiEstaEnBD();
+  }
+
+  // Evento Select Empresa Transportadora
+  EventoEmpresaTransportadora(evento){
+    // Calculo de si Tipo Envio y Empresa Transportadora esta en base de datos
+     this.CalculoSiEstaEnBD();
+  }
+
+  eventoCheckbox = false; 
+  EventoCheckbox(evento){
+    this.eventoCheckbox = evento;
+   /*  console.log("evento");
+    console.log(evento);
+    console.log("Contador Iguales");
+    console.log(this.contadorIguales);
+    if(evento == true) {
+      if(this.contadorIguales == 1){
+        console.log(this.camposFormularioEnvio.value);
+        this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
+        this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
+        this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
+        this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
+        console.log("envioCiudad");
+        console.log(this.envioCiudad);
+      }
+    } */
+  }
+
+ 
+  // Calculo de si Tipo Envio y Empresa Transportadora esta en base de datos
+  CalculoSiEstaEnBD(): void {
+
+    // Cada consulta se inicializa el contador
+    this.contadorIguales = 0;
+       
+    // Se asegura que este seleccionado Tipo Envio y Emporesa Transportadora
+    if(this.camposFormularioEnvio.value.tipoEnvio != 0 && this.camposFormularioEnvio.value.empresaTransportadora !=0) {
+
+      // Se Carga la lista Envio Ciudad Para calcular si existe el valor en la misma, sino existe se agrega
+      this.envioCiudadService.verEnvioCiudad().subscribe( enviosCiudadesBD => {
+        
+        // Se recorre cada elemento la lista envioCiudad de BD
+        enviosCiudadesBD.forEach((elementoEnvioBD) => {
+
+          // Se consulta, si Ciudad y Departamento estan registradas en BD de Envio Ciudad
+          if(this.camposFormularioEnvio.value.ciudad.id == elementoEnvioBD.ciudad.id ) {
+                     
+            // Se consulta si Tipo Envio esta registrado en BD de Envio Ciudad
+            if(this.camposFormularioEnvio.value.tipoEnvio.id == elementoEnvioBD.tipoEnvio.id &&
+               this.camposFormularioEnvio.value.empresaTransportadora.id == elementoEnvioBD.empresaTransportadora.id) {
+
+              // Contador de pareja (tipoEnvio, empresaTransportadora) igual en la Base de datos
+              this.contadorIguales++;
+              
+              // Deacuerdo al Cliente seleccionado en el Formulario, se carga los Campos Departamento, Ciudad, Dirección Por defecto.
+              // Para la Pareja EnvioCiudad y Empresa Transportadora esta en BD se carga el valorEnvio del mismo
+              this.camposFormularioEnvio.setValue({
+                tipoEnvio: this.camposFormularioEnvio.value.tipoEnvio,
+                departamento: this.camposFormularioEnvio.value.departamento,
+                ciudad: this.camposFormularioEnvio.value.ciudad,
+                direccion: this.camposFormularioEnvio.value.direccion,
+                empresaTransportadora: this.camposFormularioEnvio.value.empresaTransportadora,
+                valorEnvio: elementoEnvioBD.valorEnvio  
+              });
+              // Se carga en Pedido el campo Envia Ciudad
+              this.pedido.envioCiudad = elementoEnvioBD; 
+            } 
+          }
+        });
+      });
+    }
+    // Como cada registro es unico, si el conteo de iguales es diferente de 1, es por que no esta en BD 
+    // y valorEnvio se muestra en vacio en el Form
+    if(this.contadorIguales != 1) {
+      this.camposFormularioEnvio.setValue({
+        tipoEnvio: this.camposFormularioEnvio.value.tipoEnvio,
+        departamento:this.camposFormularioEnvio.value.departamento,
+        ciudad: this.camposFormularioEnvio.value.ciudad,
+        direccion: this.camposFormularioEnvio.value.direccion,
+        empresaTransportadora: this.camposFormularioEnvio.value.empresaTransportadora,
+        valorEnvio: ['']  
+     });
+    }
+
+  }
+  // Obtener Lista Tipo Envio
+  ObtenerListaTipoEnvio(): void {
+    this.tipoEnvioService.verTipoEnvio().subscribe( tipoEnvios => {
+      this.listaTipoEnvio = tipoEnvios;
+    });
+  }
+
+  // Comparar Departamentos
+  compararDepartamentos( a1: Departamento, a2: Departamento): boolean {
+
+    if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
+      return true;
+    }
+
+    return ( a1 === null || a2 === null || a1 === undefined || a2 === undefined )
+    ? false : a1.id === a2.id;
+  }
+
+  // Comparar Ciudades
+  compararCiudades( c1: Ciudad, c2: Ciudad): boolean {
+
+    if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
+      return true;
+    }
+
+    return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
+    ? false : c1.id === c2.id;
+  }
+  cargarCiudadDeptIdporDefecto(departamento: Departamento): void {
+    this.ciudadService.obtenerCiudadId(departamento.id).subscribe(ciud => {
+      const FiltroListaCiudades = [];
+      ciud.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" :{
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
+      });
+      this.listaCiudadesPorDep = FiltroListaCiudades;
+    });
+  }
 }

@@ -27,7 +27,7 @@ export class EnviociudadService {
       })
     );
   }
-  crearEnviociudad(enviociudad: Enviociudad): Observable<Enviociudad> {
+  crearEnviociudad(enviociudad: Enviociudad): Observable<any> {
     return this.http.post<Enviociudad>(`${this.urlEnviociudad}`, enviociudad, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
@@ -36,7 +36,7 @@ export class EnviociudadService {
       })
     );
   }
-  ModificarEnvioCiudad(enviociudad: Enviociudad): Observable<Enviociudad> {
+  ModificarEnvioCiudad(enviociudad: Enviociudad): Observable<any> {
     return this.http.put<Enviociudad>(`${this.urlEnviociudad}/${enviociudad.id}`, enviociudad, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);

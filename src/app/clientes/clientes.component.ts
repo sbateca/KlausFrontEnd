@@ -15,6 +15,7 @@ import { MatSort, Sort} from '@angular/material/sort';
 import { MatDialog} from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class ClientesComponent implements OnInit {
 // Instanciamos
   constructor(public clienteService: ClienteService,
               public ciudadService: CiudadService,
+              private alertaSnackBar: MatSnackBar,
               public departamentoservice: DepartamentoService,
               public ventanaModal: MatDialog) { }
 
@@ -171,7 +173,7 @@ reordenar(sort: Sort) {
 
  // Ejecuta el metodo eliminar cliente, retorna- nada
 
-  delete(cliente: Cliente): void {
+delete(cliente: Cliente): void {
     swal.fire ({
 
       title: '¿Estas seguro?',
@@ -183,14 +185,21 @@ reordenar(sort: Sort) {
     cancelButtonText: 'No, cancelar!',
     confirmButtonText: 'Si, eliminar!'
 
-     }).then((result) => {
-       if (result.value) {
-         this.clienteService.delete(cliente.id).subscribe(respuesta => {
-         this.listarPaginado();
-         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
-          });
-       }
-      });
+    }).then((result) => {
+        
+        if (result.value) {
+          // Si este Cliente fue utilizado en Pedido no lo deja Eliminar
+          if(cliente.listaPedido.length !=0 ) {
+            this.alertaSnackBar.open("No se puede Eliminar este Cliente, Hay al menos un Pedido del mismo!!", 'Cerrar', {
+            duration: 8000 });
+          } else {
+              this.clienteService.delete(cliente.id).subscribe(respuesta => {
+                this.listarPaginado();
+                alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
+              });
+          }
+        }
+     });
 }
 /*
     El método abrirVentana implementa acciones sobre la ventana modal:
@@ -266,10 +275,8 @@ abrirVentanaEditarCliente(idCliente): void {
     });
   }
 
-/*
-  La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
-  donde se observa el detalle del proveedor seleccionado
-*/
+/* La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
+  donde se observa el detalle del proveedor seleccionado */
 
 abrirVentanaVer(idCliente): void {
   this.ventanaModal.open(DetalleClienteComponent, {

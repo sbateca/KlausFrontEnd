@@ -1,5 +1,5 @@
-.cuatroPartes {
-    width: 23%;
+.dosPartes {
+    width: 45%;
     padding-right: 4px;
 }
 
@@ -8,13 +8,23 @@
     padding-right: 4px;
 }
 
-.dosPartes {
-    width: 45%;
+.cuatroPartes {
+    width: 23%;
+    padding-right: 4px;
+}
+
+.cincoPartes {
+    width: 17%;
     padding-right: 4px;
 }
 
 .seisPartes {
     width: 15%;
+    padding-right: 4px;
+}
+
+.sietePartes {
+    width: 14%;
     padding-right: 4px;
 }
 

@@ -84,6 +84,7 @@ import { BodegaInventarioComponent } from './bodega-inventario/bodega-inventario
 import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-inventario/form-bodega-inventario.component';
 import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
 import { MovimientosComponent } from './movimientos/movimientos/movimientos.component';
+import { DetalleMovimientosComponent } from './movimientos/detalle-movimientos/detalle-movimientos.component';
 
 
 const routes: Routes = [
@@ -159,7 +160,8 @@ const routes: Routes = [
     BodegaInventarioComponent,
     FormBodegaInventarioComponent,
     DetalleBodegaInventarioComponent,
-    MovimientosComponent
+    MovimientosComponent,
+    DetalleMovimientosComponent
   ],
   imports: [
     BrowserModule,

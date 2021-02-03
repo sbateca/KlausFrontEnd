@@ -55,6 +55,7 @@
                 </mat-select>
                 <mat-error>Debe seleccionar la Talla</mat-error>
             </mat-form-field>
+
             <mat-form-field class="cuatroPartes">
                 <mat-label>Cantidad</mat-label>
                 <input type="number" #box (keyup)="onKey(box.value)" min="1" pattern="^[0-9]+" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
@@ -166,13 +167,86 @@
                     </tbody>
                 </div>
             </div>
+            <br>
+
+            <!-- Boton Agregar Datos Envio Ciudad-->
+            <div *ngIf="this.camposFormulario.get('listaCotizacion').value.length!=0">
+                <button class=" text-center" mat-button button-hover color="primary" (click)="ActivarDatosEnvio()"><strong>Datos De Envío</strong> </button>
+            </div>
         </div>
     </form>
+    <!--Formulario Datos de Envío Ciudad-->
+    <form [formGroup]="camposFormularioEnvio" *ngIf="datosEnvio">
+        <div class="card-body col-sm-12">
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departamento" [compareWith]="compararDepartamentos" (selectionChange)=" ObtenerListaCiudadesPorDep($event)">
+                    <mat-option [value]="departamento" *ngFor="let departamento of listaDepartamentos">{{departamento.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar el Departamento</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Ciudad</mat-label>
+                <mat-select formControlName="ciudad" [compareWith]="compararCiudades">
+                    <mat-option [value]="ciudad" *ngFor="let ciudad of listaCiudadesPorDep">{{ciudad.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar la Ciudad</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Dirección</mat-label>
+                <input type="text" name="direccion" matInput placeholder="Dirección" formControlName="direccion">
+                <mat-error>Debe digitar la dirección de Envío</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Tipo Envío</mat-label>
+                <mat-select formControlName="tipoEnvio" (selectionChange)=" EventoTipoEnvio($event)">
+                    <mat-option [value]="tipoEnvio" *ngFor="let tipoEnvio of listaTipoEnvio">{{tipoEnvio.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar Tipo Envío</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cuatroPartes">
+                <mat-label>Empresa Transportadora</mat-label>
+                <mat-select formControlName="empresaTransportadora" (selectionChange)="EventoEmpresaTransportadora($event)">
+                    <mat-option [value]="empresaTransportadora" *ngFor="let empresaTransportadora of listaEmpresaTransportadora">{{empresaTransportadora.nombre}}</mat-option>
+                </mat-select>
+                <mat-error>Se debe seleccionar la Empresa Transpotadora</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="cincoPartes">
+                <mat-label>Valor Envío</mat-label>
+                <input type="number" min="0" pattern="^[0-9]+" name="valorenvio" matInput placeholder="Valor Envío" formControlName="valorEnvio">
+                <mat-error>Debe digitar el valor de envío </mat-error>
+            </mat-form-field>
+
+            <mat-checkbox class="sietePartes" *ngIf="contadorIguales == 1" (change)="EventoCheckbox($event.checked)">Actualizar Valor Envío</mat-checkbox>
+
+
+            <div class="col-md-4" *ngIf="listaCotizacion">
+                <thead>
+                    <th>Total</th>
+                </thead>
+                <tbody>
+                    <td>
+                        {{(importe+this.camposFormularioEnvio.get('valorEnvio').value)|number}}
+                    </td>
+                </tbody>
+            </div>
+
+        </div>
+    </form>
+
 </div>
+
+
 <!-- botones de acciones -->
 <mat-dialog-actions>
     <button mat-button (click)="CancelarOperacion()">Cancelar</button>
-    <button mat-button color="primary" (click)="EnviarFormularioCotizacion()" [disabled]="this.camposFormulario.get('listaCotizacion').value.length==0"> Enviar</button>
+    <button mat-button color="primary" (click)="EnviarFormularioCotizacion()" [disabled]="camposFormularioEnvio.invalid"> Enviar</button>
 </mat-dialog-actions>
 
 <!--{{camposFormulario.value | json}}-->

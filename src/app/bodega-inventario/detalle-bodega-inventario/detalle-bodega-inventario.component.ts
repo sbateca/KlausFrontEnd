@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBodegaInventarioComponent } from '../form-bodega-inventario/form-bodega-inventario.component';
 import { BodegaInventarioService } from '../bodega-inventario.service';
 import { BodegaInventario } from '../bodega-inventario';
 
@@ -18,7 +17,6 @@ export class DetalleBodegaInventarioComponent implements OnInit {
   public bodegaInventario: BodegaInventario;
   ngOnInit(): void {
     this.ObtenerBodegaInventarioPorID(this.idBodegaInventario);
-    console.log(this.idBodegaInventario);
   }
   // Obtener Pedido Por Id
   ObtenerBodegaInventarioPorID(idBodegaInventario): void {

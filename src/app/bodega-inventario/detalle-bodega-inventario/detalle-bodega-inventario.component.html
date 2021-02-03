@@ -17,11 +17,11 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Costo(COP $):</th>
-                    <th class="text-dark"><small>{{(bodegaInventario.producto.costo) | number}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario?.producto.costo) | number}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Precio de Venta(COP $):</th>
-                    <th class="text-dark"><small>{{(bodegaInventario.producto.precioVenta) |number}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario?.producto.precioVenta) |number}}</small></th>
                 </tr>
                 <tr *ngIf="bodegaInventario?.producto.activo">
                     <th class="text-secondary font-weight-normal">Listado de Componentes del Producto:</th>
@@ -39,7 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let pieza of bodegaInventario.producto.piezas; let i = index">
+                                <tr *ngFor="let pieza of bodegaInventario?.producto.piezas; let i = index">
                                     <th scope="row">{{i+1}}</th>
                                     <td>{{pieza.nombrePieza}}</td>
                                     <td>{{pieza.material.nombre}}</td>

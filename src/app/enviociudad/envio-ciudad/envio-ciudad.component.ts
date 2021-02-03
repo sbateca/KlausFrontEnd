@@ -9,8 +9,7 @@ import alertasSweet from 'sweetalert2';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort} from '@angular/material/sort'; // Sort
 import { EmpresaTransportadoraComponent } from '../../EmpresaTransportadora/empresa-transportadora/empresa-transportadora.component';
-import { TipoenviosComponent } from '../../tipoenvios/tipoenvios.component';
-import { FormEmpresaTransportadoraComponent } from '../../EmpresaTransportadora/form-empresa-transportadora/form-empresa-transportadora.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-envio-ciudad',
@@ -28,12 +27,13 @@ export class EnvioCiudadComponent implements OnInit {
 // Variables con valores iniciales para el paginador
 totalRegistros = 0;
 paginaActual = 0;
-totalPorPaginas = 3;
+totalPorPaginas = 100;
 pageSizeOptions: number[] = [3, 5, 10, 25, 100];
 @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
 @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort; // Sort
 
   constructor(public enviociudadService: EnviociudadService,
+              private alertaSnackBar: MatSnackBar,
               public ventanaModal: MatDialog) { }
 
   // Tabla
@@ -44,6 +44,8 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
     this.enviociudadService.verEnvioCiudad().subscribe(
        enviociudad => {
        this. listaenviociudad = enviociudad;
+       console.log("listaEnvioCiudad");
+       console.log(this.listaenviociudad );
     });
     this.Paginado();
   }
@@ -169,10 +171,17 @@ public Eliminar(envioCiudad: Enviociudad): void {
   confirmButtonText: 'Si, eliminar!'
   }).then((respuesta) => {
     if (respuesta.value) {
-      this.enviociudadService.Eliminar(envioCiudad.id).subscribe( respuest => {
-        alertasSweet.fire('Envio Ciudad Eliminado!', 'Envio Ciudad ' + envioCiudad.tipoEnvio.nombre + ' Eliminado con éxito', 'success' );
-        this.Paginado();
-      });
+      // Si fue utilizado en Pedido no lo deja Eliminar
+      if(envioCiudad.listaPedido.length !=0 ) {
+        this.alertaSnackBar.open("No se puede Eliminar este Envío Ciudad, Hay almenos un Pedido que requiere del mismo!!", 'Cerrar', {
+          duration: 8000
+        });
+      } else {
+        this.enviociudadService.Eliminar(envioCiudad.id).subscribe( respuest => {
+          alertasSweet.fire('Envio Ciudad Eliminado!', 'Envio Ciudad ' + envioCiudad.tipoEnvio.nombre + ' Eliminado con éxito', 'success' );
+          this.Paginado();
+        });
+      }
     }
   });
 }
