@@ -9,65 +9,115 @@
     <form [formGroup]="camposFormulario">
         <div class="card-body col-sm-12">
 
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Cliente</mat-label>
-                <mat-select formControlName="cliente" [compareWith]="compararCliente">
-                    <mat-option *ngIf="!listaClientes else ExisteAlmenosUnCliente">No hay Clientes Registrados, debe registrar uno</mat-option>
-                    <ng-template #ExisteAlmenosUnCliente>
-                        <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}} {{cliente.apellidos}}</mat-option>
-                    </ng-template>
-                </mat-select>
-                <mat-error>Debe seleccionar el Cliente</mat-error>
-            </mat-form-field>
+            <div class="row">
+                <div class="col">
+                    <h4>Buscar/Agregar Cliente</h4>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Documento Cliente</mat-label>
+                        <input type="text" name="documento" (keypress)="EventoDocumento($event)" matInput placeholder="Documento" formControlName="documento">
+                    </mat-form-field>
 
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Observaciones</mat-label>
-                <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
-            </mat-form-field>
+                    <button mat-icon-button color="basic" [disabled]="camposFormulario.get('documento').value==0" matTooltip="Buscar/Agregar Cliente" (click)="BuscarAgregarCliente()"><mat-icon class="fa fa-search"></mat-icon></button>
+                </div>
+                <div class="col">
+                    <mat-form-field class="noventa">
+                        <mat-label>Cliente</mat-label>
+                        <mat-select formControlName="cliente" [compareWith]="compararCliente">
+                            <mat-option *ngIf="!listaClientes else ExisteAlmenosUnCliente">No hay Clientes Registrados, debe registrar uno</mat-option>
+                            <ng-template #ExisteAlmenosUnCliente>
+                                <mat-option [value]="cliente" *ngFor="let cliente of listaClientes">{{cliente.nombres}} {{cliente.apellidos}}</mat-option>
+                            </ng-template>
+                        </mat-select>
+                        <mat-error>Debe seleccionar el Cliente</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
 
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Valor Iva (Entero)</mat-label>
-                <input type="number" min="1" max="100" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
-                <mat-error>Debe digitar el Valor del Iva</mat-error>
-            </mat-form-field>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Observaciones</mat-label>
+                        <input type="text" name="observaciones" matInput placeholder="Observaciones" formControlName="observaciones">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Valor Iva (Entero)</mat-label>
+                        <input type="number" min="1" max="100" pattern="^[0-9]+" name="valorIva" matInput placeholder="Valor Iva" formControlName="valorIva">
+                        <mat-error>Debe digitar el Valor del Iva</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Valor Descuento (%)</mat-label>
+                        <input type="number" min="0" max="100" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
+                        <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <h4>Buscar/Por Referencia de Inventario</h4>
+                </div>
+                <div class="col">
+                    <mat-checkbox class="example-margin" [disabled]="!(this.camposFormulario.get('cliente').value  && this.camposFormulario.get('observaciones').value )" (change)="ScanneaContinuamenteCodigosQR($event.checked)">Scanneo continuo</mat-checkbox>
+                </div>
+                <div class="col">
+                    <button mat-icon-button color="basic" matTooltip="Buscar por codigo QR" (click)="ScanneaCodigosQR()"><mat-icon class="fa fa-qrcode"></mat-icon></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <!-- <div class="col"> -->
 
+                        <mat-form-field class="ochenta">
+                            <mat-label>Referencia De Inventario</mat-label>
+                            <input type="text" name="referencia" (keypress)="EventoReferencia($event)" matInput placeholder="Referencia De Inventario" formControlName="referencia">
+                        </mat-form-field>
+                        <button mat-icon-button color="basic" [disabled]="camposFormulario.get('referencia').value==0" matTooltip="Por Referencia de Inventario" (click)="BuscarReferenciaInventario()"><mat-icon class="fa fa-search"></mat-icon></button>
 
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Valor Descuento (%)</mat-label>
-                <input type="number" min="0" max="100" pattern="^[0-9]+" name="descuento" matInput placeholder="Descuento" formControlName="descuento">
-                <mat-error>Debe digitar el Valor del descuento en (%)</mat-error>
-            </mat-form-field>
+                        <!--  </div> -->
+                    </div>
+                </div>
+                <div class="col">
+                    <mat-form-field class="noventa">
+                        <mat-label>Producto</mat-label>
+                        <mat-select formControlName="producto" (selectionChange)="ProductoSeleccionado($event)">
+                            <mat-option [value]="producto" *ngFor="let producto of listaProductos">
+                                <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
+                        </mat-select>
+                        <mat-error>Debe seleccionar El producto</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="noventa">
+                        <mat-label>Talla</mat-label>
+                        <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event)">
+                            <mat-option [value]="talla" *ngFor="let talla of listaTalla">{{talla.talla}}</mat-option>
+                        </mat-select>
+                        <mat-error>Debe seleccionar la Talla</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="noventa">
+                        <mat-label>Cantidad</mat-label>
+                        <input type="number" antidad (keypress)="EventoTeclado($event)" #box (keyup)="EventoCantidad(box.value)" min="1" pattern="^[0-9]+" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
+                        <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
+                    </mat-form-field>
 
+                </div>
+            </div>
 
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Producto</mat-label>
-                <mat-select formControlName="producto" (selectionChange)="ProductoSeleccionado($event)">
-                    <mat-option [value]="producto" *ngFor="let producto of listaProductos">
-                        <!-- {{producto.nombre}} Ref: -->{{producto.referencia}}</mat-option>
-                </mat-select>
-                <mat-error>Debe seleccionar El producto</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Talla</mat-label>
-                <mat-select formControlName="talla" (selectionChange)="CrearArrayConTallasNoSeleccionadas($event)">
-                    <mat-option [value]="talla" *ngFor="let talla of listaTalla">{{talla.talla}}</mat-option>
-                </mat-select>
-                <mat-error>Debe seleccionar la Talla</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="cuatroPartes">
-                <mat-label>Cantidad</mat-label>
-                <input type="number" #box (keyup)="onKey(box.value)" min="1" pattern="^[0-9]+" name="cantidad" matInput placeholder="Cantidad" formControlName="cantidad">
-                <mat-error>Debe digitar la cantidad de Productos a pedir </mat-error>
-            </mat-form-field>
-
-            <button class=" text-center" *ngIf="!FormularioNoValido" mat-button button-hover color="primary" (click)="CalcularCuentaPedido()"><strong>Calcular Precio</strong> </button>
+            <button class=" text-center" *ngIf="!(camposFormulario.invalid || desactivado)" mat-button button-hover color="primary" (click)="CalcularCuentaPedido()"><strong>Calcular Precio</strong> </button>
 
             <!-- Calculadora-->
             <div *ngIf="calculadora">
                 <div class="w-100 text-center">
-                    Hay <strong>{{(bodegaInventario.cantidad) | number}}</strong> unidades de Zapatos {{bodegaInventario.producto.referencia}}-{{bodegaInventario.talla.talla}} En Bodega
+                    Hay <strong>{{(bodegaInventario?.cantidad) | number}}</strong> unidades de Zapatos {{bodegaInventario?.producto.referencia}}-{{bodegaInventario?.talla.talla}} En Bodega
                 </div>
 
                 <table class="table table-sm table-hover">
@@ -92,7 +142,7 @@
 
 
             <!-- Boton Agregar Cotizacion-->
-            <h4>Agregar Cotizacion <button mat-icon-button color="basic" [disabled]="FormularioNoValido" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
+            <h4>Agregar Producto a Cotizacion <button mat-icon-button color="basic" [disabled]="camposFormulario.invalid || desactivado" matTooltip="Agregar Componentes de Inventario" (click)="AgregarListaCotizacion()"><mat-icon>add_circle</mat-icon></button></h4>
 
             <div class="example-headers-align" formArrayName="listaCotizacion">
 
@@ -171,7 +221,8 @@
 
             <!-- Boton Agregar Datos Envio Ciudad-->
             <div *ngIf="this.camposFormulario.get('listaCotizacion').value.length!=0">
-                <button class=" text-center" mat-button button-hover color="primary" (click)="ActivarDatosEnvio()"><strong>Datos De Envío</strong> </button>
+                <h4>Agregar Datos De Envío <button mat-icon-button color="basic" matTooltip="Agregar Datos De Envío" (click)="ActivarDatosEnvio()"><mat-icon>add_circle</mat-icon></button></h4>
+                <!--< button class=" text-center" mat-button button-hover color="primary" (click)="ActivarDatosEnvio()"><strong>Datos De Envío</strong> </button> -->
             </div>
         </div>
     </form>
@@ -223,18 +274,23 @@
                 <mat-error>Debe digitar el valor de envío </mat-error>
             </mat-form-field>
 
-            <mat-checkbox class="sietePartes" *ngIf="contadorIguales == 1" (change)="EventoCheckbox($event.checked)">Actualizar Valor Envío</mat-checkbox>
+            <mat-checkbox class="sietePartes" *ngIf="contadorIguales == 1" (change)="EventoCheckboxEnvio($event.checked)">Actualizar Valor Envío</mat-checkbox>
 
 
             <div class="col-md-4" *ngIf="listaCotizacion">
-                <thead>
-                    <th>Total</th>
-                </thead>
-                <tbody>
-                    <td>
-                        {{(importe+this.camposFormularioEnvio.get('valorEnvio').value)|number}}
-                    </td>
-                </tbody>
+                <div class="row">
+                    <div class="col align-self-start">
+                        <thead>
+                            <th>Total</th>
+                        </thead>
+                        <tbody>
+                            <td>
+                                {{(importe+this.camposFormularioEnvio.get('valorEnvio').value)|number}}
+                            </td>
+                        </tbody>
+                    </div>
+
+                </div>
             </div>
 
         </div>

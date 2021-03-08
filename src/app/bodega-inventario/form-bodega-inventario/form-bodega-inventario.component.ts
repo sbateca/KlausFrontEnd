@@ -130,25 +130,20 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
         // Recorro la lista De Tallas
         this.listaTalla1.forEach( (elementoTalla) => {
  
-         // Preginto si el producto seleccionado es igual al producto en lista Componente
-         if(this.eventoProducto.value.id == elementoBodega.producto.id){
+          // Preginto si el producto seleccionado es igual al producto en lista Componente
+          if(this.eventoProducto.value.id == elementoBodega.producto.id){
              
-           if(elementoTalla.id == elementoBodega.talla.id){// Las tallas seleccionadas por producto
+            if(elementoTalla.id == elementoBodega.talla.id){// Las tallas seleccionadas por producto
            
-             this.indice = this.listaTalla1.indexOf(elementoTalla);
-             this.listaTalla1.splice(this.indice, 1);
-           } 
-         }
-       });
-       
+              this.indice = this.listaTalla1.indexOf(elementoTalla);
+              this.listaTalla1.splice(this.indice, 1);
+            } 
+          }
+        });
       });
-    
     }
-
   }
   
- 
-
   // Crear Formulario Bodega Inventario
   CrearFormularioBodegaInventario(): void {
     this.camposFormularioBodegaInventario = this.constructorFormularioBodegaInventario.group(
@@ -208,7 +203,7 @@ CrearArrayConTallasNoSeleccionadas(event, posicion: number): void {
       talla: this.camposFormularioBodegaInventario.get("talla").value,
       cantidad: this.camposFormularioBodegaInventario.get("cantidad").value,
       producto: this.camposFormularioBodegaInventario.get("producto").value,
-      });
+    });
   }
 
 // Quitar Lista de Componente inventario
@@ -223,7 +218,6 @@ EliminarComponenteInventarioArray(posicion: number): void {
      // Elimino de la lista y cargo el producto que habia por defecto
     this.CargarFormularioBodegaInventario();
     this.listaTipoTalla = [];
-   
   }
 }
 
@@ -269,12 +263,15 @@ AgregarComponentesInventario(): void {
         if (this.listaComponentesInventario.length === 0) {
           this.alertaSnackBar.open('Debe Agregar como minimo una talla!!', 'Cerrar', {
             duration: 5000
-            });
+          });
           // console.log("longitud cero");
         } else {
           this.alertaSnackBar.open('Ya se puede Guardar!!', 'Cerrar', {
             duration: 5000
-            });
+          });
+
+          /* console.log("FormularioBodegaInventario: ");
+          console.log(this.camposFormularioBodegaInventario.value); */
           this.referenciaVentanaModal.close(this.camposFormularioBodegaInventario.value);
           // console.log(this.camposFormularioBodegaInventario.value);
         }

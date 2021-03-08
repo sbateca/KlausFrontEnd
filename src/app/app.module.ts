@@ -73,9 +73,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-ciudad.component';
-import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
-import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UnidadesMedidasComponent } from './UnidadesMedidas/unidades-medidas.component';
 import { UnidadMedidaFormComponent } from './UnidadesMedidas/unidadMedidaForm/unidadmedida-form.component';
@@ -85,6 +82,17 @@ import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-i
 import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
 import { MovimientosComponent } from './movimientos/movimientos/movimientos.component';
 import { DetalleMovimientosComponent } from './movimientos/detalle-movimientos/detalle-movimientos.component';
+import { EstadoPedidoComponent } from './estado-pedido/estado-pedido.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { PdfMakeWrapper } from 'pdfmake-wrapper';
+import { NgQrScannerModule } from 'angular2-qrscanner';
+
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { ScannearPedidoComponent } from './pedido/scannear-pedido/scannear-pedido.component'; // fuentes
+
+// fuentes a usar
+PdfMakeWrapper.setFonts(pdfFonts);
+
 
 
 const routes: Routes = [
@@ -104,7 +112,6 @@ const routes: Routes = [
     {path: 'enviociudad', component: EnvioCiudadComponent},
     {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent},
     {path: 'pedido', component: PedidoComponent},
-    {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
     {path: 'UnidadMedida', component: UnidadesMedidasComponent},
     {path: 'bodegaInventario', component: BodegaInventarioComponent},
     {path: 'movimiento', component: MovimientosComponent}
@@ -150,10 +157,6 @@ const routes: Routes = [
     PedidoComponent,
     FormPedidoComponent,
     DetallePedidoComponent,
-    EstadoEnvioCiudadComponent,
-    FormEstadoEnvioCiudadComponent,
-    DetalleEstadoEnvioCiudadComponent,
-    EstadoEnvioCiudadComponent,
     UnidadesMedidasComponent,
     UnidadMedidaFormComponent,
     UnidadMedidaDetalleComponent,
@@ -161,7 +164,9 @@ const routes: Routes = [
     FormBodegaInventarioComponent,
     DetalleBodegaInventarioComponent,
     MovimientosComponent,
-    DetalleMovimientosComponent
+    DetalleMovimientosComponent,
+    EstadoPedidoComponent,
+    ScannearPedidoComponent
   ],
   imports: [
     BrowserModule,
@@ -189,7 +194,9 @@ const routes: Routes = [
     NgxMaterialTimepickerModule,
     MatSnackBarModule,
     MatSlideToggleModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatNativeDateModule,
+    NgQrScannerModule
     ],
   entryComponents: [ FormProveedoresComponent ],
   providers: [],

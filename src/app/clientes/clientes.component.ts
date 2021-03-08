@@ -85,7 +85,7 @@ aplicarFiltro(event: Event) {
 
 
 // Listar paginado : Realiza el get deacuerdo a los valores actualizados de cada pagina
-private listarPaginado() {
+public listarPaginado() {
 
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion => {
@@ -255,9 +255,11 @@ abrirVentanaEditarCliente(idCliente): void {
     data: idCliente
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
-    this.cli = resultado;
-    this.cli.id = idCliente;
-    this.actualizarCliente();
+    if(resultado){
+      this.cli = resultado;
+      this.cli.id = idCliente;
+      this.actualizarCliente();
+    }
   });
 }
 
@@ -268,8 +270,7 @@ abrirVentanaEditarCliente(idCliente): void {
       - Retorna: nada
 */
   actualizarCliente(): void {
-    this.clienteService.update(this.cli)
-    .subscribe(respuesta => {
+    this.clienteService.update(this.cli).subscribe(respuesta => {
       this.listarPaginado();
       swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success');
     });

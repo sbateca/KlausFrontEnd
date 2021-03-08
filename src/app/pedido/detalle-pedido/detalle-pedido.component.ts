@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Pedido } from '../pedido';
 import { Cotizacion } from '../../cotizacion/cotizacion';
 
+
+
 @Component({
   selector: 'app-detalle-pedido',
   templateUrl: './detalle-pedido.component.html',
@@ -27,7 +29,7 @@ export class DetallePedidoComponent implements OnInit {
       this.pedidoService.VerPedidoPorId(idPedido).subscribe( pedido => {
         this.pedido = pedido;
         console.log("pedido");
-        console.log(this.pedido.envioCiudad);
+        console.log(this.pedido);
       });
     }
   }

@@ -12,6 +12,13 @@ import { MovimientoService } from '../movimientos/movimiento.service';
 import { Movimiento } from '../movimientos/movimiento';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PedidoService } from '../pedido/pedido.service';
+// Import pdfmake-wrapper and the fonts to use
+import { PdfMakeWrapper, QR, Table } from 'pdfmake-wrapper';
+import { ITable} from 'pdfmake-wrapper/lib/interfaces';
+import pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
+
+// Set the fonts to use
+PdfMakeWrapper.setFonts(pdfFonts);
 
 @Component({
   selector: 'app-bodega-inventario',
@@ -41,6 +48,50 @@ export class BodegaInventarioComponent implements OnInit {
     this.CargarBodegaInventario();
     this.ListarPaginado();
   }
+
+  GenaraCodigosQR(){
+    this.bodegaInventarioService.ListaBodegaInventario().subscribe( listaBodegaInventario => {
+
+      
+        const pdf = new PdfMakeWrapper();
+        pdf.header('Codigos QR  Productos existentes en Bodega Inventario Empresa: Klaus Leather');
+        pdf.pageMargins ( [  5 ,  10 ,  0 ,  0  ] );
+        pdf.defaultStyle({ bold: false, fontSize: 8 });
+        pdf.add( this. CreaTablaReferenciaQR(listaBodegaInventario));
+        pdf.create().open();
+     
+    });
+  }
+
+  CreaTablaReferenciaQR(listaBodegaInventario): ITable{
+    return new Table([
+      ['#', 'Referencia', 'QR-1', 'QR-2', 'QR-3', 'QR-4', 'QR-5', 'QR-6', 'QR-7', 'QR-8', 'QR-9', 'QR-10'],
+      ... this.ExtraeElementoBodegaInventrario(listaBodegaInventario)
+    ])
+    .layout('noBorders')
+    .alignment('center')
+    .margin([5,0,0,0])
+    .end
+  }
+
+  // Crea el codigo 
+  CreaQR(referencia){
+    return new QR (referencia).fit(50).end
+  }
+
+  // Se extrae cada elemento de la listaBodegaInventario
+  ExtraeElementoBodegaInventrario(listaBodegaInventario) {
+    return listaBodegaInventario.map((bodegaInventario, index) => [
+      index+1, bodegaInventario.referencia, 
+      this.CreaQR(bodegaInventario.referencia), this.CreaQR(bodegaInventario.referencia),
+      this.CreaQR(bodegaInventario.referencia), this.CreaQR(bodegaInventario.referencia), 
+      this.CreaQR(bodegaInventario.referencia), this.CreaQR(bodegaInventario.referencia),
+      this.CreaQR(bodegaInventario.referencia), this.CreaQR(bodegaInventario.referencia), 
+      this.CreaQR(bodegaInventario.referencia), this.CreaQR(bodegaInventario.referencia)
+    ]);
+  }
+
+
 
 // Cargar Bodega Inventario
 CargarBodegaInventario(): void{
@@ -86,7 +137,16 @@ CrearBodegaInventario(inventarioFormulario): void {
         // Recorro la listaComponenteInventario de Formulario
         inventarioFormulario.listaComponentesInventario.forEach( elementoFormulario => {
 
-          this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {
+          this.bodegaInventario = elementoFormulario;
+
+          // Se crea la referencia es la union de la referencia de producto con la talla
+          this.bodegaInventario.referencia = elementoFormulario.producto.referencia+'-'+elementoFormulario.talla.talla.toString();
+          
+          /* console.log("elementoFormulario");
+          console.log(elementoFormulario); */
+         
+
+          this.bodegaInventarioService.CrearBodegaInventario( this.bodegaInventario).subscribe( resultadoAgregar => {
             
             // Pasamos Bodega Inventario a Movimiento
             this.movimiento.bodegaInventario  = resultadoAgregar.bodegaInventario;
@@ -134,23 +194,29 @@ CrearBodegaInventario(inventarioFormulario): void {
               
               // Adiciono la id de Base De Datos
               elementoFormulario.id = elementoInventarioBD.id;
+
+              this.bodegaInventario = elementoFormulario;
+
+              // Se crea la referencia es la union de la referencia de producto con la talla
+              this.bodegaInventario.referencia = elementoFormulario.producto.referencia+'-'+elementoFormulario.talla.talla.toString();
               
               // Tipo de Movimiento Entrada a Bodega # 1
               this.movimiento.tipo = 1;
               // Pasamos Bodega Inventario(elementoFormulario) a Movimiento
-              this.movimiento.bodegaInventario  = elementoFormulario;
+              this.movimiento.bodegaInventario  = this.bodegaInventario;
               // Calculamos El dinero(Costo*Cantidd) para Guardar en Movimiento
-              this.movimiento.dinero = elementoFormulario.producto.costo*elementoFormulario.cantidad;
+              this.movimiento.dinero = this.bodegaInventario.producto.costo*this.bodegaInventario.cantidad;
     
               // Agregamos Movimiento
               this.movimientoService.agregarElemento(this.movimiento).subscribe(agreamosMovimiento => {this.ListarPaginado();}); 
                  
               // Sumo las cantidades del mismo Producto
-              elementoFormulario.cantidad = elementoInventarioBD.cantidad + elementoFormulario.cantidad;
+              this.bodegaInventario.cantidad = elementoInventarioBD.cantidad + this.bodegaInventario.cantidad;
 
-
+              /* console.log("ElementoFormularioHay");
+              console.log(elementoFormulario); */
               // Actualizo BodegaInventario(elementoFormulario)
-              this.bodegaInventarioService.ActualizarBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => {this.ListarPaginado(); });
+              this.bodegaInventarioService.ActualizarBodegaInventario(this.bodegaInventario).subscribe( resultadoAgregar => {this.ListarPaginado(); });
               contador1 = 0; 
               swal.fire('Nuevo Producto en Bodega Inventario',
               `Bodega Inventario ${elementoFormulario.producto.nombre} creado con exito!`, 'success');
@@ -162,7 +228,15 @@ CrearBodegaInventario(inventarioFormulario): void {
               // 
               if (this.contador[index2] === listaInventarioBD.length || contador1 === listaInventarioBD.length ) {
 
-                this.bodegaInventarioService.CrearBodegaInventario(elementoFormulario).subscribe( resultadoAgregar => { 
+                
+                this.bodegaInventario = elementoFormulario;
+
+                // Se crea la referencia es la union de la referencia de producto con la talla
+                this.bodegaInventario.referencia = elementoFormulario.producto.referencia+'-'+elementoFormulario.talla.talla.toString();
+
+                /* console.log("ElementoFormularioelse");
+                console.log(this.bodegaInventario); */
+                this.bodegaInventarioService.CrearBodegaInventario(this.bodegaInventario).subscribe( resultadoAgregar => { 
 
                   // Tipo de movimiento Entrada a Bodega # 1
                   this.movimiento.tipo = 1;

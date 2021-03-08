@@ -7,9 +7,6 @@
     <div>
         <table class="table table-sm">
             <div>
-
-
-
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr class="thead-light">
@@ -122,7 +119,7 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Valor Envío:</th>
-                    <th class="text-dark"><small>{{pedido?.valorEnvio}}</small></th>
+                    <th class="text-dark"><small>{{(pedido?.valorEnvio)|number}}</small></th>
                 </tr>
 
             </div>

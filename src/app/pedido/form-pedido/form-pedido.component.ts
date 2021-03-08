@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { Pedido } from '../pedido';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Cliente } from '../../clientes/cliente';
 import { ClienteService } from '../../clientes/cliente.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { PedidoService } from '../pedido.service';
 import { BodegaInventarioService } from '../../bodega-inventario/bodega-inventario.service';
 import { BodegaInventario } from '../../bodega-inventario/bodega-inventario';
@@ -24,8 +25,13 @@ import { TipoenviosService } from '../../tipoenvios/tipoenvios.service';
 import { TipoEnvio } from '../../tipoenvios/tipoenvios';
 import { EnviociudadService } from '../../enviociudad/enviociudad.service';
 import { Enviociudad } from '../../enviociudad/Enviociudad';
-
-
+import { FormClientesComponent } from '../../clientes/form.component';
+import swal from 'sweetalert2';
+import {QrScannerComponent} from 'angular2-qrscanner';
+import { ScannearPedidoComponent } from '../scannear-pedido/scannear-pedido.component';
+/* declare  var  jQuery: any;
+declare var $: any;
+ */
 
 @Component({
   selector: 'app-form-pedido',
@@ -33,6 +39,8 @@ import { Enviociudad } from '../../enviociudad/Enviociudad';
   styleUrls: ['./form-pedido.component.css']
 })
 export class FormPedidoComponent implements OnInit {
+
+  @ViewChild(QrScannerComponent, {static: false}) qrScannerComponent: QrScannerComponent ;
 
   public pedido = new Pedido();
   public camposFormulario: FormGroup;
@@ -46,9 +54,7 @@ export class FormPedidoComponent implements OnInit {
   public listaTalla: Talla[];
   public tallaEliminada: Talla;
   public listaTalla1 = new Array<Talla>();
-  public eventoProducto: MatSelectChange;
   public eventoTipoTalla: MatSelectChange;
-  public eventoTallaSeleccionada: MatSelectChange;
   public eventoInput = 0;
   public indice = 0;
   public importe = 0;
@@ -62,8 +68,12 @@ export class FormPedidoComponent implements OnInit {
   public listaEnvioCiudad: Enviociudad[];
   public contadorIguales = 0;
   public envioCiudad = new Enviociudad();
+
+  elementoInput;
   
   constructor(@Inject(MAT_DIALOG_DATA) private idPedido: number,
+              public ventanaModalScanner: MatDialog,
+              public  ventanaModalFormCliente: MatDialog,
               private pedidoService: PedidoService,
               private constructorFormulario: FormBuilder,
               private clienteService: ClienteService,
@@ -80,7 +90,7 @@ export class FormPedidoComponent implements OnInit {
               private referenciaVentanaModal: MatDialogRef<FormPedidoComponent>) { }
 
   ngOnInit(): void {
-    this.CargarCliente();
+    this.ListarClientes();
     this.CargarBodegaInventario();
     this.CargarProducto();
     this.ObtenerListaTipoEnvio();
@@ -92,10 +102,243 @@ export class FormPedidoComponent implements OnInit {
   }
 
 // Quito el error ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'true'. Current value: 'false'.
-ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
+ngAfterViewChecked(): void { 
+  this.changeRef.detectChanges(); 
 
+}
+
+// Apenas se digite algo en documento se quita la seleccion del cliente que hay
+EventoDocumento(eventoDocumento){
+  /* console.log("evento Documento: ");
+  console.log(eventoDocumento); */
+  if(eventoDocumento != null) {
+    this.camposFormulario.get('cliente').setValue('');
+  }
+}
+
+public activaScannerContinuo: boolean;
+// Se escanea de forma continia
+ScanneaContinuamenteCodigosQR(eventoCheckboxQR){
+
+  // Validacion Debe llenar en orden Cliente, Observacion
+  if(this.camposFormulario.get('cliente').value != '' && this.camposFormulario.get('observaciones').value != '' ) {
+    if(eventoCheckboxQR){
+      // Abre la ventana modal de scaner QR
+      this.ScanneaCodigosQR();
+    }
+    this.activaScannerContinuo = eventoCheckboxQR;
+  } else {
+    // Se pone activaScannerContinuo en false
+    this.camposFormulario.get('activaScannerContinuo').setValue(false);
+      this.alertaSnackBar.open(' Debe llenar en orden Cliente, Observacion!!', 'Cerrar', {
+        duration: 8000
+      });
+    }
+}
+
+ // Abrir Ventana Modal De Scanear
+ ScanneaCodigosQR(): void {
+
+  // Validacion Debe llenar en orden Cliente, Observacion
+  if(this.camposFormulario.get('cliente').value != '' && this.camposFormulario.get('observaciones').value != '' ) {
+
+    // Se Abre la ventana modal se escaneo de codigo QR
+    const referenciaVentanaModal = this.ventanaModalScanner.open(ScannearPedidoComponent,
+      {
+        width: '45%',
+        height: '25',
+        position: { left: '30%', top: '60px' }
+      });
+    referenciaVentanaModal.afterClosed().subscribe(referenciaProducto => {
+
+      if (referenciaProducto != null) {
+    
+        // Se carga el input con la referencia scanneada por QR
+        this.camposFormulario.get('referencia').setValue(referenciaProducto);
+        // Se selecciona automaticamente los select de Producto-Talla por referencia QR
+        this.BuscarReferenciaInventario();
+      }
+    });
+
+  } else {
+    this.alertaSnackBar.open(' Debe llenar en orden Cliente, Observacion!!', 'Cerrar', {
+      duration: 8000
+    });
+  }
+}
+
+// Cuando se empieza a escribir algo en el input limpia el select de Talla
+EventoReferencia(event){
+  
+  if(this.camposFormulario.get('referencia').value !== 0){
+
+    // Se limpia el campo talla en el formulario
+    this.camposFormulario.get('talla').setValue('');
+  }
+}
+
+// Buscador de Producto-Talla por referencia
+BuscarReferenciaInventario(){
+
+  if(this.camposFormulario.get('cliente').value != '' && this.camposFormulario.get('observaciones').value != '' ) {
+
+   
+    let referencia = this.camposFormulario.get('referencia').value;
+
+  // obtenemos la Bodega Inventario del backend por su referencia
+  this.bodegaInventarioService.ObtenerBodegaInventarioPorReferencia(referencia).subscribe(bodegaInventarioFiltrado => {
+
+    
+
+    if(bodegaInventarioFiltrado!=null){
+
+      let productoBD: Producto =  bodegaInventarioFiltrado.producto;
+      let tallaPorRef: Talla =  bodegaInventarioFiltrado.talla;
+      let talla: Talla = null;
+      
+      // Se busca en la lista de select el Producto de la consulta por referencia
+      this.listaProductos.forEach(elementoProducto=>{
+        if(elementoProducto.id == productoBD.id){
+          productoBD=elementoProducto;
+        }
+      });
+
+      // Lista de tallas dependiendo de producto
+      this.tallaService.ObtenerTallasPorProductoEnBodega( bodegaInventarioFiltrado.producto.id).subscribe( tallas => {
+
+        // Lista Talla de Bodega Inventario
+        this.listaTalla = tallas;
+
+        // Se Sustrae la talla ya agregada en cotizacion de la listaTallas en el Select
+        this.SustraeTallaAgregadaEnLista();
+
+        // Se busca en la lista Tallas de select la Talla de la consulta por referencia
+        this.listaTalla.forEach(tallaSelect => {
+          if(tallaSelect.id == tallaPorRef.id){
+            talla=tallaSelect;
+          }
+        });
+
+        // Si la referencia ya Fue agregada talla es null
+        if(talla === null) {
+          // Cuando ya esta agregada esta referencia en la factura deja cargado lo que tiene
+          this.camposFormulario.get('referencia').setValue(this.camposFormulario.get('referencia').value);
+          this.alertaSnackBar.open('La Referencia '+ referencia +' ya fue agregada a la factura!!', 'Cerrar', {
+            duration: 8000
+          });
+        }else {
+          // Cuando no esta agregada esta referencia en la factura se limpia el input de referencia y carga cantidad=1 por defecto
+          this.camposFormulario.get('referencia').setValue('');
+          // Para el primer producto scaneado se le carga una cantidad '' para obligar a colocar una cantidad y dar enter
+          if(this.listaCotizacion == null){
+            this.camposFormulario.get('cantidad').setValue('');
+          } else {
+            this.camposFormulario.get('cantidad').setValue(1);
+          }
+        }
+
+        // Se cargan los siguentes campos del formulario automaticamente
+        this.camposFormulario.get('producto').setValue(productoBD);
+        this.camposFormulario.get('talla').setValue(talla)
+        
+        // Toma el el indice de la talla seleccionada
+        this.indice = this.listaTalla.indexOf(talla);
+    });
+    } else {
+      // Cuando esta referencia no existe en bodega en la factura deja cargado lo que tiene 
+      this.camposFormulario.get('referencia').setValue(this.camposFormulario.get('referencia').value);
+      this.alertaSnackBar.open('La Referencia '+ referencia +' no existe en Bodega-Inventario!!', 'Cerrar', {
+        duration: 8000
+      });
+    }
+  });
+  } else {
+    this.alertaSnackBar.open(' Debe llenar en orden Cliente, Observacion!!', 'Cerrar', {
+      duration: 8000
+    });
+  }
+  
+}
+
+// Se Aplica la consulta de Cliente Por Documento
+BuscarAgregarCliente(){
+  let documento = this.camposFormulario.get('documento').value;
+  
+  this.clienteService.ObtenerClientePorDocumento(documento).subscribe( clienteFiltrado => {
+
+    if(clienteFiltrado!=null){     
+      
+      // Se selecciona el cliente automaticamente llenando el input Documento
+      this.camposFormulario.get('cliente').setValue(clienteFiltrado);
+     
+    } else {
+
+      swal.fire({
+        title: '¡Este Cliente no existe!',
+        text: '¿Desea Agregar un cliente nuevo?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#ad3333',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonText: 'Si, agregar!'
+      }).then((result) => {
+  
+          if (result.value) {
+  
+            // Formulario Cliente
+            this.AbrirVentanaModalFormCliente();
+  
+           
+          }
+      });
+    }
+   });
+}
+
+// Ventana Modal de -Formulario Cliente
+AbrirVentanaModalFormCliente(): void {
+    const referenciaVentanaModal = this.ventanaModalFormCliente.open(FormClientesComponent,
+      {
+        width: '50%',
+        height: '70%',
+        position: { left: '30%', top: '60px' },
+        data: [this.camposFormulario.get('documento').value, true] // Se envia a FormClientes un array con el documento y un true(Representando a Pedido)
+      });
+    referenciaVentanaModal.afterClosed().subscribe(cliente => {
+
+      if (cliente != null) {
+        
+        // Se crea el cliente con la información del Formulario
+        this.clienteService.crearCliente(cliente).subscribe( Cliente => {
+          
+          // Se listan los clientes para que tener el selec de clientes actualizado
+          this.ListarClientes();
+
+          // Se carga el input(documento) con el documento del nuevo cliente
+          this.camposFormulario.get('documento').setValue(cliente.documento);
+        });
+
+        // Se muestra mensaje de se crea cliente nuevo
+        swal.fire('Cliente Creado', `Cliente ${cliente.nombres} creado con éxito!`, 'success');
+        
+       
+       
+        // Se obtiene el cliente por documento y se carga el mismo en el select del formulario
+        this.clienteService.ObtenerClientePorDocumento(cliente.documento).subscribe( clienteFiltrado => {
+
+          if(clienteFiltrado!=null){     
+            
+            // Se selecciona el cliente automaticamente llenando el input Documento
+            this.camposFormulario.get('cliente').setValue(clienteFiltrado);
+          }
+        });
+          
+      }
+    });
+}
 // Se Carga el cliente
-CargarCliente(): void {
+ListarClientes(): void {
   this.clienteService.getClientes().subscribe(clientes => {
     this.listaClientes = clientes;
   });
@@ -113,13 +356,20 @@ CargarProducto(): void {
 }
 // CargarTallas
 CargarTallas(id): void {
+  
+  this.tallaService.ObtenerTallasPorProductoEnBodega(id).subscribe( resultado => {
+    // Lista Talla DE Bodega Inventario
+    this.listaTalla = resultado;
+
+    // Se va sacando la talla que ya ha sido agregada
+    this.SustraeTallaAgregadaEnLista();
+  });
+}
+
+// Se va sacando la talla que ya ha sido agregada
+SustraeTallaAgregadaEnLista(){
   let contador2 = 0;
   let contador3 = 0;
-  
-   this.tallaService.ObtenerTallasPorProductoEnBodega(id).subscribe( resultado => {
-     // Lista Talla DE Bodega Inventario
-     this.listaTalla = resultado;
-     
   if (this.listaCotizacion != undefined) {
 
     
@@ -134,20 +384,20 @@ CargarTallas(id): void {
           }
          
           // Con id por que la lista talla tiene la estructura diferente
-          if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){
-
+          /* if(this.eventoProducto.value.id == elementoCotizacion.bodegaInventario.producto.id ){ */
+          if(this.camposFormulario.get('producto').value.id == elementoCotizacion.bodegaInventario.producto.id ){
           
             if(elementoTalla.id != elementoCotizacion.bodegaInventario.talla.id){
               // Cuenta las tallas si no se selecciona del mismo Producto 
               this.contador1[j] ++;       
             }  else {// Si es igual la talla de la lista con la talla de cotizacion
-              contador3++;
-              if(contador3 == this.listaTalla.length){
-                this.listaTalla=[];
-                this.alertaSnackBar.open('Ya se selecciono toda la lista de Tallas de '+ elementoCotizacion.bodegaInventario.producto.nombre +' '+elementoCotizacion.bodegaInventario.producto.referencia+'!!', 'Cerrar', {
-                duration: 8000
-                });
-              }
+                contador3++;
+                if(contador3 == this.listaTalla.length){
+                  this.listaTalla=[];
+                  this.alertaSnackBar.open('Ya se selecciono toda la lista de Tallas de '+ elementoCotizacion.bodegaInventario.producto.nombre +' '+elementoCotizacion.bodegaInventario.producto.referencia+'!!', 'Cerrar', {
+                    duration: 8000
+                  });
+                }
             } 
           } else {// Si No es el producto se suma la talla tampoco se selecciona
               this.contador1[j] ++;             
@@ -166,24 +416,19 @@ CargarTallas(id): void {
             // lleno la lista con los elementos tallas no seleccionada
             this.listaTalla1.push(elementoTalla);
      
-            // Le asigno a lista Talla la lista de tallas sin seleccionar
+            // Se asigna(listaTalla) la lista de tallas sin seleccionar
             this.listaTalla= this.listaTalla1;     
             
           }
      }); 
-
-    });
-    
-    
+    });    
   }
-   });
-   
 }
+
 // Evento Select de Producto
 ProductoSeleccionado(evento){
-  this.eventoProducto = evento;
-   
-  // Cargo Lista de Talla apartir del id del producto de Bodega Inventario
+ 
+  // Se carga Lista de Talla apartir del id del producto de Bodega Inventario
   this.CargarTallas(evento.value.id);
 }
 
@@ -196,7 +441,7 @@ CargarBodegaInventario(): void {
 
 // Crea Array Con las Tallas que no se han Seleccionado
 CrearArrayConTallasNoSeleccionadas(event): void {
-  this.eventoTallaSeleccionada = event;
+
   // Toma el el indice de la talla seleccionada
   this.indice = this.listaTalla.indexOf(event.value);
 
@@ -219,8 +464,11 @@ CalcularCuentaPedido(){
   
   // Me desplazo por la lista de bodega y se busca el mismo elemento a partir de seleccionar Producto y Talla
   this.listaBodegaInventario.forEach(elementoBodegaInventario => {
-    if(elementoBodegaInventario.producto.id === (this.eventoProducto.value.id)){
-      if(elementoBodegaInventario.talla.id === (this.eventoTallaSeleccionada.value.id)) {
+   
+    if(elementoBodegaInventario.producto.id === (this.camposFormulario.get('producto').value.id)){
+      
+      if(elementoBodegaInventario.talla.id === (this.camposFormulario.get('talla').value.id)) {
+
         // Bodega Inventario 
         this.bodegaInventario = elementoBodegaInventario;
         
@@ -236,10 +484,17 @@ CalcularCuentaPedido(){
   return this.calculadora;
 }
 
+EventoTeclado(teclasInputCantidad: KeyboardEvent ){
+  /* console.log('teclasInputCantidad');
+  console.log(teclasInputCantidad); */
+}
 
 
 // Evento input captura los numeros en value
-onKey(value: number): boolean {
+EventoCantidad(cantidadInput: number): boolean {
+
+  /* console.log('Cantidad');
+  console.log(cantidadInput); */
 
   // Si hay seleccionado una talla
   if(this.camposFormulario.value.talla!=0){
@@ -252,19 +507,28 @@ onKey(value: number): boolean {
     this.calculadora = false;
 
     // Observa si el valor del input de la cantidad de pedido es menor a la cantidad de producto en Bodega
-    if (value <= this.bodegaInventario.cantidad) {
-      if (this.bodegaInventario.cantidad === 0) {
-        this.alertaSnackBar.open('Debe Agregar unidades de este Producto por que no hay en Bodega!!', 'Cerrar', {
+    if (cantidadInput <= this.bodegaInventario.cantidad  ) {
+      // Cero no es valido como cantidad
+      if(cantidadInput != 0){
+        if (this.bodegaInventario.cantidad === 0) {
+          this.alertaSnackBar.open('Debe Agregar unidades de este Producto por que no hay en Bodega!!', 'Cerrar', {
+            duration: 8000
+          });
+          this.desactivado = true;
+        } else {
+            this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
+            " unidades de este Producto, su Pedido SI se puede hacer efectivo!!", 'Cerrar', {
+              duration: 8000
+            });
+            this.desactivado = false;
+        }
+      } else {
+        this.alertaSnackBar.open("Debe digitar una cantidad, cantidad 0 no es valido!!", 'Cerrar', {
           duration: 8000
         });
         this.desactivado = true;
-      } else {
-          this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
-          " unidades de este Producto, su Pedido SI se puede hacer efectivo!!", 'Cerrar', {
-            duration: 8000
-          });
-          this.desactivado = false;
       }
+      
     } else {
         this.alertaSnackBar.open("Hay " + this.bodegaInventario.cantidad +
         " unidades de este Producto, su Pedido NO se puede hacer efectivo!!", 'Cerrar', {
@@ -283,10 +547,13 @@ onKey(value: number): boolean {
 CrearFormulario(): void {
   this.camposFormulario = this.constructorFormulario.group(
   {
+    documento: ['', [Validators.minLength(6), Validators.maxLength(10)]],
     cliente: ['', Validators.required],
     observaciones: ['', Validators.required],
     valorIva: ['19', [Validators.required, Validators.max(19)]],
     descuento: ['0', [Validators.required, Validators.max(100)]],
+    activaScannerContinuo: ['false'],
+    referencia: [''],
     producto: ['', Validators.required],
     talla: ['', Validators.required],
     cantidad: ['', Validators.required],
@@ -301,6 +568,20 @@ get ObtenerListaCotizacion() {
 
 // Crea Formulario Lista Cotizacion
 CrearListaCotizacion(): FormGroup {
+
+  // Se se utiliza bodega inventario de BD
+  this.listaBodegaInventario.forEach(elementoBodegaInventario => {
+  if(elementoBodegaInventario.producto.id === (this.camposFormulario.get('producto').value.id)){
+    if(elementoBodegaInventario.talla.id === (this.camposFormulario.get('talla').value.id)) {
+
+      // Bodega Inventario 
+      this.bodegaInventario = elementoBodegaInventario;
+    }
+  }
+});
+
+ /*  console.log("bodega");
+  console.log(this.bodegaInventario); */
   return this.constructorFormulario.group({
     bodegaInventario: this.bodegaInventario,
     cantidad: this.camposFormulario.get("cantidad").value,
@@ -329,6 +610,7 @@ AgregarListaCotizacion(): void {
   this.listaCotizacion.push(this.CrearListaCotizacion());
 
   // Limpia input
+  
   this.camposFormulario.get('descuento').setValue(0);  
   this.camposFormulario.get('talla').setValue(null);
   this.camposFormulario.get('cantidad').setValue(null);
@@ -344,11 +626,15 @@ AgregarListaCotizacion(): void {
   this.importe = this.importe + (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[this.contador].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[this.contador].descuento/100))*(this.camposFormulario.value.listaCotizacion[this.contador].cantidad);
   this.contador++;
 
-
-
   // Siempre que agrego pongo calculadora en false para no mostrar el calculo
   this.calculadora = false;
  
+  // Si se activa scanner continuo
+  if(this.activaScannerContinuo == true){
+    this.camposFormulario.get('referencia').setValue('');
+    // Se abre la ventana modal de scanner
+    this.ScanneaCodigosQR();
+  }
 }
 
 
@@ -374,20 +660,33 @@ EnviarFormularioCotizacion() {
         this.alertaSnackBar.open('Ya se puede Guardar!!', 'Cerrar', {
         duration: 5000
         });
+
+        this.pedido.ciudadEnvio = this.camposFormularioEnvio.value.ciudad;
+        this.pedido.direccionEnvio = this.camposFormularioEnvio.value.direccion;
+        this.pedido.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
+      
+        // Se prepara el objeto Pedido
+        this.pedido.cliente = this.camposFormulario.value.cliente;
+        this.pedido.observaciones = this.camposFormulario.value.observaciones;
+        this.pedido.listaCotizacion = this.camposFormulario.value.listaCotizacion;
+        this.pedido.valorIva = this.camposFormulario.value.valorIva;
+
+        // Se llena el Objeto Envio ciudad (Tarifas Reales de envío)
+        this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
+        this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
+        this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
+        this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
         
-        
-        // El Contador Iguales siempre es 1 por que es unico en Base de Datos
-        // Si es diferente es Se hace el registro nuevo en BD Envio Ciudad
+        // El Contador Iguales es 1 por que es unico en Base de Datos
+        // Si es diferente no esta registrado y Se hace el registro nuevo en BD Envio Ciudad
         if(this.contadorIguales != 1) {
 
-          // Se llena el Objeto Envio ciudad (Tarifas Reales de envío)
-          this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
-          this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
-          this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
-          this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
-          
           // Se agrega Envio Ciudad en la tabla
-          this.AgregarEnvioCiudad(this.envioCiudad);
+          this.envioCiudadService.crearEnviociudad(this.envioCiudad).subscribe( respuesta => {
+            // Se Agrega Envio Ciudad a Pedido Envio Ciudad
+            this.pedido.envioCiudad = respuesta.envioCiudad;
+            this.referenciaVentanaModal.close(this.pedido);
+          });
           
         } else {
           
@@ -395,149 +694,61 @@ EnviarFormularioCotizacion() {
           if(this.eventoCheckbox == true) {
             
               this.envioCiudad.id = this.pedido.envioCiudad.id
-              this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
-              this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
-              this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
-              this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
-              
+
               // Se actualiza el Valor de Envío 
               this.envioCiudadService.ModificarEnvioCiudad(this.envioCiudad).subscribe( respuesta => {
                 // Se Agrega Envio Ciudad a Pedido Envio Ciudad
                 this.pedido.envioCiudad = respuesta.envioCiudad;
+                this.referenciaVentanaModal.close(this.pedido);
               });
+          } else {
+            this.referenciaVentanaModal.close(this.pedido);
           }
         }
       
-       this.pedido.ciudadEnvio = this.camposFormularioEnvio.value.ciudad;
-       this.pedido.direccionEnvio = this.camposFormularioEnvio.value.direccion;
-       this.pedido.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
-      
-        // Se prepara el objeto Pedido
-        this.pedido.cliente = this.camposFormulario.value.cliente;
-        this.pedido.observaciones = this.camposFormulario.value.observaciones;
-        this.pedido.listaCotizacion = this.camposFormulario.value.listaCotizacion;
-        this.pedido.valorIva = this.camposFormulario.value.valorIva;
         
-        // Envia el Formulario Cargado
-        this.referenciaVentanaModal.close(this.pedido);
-        }
-    }
-  }
-  // Se Agrega o Registra Envio Ciudad a la tabla Envio Ciudad 
-  AgregarEnvioCiudad(envioCiudadF): any {
+       /*  
+        // Se iba envioCiudad null con esto se evita este error
+        if(this.pedido.envioCiudad!=null){
+         
+          console.log("Pedido-EnvioCiudad-lleno");
+          console.log(this.pedido.envioCiudad);
+          // Envia el Formulario Cargado
+          this.referenciaVentanaModal.close(this.pedido);
+        } else {
+          // Envio ciudad esta lleno
+          if(this.envioCiudad!=null){
+            console.log("Pedido-EnvioCiudad-null");
+            console.log(this.pedido.envioCiudad);
 
-    this.envioCiudadService.crearEnviociudad(envioCiudadF).subscribe( respuesta => {
-      // Se Agrega Envio Ciudad a Pedido Envio Ciudad
-      this.pedido.envioCiudad = respuesta.envioCiudad;
-    });
-  }
 
-// Desctiva el boton Agregar Cotizacion
-get FormularioNoValido(): boolean {
-  if (this.camposFormulario.invalid || this.desactivado) {
-    return true;
-  }
-}
+            // Se Carga la lista Envio Ciudad Para calcular si existe el valor en la misma, sino existe se agrega
+            this.envioCiudadService.verEnvioCiudad().subscribe( enviosCiudadesBD => {
+        
+              // Se recorre cada elemento la lista envioCiudad de BD
+              enviosCiudadesBD.forEach((elementoEnvioBD) => {
 
-  ProductoBodegaSeleccionado(event): void {
-    // Obtiene la posicion del producto seleccionado
-    this.indice = this.listaBodegaInventario.indexOf(event.value);
-  }
-
-// Quitar Lista de Componente inventario
-EliminarComponenteInventarioArray(posicion: number): void {
-
- // Resto uno al contador que es la cantidad de Productos en la lista cotizacion(index)
- this.contador--; 
- 
- this.listaBodegaInventario.push(this.listaCotizacion.value[posicion].bodegaInventario);
-
-  // Le resto al total el articulo que saco de la lista de pedido
- this.importe = this.importe - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[posicion].descuento/100))*(this.camposFormulario.value.listaCotizacion[posicion].cantidad);
-
- // Evita que le adicione la talla eliminada la lista detallas de otro Producto 
-  if(!this.eventoProducto.value.id != this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.id ){
-   
-    // Se carga la lista de tallas del producto seleccionado 
-    this.CargarTallas(this.eventoProducto.value.id);
-    
-  } 
-    // Antes de eliminar se adiciona la lista Talla al producto eliminado del Pedido
-    this.listaTalla.push(this.listaCotizacion.value[posicion].bodegaInventario.talla);
-    // Se elimina el producto del pedido
-    this.listaCotizacion.removeAt(posicion);
-}
-
-  // Carga pedido
-  CargarPedido(): void {
-    if  (this.idPedido) {
-      this.pedidoService.VerPedidoPorId(this.idPedido).subscribe(pedido => {
-        this.pedido = pedido;
-        this.camposFormulario.setValue({
-
-          "valorIva": this.pedido.valorIva,
-          "valorFinalVenta": this.pedido.valorFinalVenta,
-          "observaciones": this.pedido.observaciones,
-          "cliente": this.pedido.cliente
-
-        });
-      });
-    }
-  }
-
-//  Compara el Cliente
-compararCliente( c1: Cliente, c2: Cliente): boolean {
-  if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
-    return true;
-  }
-  return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
-    ? false : c1.id === c2.id;
-  }
-
-// Cancela el formularioy sale del mismo
-CancelarOperacion(): void {
-  this.referenciaVentanaModal.close();
-}
-
-  // Separador de decimales
-  FormatoSeparadorDecimal(n) {
-    let sep = n || "."; // Por defecto, el punto como separador decimal
-    // decimals = decimals || 2; // A 2 decimales
-    return n.toLocaleString().split(sep)[0];
-           // + n.toFixed(decimals).split(sep)[1];
-   }
-  
-  // Obtener Departamento
-  ObtenerListaDepartamento(): void {
-    this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
-      this.listaDepartamentos = departamentos;
-    });
-  }
-  // Obtener Lista de Ciudades de Departamento Seleccionado
-  ObtenerListaCiudadesPorDep(evento): void {
-    this.ciudadService.obtenerCiudadId(evento.value.id).subscribe( ciudades => {
-      const FiltroListaCiudades = [];
-      ciudades.forEach(elemento => {
-        FiltroListaCiudades.push({
-          "id": elemento.id,
-          "nombre": elemento.nombre,
-          "departamento" : {
-            "id": elemento.departamento.id,
-            "nombre": elemento.departamento.nombre
+                // Se consulta, si Ciudad y Departamento estan registradas en BD de Envio Ciudad
+                if(this.envioCiudad.ciudad.id == elementoEnvioBD.ciudad.id ) {
+                     
+                  // Se consulta si Tipo Envio esta registrado en BD de Envio Ciudad
+                  if(this.envioCiudad.tipoEnvio.id == elementoEnvioBD.tipoEnvio.id &&
+                    this.envioCiudad.empresaTransportadora.id == elementoEnvioBD.empresaTransportadora.id) {
+                      // Se carga en Pedido el campo Envia Ciudad de BD
+                      this.pedido.envioCiudad = elementoEnvioBD;
+                      this.referenciaVentanaModal.close(this.pedido);
+                  }
+                }
+              });
+            });
           }
-        });
-      });
-      this.listaCiudadesPorDep = FiltroListaCiudades;
-    });
+        } */
+      
+      }
+    }
   }
 
-  // Obtener Lista Empresa Transportadora
-  ObtenerListaEmpresaTransportadora(): void {
-    this.empresaTransportadoraService.verEmpresaTransportadora().subscribe( empresaTransportadora => {
-      this.listaEmpresaTransportadora = empresaTransportadora;
-    });
-  }
-
+  
   public datosEnvio= false;
 
   // Activa el Boton Datos Envío
@@ -574,23 +785,10 @@ CancelarOperacion(): void {
   }
 
   eventoCheckbox = false; 
-  EventoCheckbox(evento){
+
+  // Evento checkboxs de envioCiudad
+  EventoCheckboxEnvio(evento){
     this.eventoCheckbox = evento;
-   /*  console.log("evento");
-    console.log(evento);
-    console.log("Contador Iguales");
-    console.log(this.contadorIguales);
-    if(evento == true) {
-      if(this.contadorIguales == 1){
-        console.log(this.camposFormularioEnvio.value);
-        this.envioCiudad.ciudad = this.camposFormularioEnvio.value.ciudad;
-        this.envioCiudad.empresaTransportadora = this.camposFormularioEnvio.value.empresaTransportadora;
-        this.envioCiudad.tipoEnvio = this.camposFormularioEnvio.value.tipoEnvio;
-        this.envioCiudad.valorEnvio = this.camposFormularioEnvio.value.valorEnvio;
-        console.log("envioCiudad");
-        console.log(this.envioCiudad);
-      }
-    } */
   }
 
  
@@ -648,13 +846,139 @@ CancelarOperacion(): void {
         valorEnvio: ['']  
      });
     }
-
   }
+
+  // Se Agrega o Registra Envio Ciudad a la tabla Envio Ciudad 
+  AgregarEnvioCiudad(envioCiudadFormulario): any {
+
+    this.envioCiudadService.crearEnviociudad(envioCiudadFormulario).subscribe( respuesta => {
+      // Se Agrega Envio Ciudad a Pedido Envio Ciudad
+      this.pedido.envioCiudad = respuesta.envioCiudad;
+    });
+  }
+
+  // Desctiva el boton Agregar Cotizacion
+  get FormularioNoValido(): boolean {
+    if (this.camposFormulario.invalid || this.desactivado) {
+      return true;
+    }
+  }
+
+  // Quitar Lista de Componente inventario
+  EliminarComponenteInventarioArray(posicion: number): void {
+
+    // Resto uno al contador que es la cantidad de Productos en la lista cotizacion(index)
+    this.contador--; 
+ 
+    this.listaBodegaInventario.push(this.listaCotizacion.value[posicion].bodegaInventario);
+
+    // Le resto al total el articulo que saco de la lista de pedido
+    this.importe = this.importe - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta - (this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.precioVenta*this.camposFormulario.value.listaCotizacion[posicion].descuento/100))*(this.camposFormulario.value.listaCotizacion[posicion].cantidad);
+
+    // Evita que le adicione la talla eliminada la lista detallas de otro Producto 
+    if(!this.camposFormulario.get('producto').value.id   != 
+        this.camposFormulario.value.listaCotizacion[posicion].bodegaInventario.producto.id ){
+    
+      // Se carga la lista de tallas del producto seleccionado 
+      this.CargarTallas(this.camposFormulario.get('producto').value.id);
+    } 
+    // Antes de eliminar se adiciona la lista Talla al producto eliminado del Pedido
+    this.listaTalla.push(this.listaCotizacion.value[posicion].bodegaInventario.talla);
+    // Se elimina el producto del pedido
+    this.listaCotizacion.removeAt(posicion);
+  }
+
+  // Carga pedido
+  CargarPedido(): void {
+    if  (this.idPedido) {
+      this.pedidoService.VerPedidoPorId(this.idPedido).subscribe(pedido => {
+        this.pedido = pedido;
+        this.camposFormulario.setValue({
+          "valorIva": this.pedido.valorIva,
+          "valorFinalVenta": this.pedido.valorFinalVenta,
+          "observaciones": this.pedido.observaciones,
+          "cliente": this.pedido.cliente
+        });
+      });
+    }
+  }
+
+  // Cancela el formularioy sale del mismo
+  CancelarOperacion(): void {
+    this.referenciaVentanaModal.close();
+  }
+
+  // Separador de decimales
+  FormatoSeparadorDecimal(n) {
+    let sep = n || "."; // Por defecto, el punto como separador decimal
+    // decimals = decimals || 2; // A 2 decimales
+    return n.toLocaleString().split(sep)[0];
+           // + n.toFixed(decimals).split(sep)[1];
+   }
+  
+  // Obtener Departamento
+  ObtenerListaDepartamento(): void {
+    this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+      this.listaDepartamentos = departamentos;
+    });
+  }
+
+  // Obtener Lista de Ciudades de Departamento Seleccionado
+  ObtenerListaCiudadesPorDep(evento): void {
+    this.ciudadService.obtenerCiudadId(evento.value.id).subscribe( ciudades => {
+      const FiltroListaCiudades = [];
+      ciudades.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" : {
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
+      });
+      this.listaCiudadesPorDep = FiltroListaCiudades;
+    });
+  }
+
+  // Obtener Lista Empresa Transportadora
+  ObtenerListaEmpresaTransportadora(): void {
+    this.empresaTransportadoraService.verEmpresaTransportadora().subscribe( empresaTransportadora => {
+      this.listaEmpresaTransportadora = empresaTransportadora;
+    });
+  }
+
   // Obtener Lista Tipo Envio
   ObtenerListaTipoEnvio(): void {
     this.tipoEnvioService.verTipoEnvio().subscribe( tipoEnvios => {
       this.listaTipoEnvio = tipoEnvios;
     });
+  }
+
+  cargarCiudadDeptIdporDefecto(departamento: Departamento): void {
+    this.ciudadService.obtenerCiudadId(departamento.id).subscribe(ciud => {
+      const FiltroListaCiudades = [];
+      ciud.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" :{
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
+      });
+      this.listaCiudadesPorDep = FiltroListaCiudades;
+    });
+  }
+
+  //  Compara el Cliente
+  compararCliente( c1: Cliente, c2: Cliente): boolean {
+    if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
+      return true;
+    }
+    return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
+      ? false : c1.id === c2.id;
   }
 
   // Comparar Departamentos
@@ -677,21 +1001,5 @@ CancelarOperacion(): void {
 
     return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
     ? false : c1.id === c2.id;
-  }
-  cargarCiudadDeptIdporDefecto(departamento: Departamento): void {
-    this.ciudadService.obtenerCiudadId(departamento.id).subscribe(ciud => {
-      const FiltroListaCiudades = [];
-      ciud.forEach(elemento => {
-        FiltroListaCiudades.push({
-          "id": elemento.id,
-          "nombre": elemento.nombre,
-          "departamento" :{
-            "id": elemento.departamento.id,
-            "nombre": elemento.departamento.nombre
-          }
-        });
-      });
-      this.listaCiudadesPorDep = FiltroListaCiudades;
-    });
   }
 }

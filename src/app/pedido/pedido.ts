@@ -2,8 +2,10 @@ import { Cliente } from '../clientes/cliente';
 import { Cotizacion } from '../cotizacion/cotizacion';
 import { Enviociudad } from '../enviociudad/Enviociudad';
 import { Ciudad } from '../ciudades/ciudad';
+import { EstadoPedido } from '../estado-pedido/estado-pedido';
 export class Pedido {
     id: number;
+    referencia: string;
     valorIva: number;
     valorFinalVenta: number;
     observaciones: string;
@@ -13,5 +15,5 @@ export class Pedido {
     ciudadEnvio: Ciudad;
     direccionEnvio: string;
     valorEnvio: number;
-    
+    listaEstadoPedido: Pedido[];
 }

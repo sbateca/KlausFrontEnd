@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Enviociudad } from '../Enviociudad';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'; // Formulario
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'; // Formulario
 import { TipoEnvio } from '../../tipoenvios/tipoenvios';
 import { TipoenviosService } from '../../tipoenvios/tipoenvios.service'; // Tipo Envios Service
 import { DepartamentoService } from '../../departamentos/departamento.service';
@@ -49,15 +49,13 @@ export class FormenviociudadComponent implements OnInit {
 
   // Crear Formulario
   Crearformulario(): void {
-    this.camposformularioEnviociudad = this.constructorFormularioEnviociudad.group(
-      {
-        tipoEnvio: ['', Validators.required],
-        departamento: ['', Validators.required],
-        ciudad: ['', Validators.required],
-        empresaTransportadora: ['', Validators.required],
-        valorEnvio: ['', Validators.required]
-      }
-    );
+    this.camposformularioEnviociudad = this.constructorFormularioEnviociudad.group({
+      tipoEnvio: ['', Validators.required],
+      departamento: ['', Validators.required],
+      ciudad: ['', Validators.required],
+      empresaTransportadora: ['', Validators.required],
+      valorEnvio: ['', Validators.required]
+    });
   }
 
   // Obtener Lista Tipo Envio
@@ -85,20 +83,17 @@ export class FormenviociudadComponent implements OnInit {
     this.ciudadservice.obtenerCiudadId(evento.value.id).subscribe( ciudades => {
       const FiltroListaCiudades = [];
       ciudades.forEach(elemento => {
-        FiltroListaCiudades.push(
-         {
-           "id": elemento.id,
-           "nombre": elemento.nombre,
-           "departamento" :
-             {
-               "id": elemento.departamento.id,
-               "nombre": elemento.departamento.nombre
-             }
-         }
-        );
+        FiltroListaCiudades.push({
+          "id": elemento.id,
+          "nombre": elemento.nombre,
+          "departamento" :{
+            "id": elemento.departamento.id,
+            "nombre": elemento.departamento.nombre
+          }
+        });
       });
       this.listaciudadpordep = FiltroListaCiudades;
-  });
+    });
   }
 
   // Obtener Lista Empresa Transportadora
@@ -120,87 +115,83 @@ export class FormenviociudadComponent implements OnInit {
     } else {
       this.referenciaVentanaModal.close(this.camposformularioEnviociudad.value);
     }
-   }
+  }
 
     // Cargar Envio Ciudad en formulario editar
-    cargarEnvioCiudad(): void {
-      if (this.idEnvioCiudad) {
+  cargarEnvioCiudad(): void {
+    if (this.idEnvioCiudad) {
   
-        this.enviociudadservice.verEnvioCiudadPorId(this.idEnvioCiudad).subscribe(enviociudad => {
-          this.envioCiudad = enviociudad;
-          this.CargarListaCiudadesPorDefecto(this.envioCiudad.ciudad.departamento);
-          
-          this.camposformularioEnviociudad.setValue({
-             tipoEnvio: this.envioCiudad.tipoEnvio, // Se carga el objeto TipoEnvio completo
-             ciudad: this.envioCiudad.ciudad, // Se carga el objeto Ciudad completo
-             departamento: this.envioCiudad.ciudad.departamento, // Se carga el objeto Departamento completo
-             empresaTransportadora: this.envioCiudad.empresaTransportadora, // Se carga el objeto Empresa Transportadora completo
-             valorEnvio: this.envioCiudad.valorEnvio
-          });
+      this.enviociudadservice.verEnvioCiudadPorId(this.idEnvioCiudad).subscribe(enviociudad => {
+        this.envioCiudad = enviociudad;
+        this.CargarListaCiudadesPorDefecto(this.envioCiudad.ciudad.departamento);
+        
+        this.camposformularioEnviociudad.setValue({
+           tipoEnvio: this.envioCiudad.tipoEnvio, // Se carga el objeto TipoEnvio completo
+           ciudad: this.envioCiudad.ciudad, // Se carga el objeto Ciudad completo
+           departamento: this.envioCiudad.ciudad.departamento, // Se carga el objeto Departamento completo
+           empresaTransportadora: this.envioCiudad.empresaTransportadora, // Se carga el objeto Empresa Transportadora completo
+           valorEnvio: this.envioCiudad.valorEnvio
         });
-      }
+      });
     }
+  }
 
     // Obtener Lista de Ciudades de Departamento Por Defecto
   CargarListaCiudadesPorDefecto(departamento: Departamento): void {
     // console.log(evento);
-     this.ciudadservice.obtenerCiudadId(departamento.id).subscribe( ciudades => {
-       const FiltroListaCiudades = [];
-       ciudades.forEach(elemento => {
-         FiltroListaCiudades.push(
-          {
-            "id": elemento.id,
+    this.ciudadservice.obtenerCiudadId(departamento.id).subscribe( ciudades => {
+      const FiltroListaCiudades = [];
+      ciudades.forEach(elemento => {
+        FiltroListaCiudades.push({
+          "id": elemento.id,
             "nombre": elemento.nombre,
-            "departamento" :
-              {
-                "id": elemento.departamento.id,
-                "nombre": elemento.departamento.nombre
-              }
-          }
-         );
-       });
-       this.listaciudadpordep = FiltroListaCiudades;
-       // console.log(this.listaciudadpordep);
-   });
-   }
+            "departamento" :{
+              "id": elemento.departamento.id,
+              "nombre": elemento.departamento.nombre
+            }
+        });
+      });
+      this.listaciudadpordep = FiltroListaCiudades;
+    });
+  }
 
-    comparaDepartamentos( a1: Departamento, a2: Departamento): boolean {
+  comparaDepartamentos( a1: Departamento, a2: Departamento): boolean {
 
-      if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
-        return true;
-      }
-
-      return ( a1 === null || a2 === null || a1 === undefined || a2 === undefined )
-      ? false : a1.id === a2.id;
+    if (a1 === undefined && a2 === undefined) { // a1, a2  identico undefined
+      return true;
     }
 
-    comparaCiudades( c1: Ciudad, c2: Ciudad): boolean {
+    return ( a1 === null || a2 === null || a1 === undefined || a2 === undefined )
+    ? false : a1.id === a2.id;
+  }
 
-      if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
-        return true;
-      }
+  comparaCiudades( c1: Ciudad, c2: Ciudad): boolean {
 
-      return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
-      ? false : c1.id === c2.id;
+    if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
+      return true;
     }
 
-    comparaTipoEnvio( c1: TipoEnvio, c2: TipoEnvio): boolean {
+    return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
+    ? false : c1.id === c2.id;
+  }
 
-      if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
-        return true;
-      }
+  comparaTipoEnvio( c1: TipoEnvio, c2: TipoEnvio): boolean {
 
-      return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
-      ? false : c1.id === c2.id;
+    if (c1 === undefined && c2 === undefined) { // a1, a2  identico undefined
+      return true;
     }
 
-    ComparaEmpresaTransportadora( ET1: EmpresaTransportadora, ET2: EmpresaTransportadora): boolean {
+    return ( c1 === null || c2 === null || c1 === undefined || c2 === undefined )
+    ? false : c1.id === c2.id;
+  }
 
-      if (ET1 === undefined && ET2 === undefined) { // ET1, ET2  identico undefined
-        return true;
-      }
+  ComparaEmpresaTransportadora( ET1: EmpresaTransportadora, ET2: EmpresaTransportadora): boolean {
 
-      return ( ET1 === null || ET2 === null || ET1 === undefined || ET2 === undefined )
-      ? false : ET1.id === ET2.id;
+    if (ET1 === undefined && ET2 === undefined) { // ET1, ET2  identico undefined
+      return true;
     }
+
+    return ( ET1 === null || ET2 === null || ET1 === undefined || ET2 === undefined )
+    ? false : ET1.id === ET2.id;
+  }
 }

@@ -30,6 +30,12 @@ export class BodegaInventarioService extends CommonService<BodegaInventario> {
     .set('size', tamanoPagina);
     return this.httpCliente.get<any>(`${this.urlBodegaInventario}/pagina`, { params: params });
   }
+
+  // Consulta Bodega Por Feferencia
+  ObtenerBodegaInventarioPorReferencia(referencia: number): Observable<any> {
+    return this.httpCliente.get(this.urlBodegaInventario + '/bodega' + '/' + referencia);
+  }
+
   // Obtener Bodega Inventario Por Id
   VerBodegaInventarioPorId(id): Observable<BodegaInventario> {
     return this.httpCliente.get<BodegaInventario>(`${this.urlBodegaInventario}/${id}`).pipe(
