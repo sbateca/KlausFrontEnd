@@ -6,6 +6,7 @@ import { Ciudad } from '../ciudades/ciudad';
 import { catchError, map} from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 
 
@@ -14,8 +15,10 @@ import { Router } from '@angular/router';
 })
 export class ClienteService {
 
-  private urlEndPoint: string = 'http://localhost:8080/api/clientes';
-  private urlporciudad: string = 'http://localhost:8080/api/clientesciud';
+/*   private urlEndPoint: string = 'http://localhost:8080/api/clientes';
+  private urlporciudad: string = 'http://localhost:8080/api/clientesciud'; */
+  urlEndPoint = environment.urlEndPoint;
+  urlporciudad = environment.urlporciudad;
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 

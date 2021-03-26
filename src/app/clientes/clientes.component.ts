@@ -16,6 +16,8 @@ import { MatDialog} from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '../service/token.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -27,6 +29,8 @@ export class ClientesComponent implements OnInit {
   public cliente: Cliente[];
   public ciudades: Ciudad[];
   public departamentos: Departamento[];
+  public roles: string[];
+  public esAdmin: boolean;
  
 
   // se declara donde quedará la información del resultado obtenido al cerrar la ventana
@@ -52,13 +56,16 @@ export class ClientesComponent implements OnInit {
               public ciudadService: CiudadService,
               private alertaSnackBar: MatSnackBar,
               public departamentoservice: DepartamentoService,
-              public ventanaModal: MatDialog) { }
+              public ventanaModal: MatDialog,
+              private tokenService: TokenService) { }
 
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
 
     this.listarPaginado();
     this.cargarDepartamentos();
+    this.esAdmin = this.tokenService.isAdmin();
+    console.log("admin: "+this.esAdmin);
   }
 
 /*

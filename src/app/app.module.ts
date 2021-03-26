@@ -88,7 +88,15 @@ import { PdfMakeWrapper } from 'pdfmake-wrapper';
 import { NgQrScannerModule } from 'angular2-qrscanner';
 
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { ScannearPedidoComponent } from './pedido/scannear-pedido/scannear-pedido.component'; // fuentes
+import { ScannearPedidoComponent } from './pedido/scannear-pedido/scannear-pedido.component';
+import { AccesoComponent } from './acceso/acceso.component';
+import { CerrarSesionComponent } from './cerrar-sesion/cerrar-sesion.component';
+import { RegistroComponent } from './auth/registro.component';
+import { IndexComponent } from './index/index.component'; // fuentes
+import { LoginComponent } from './auth/login.component';
+import { interceptorProvider } from './interceptors/pro-interceptor.service';
+import { ToastrModule } from 'ngx-toastr';
+
 
 // fuentes a usar
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -96,7 +104,11 @@ PdfMakeWrapper.setFonts(pdfFonts);
 
 
 const routes: Routes = [
-    {path: '', redirectTo: '/clientes', pathMatch: 'full'},
+   /*  {path: '', redirectTo: '/clientes', pathMatch: 'full'}, */
+   /* {path: '', redirectTo: '/autenticacion', pathMatch: 'full'}, */
+    {path: '', component: IndexComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'registro', component: RegistroComponent},
     {path: 'clientes', component: ClientesComponent},
     {path: 'proveedores', component: ProveedoresComponent},
     {path: 'proveedores/form', component: FormProveedoresComponent},
@@ -114,7 +126,10 @@ const routes: Routes = [
     {path: 'pedido', component: PedidoComponent},
     {path: 'UnidadMedida', component: UnidadesMedidasComponent},
     {path: 'bodegaInventario', component: BodegaInventarioComponent},
-    {path: 'movimiento', component: MovimientosComponent}
+    {path: 'movimiento', component: MovimientosComponent},
+    /* {path: 'autenticacion', component: AccesoComponent},, */
+    {path: '', component: AccesoComponent}
+
 ];
 
 @NgModule({
@@ -166,7 +181,12 @@ const routes: Routes = [
     MovimientosComponent,
     DetalleMovimientosComponent,
     EstadoPedidoComponent,
-    ScannearPedidoComponent
+    ScannearPedidoComponent,
+    AccesoComponent,
+    CerrarSesionComponent,
+    LoginComponent,
+    RegistroComponent,
+    IndexComponent
   ],
   imports: [
     BrowserModule,
@@ -174,6 +194,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
+    ToastrModule.forRoot(),
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -199,7 +220,7 @@ const routes: Routes = [
     NgQrScannerModule
     ],
   entryComponents: [ FormProveedoresComponent ],
-  providers: [],
+  providers: [interceptorProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

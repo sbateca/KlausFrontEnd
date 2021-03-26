@@ -26,7 +26,7 @@
     </form>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav mr-auto">
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
@@ -85,6 +85,7 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
             </div>
         </li>
+
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
@@ -116,5 +117,17 @@
             <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
                 <i class="fas fa-th-large"></i></a>
         </li>
+
+        <!-- <form class="d-flex">
+            <button *ngIf="!isLogged" class="btn btn-outline-success" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+            <button *ngIf="isLogged" class="btn btn-outline-danger" (click)="onLogOut()"><i class="fas fa-door-open" ></i> Cerrar Sesión</button>
+        </form> -->
+        <form class="form-inline my-2 my-lg-0">
+            <button *ngIf="!isLogged" class="btn btn-outline-success my-2 my-sm-0" routerLink="/login" type="submit">
+              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+            <button *ngIf="isLogged" class="btn btn-outline-danger my-2 my-sm-0" (click)="onLogOut()" type="reset">
+                <i class="fas fa-sign-in-alt"></i>
+                <i class="fas fa-door-open"></i> Cerrar Sesión</button>
+        </form>
     </ul>
 </nav>
