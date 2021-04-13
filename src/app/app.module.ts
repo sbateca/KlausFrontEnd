@@ -1,10 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Component } from '@angular/core';
+import { NgModule} from '@angular/core';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { ClienteService } from './clientes/cliente.service';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
@@ -16,7 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FormClientesComponent } from './clientes/form.component';
 
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,7 +23,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatDialogConfig} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -58,7 +56,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import { TipoenviosComponent } from './tipoenvios/tipoenvios.component';
 
-import { TipoEnvio } from './tipoenvios/tipoenvios';
 import { FormtipoenviosComponent } from './tipoenvios/formtipoenvios/formtipoenvios.component';
 import { DetalleTipoEnvioComponent } from './tipoenvios/detalle-tipo-envio/detalle-tipo-envio.component';
 import { EnvioCiudadComponent } from './enviociudad/envio-ciudad/envio-ciudad.component';
@@ -189,6 +186,7 @@ const routes: Routes = [
     IndexComponent
   ],
   imports: [
+    MatCardModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,

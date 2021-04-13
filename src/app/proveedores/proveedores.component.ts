@@ -1,15 +1,10 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Proveedor } from './proveedor';
 import { ProveedorService } from './proveedor.service';
 import alertasSweet from 'sweetalert2';
-
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
-
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
 
 // para trabajar con rutas
 import { Router, ActivatedRoute } from '@angular/router';
@@ -18,12 +13,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 /*
   Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog)
 */
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { FormProveedoresComponent } from './form.component';
 import { DetalleComponent } from './detalle/detalle.component';
 
 // importamos librería para el uso de Tooltips
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { TokenService } from '../service/token.service';
 
 
 
@@ -58,13 +54,15 @@ export class ProveedoresComponent implements OnInit {
   // creramos un enrutador
   private enrutador: Router; // se usa para acceder a funciones de redirección
   private activatedRoute: ActivatedRoute; // se usa para extraer información de la ruta
-
+  public isAdmin: boolean   
+  public esOperador: boolean;
 
   // instanciamos el ProveedorService y la ventana modal
   constructor(proveedorService: ProveedorService,
               enrutador: Router,
               activatedRoute: ActivatedRoute,
-              ventanaModal: MatDialog) {
+              ventanaModal: MatDialog,
+              private tokenService: TokenService) {
 
       this.proveedorService = proveedorService;
       this.enrutador = enrutador;
@@ -93,8 +91,14 @@ export class ProveedoresComponent implements OnInit {
   */
   ngOnInit(): void {
     this.listaPaginado();
+    this.Admin_Operador();
   }
 
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.isAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
+  }
 
 
 /*
@@ -150,8 +154,8 @@ paginar(evento: PageEvent): void {
 
           // asigna el sorting al MatTableDataSource
           this.datos.sort = this.ordenadorRegistros;
-          this.datos.sort.active = 'nombres';
-          this.datos.sort.direction = 'asc';
+         /*  this.datos.sort.active = 'nombres'; */
+        /*   this.datos.sort.direction = 'asc'; */
       }
   );
   }

@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-danger elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="#" class="brand-link">
         <img src="../../assets/img/klausLogo.png" alt="Klaus Leather" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Klaus Leather</span>
     </a>
@@ -121,24 +121,16 @@
                                 <p>Productos</p>
                             </a>
                         </li>
-
-
-
                     </ul>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="esAdmin || esPropietario">
                     <a [routerLink]="['/movimiento']" class="nav-link">
                         <i class="fa fa-chart-line nav-icon"></i>
                         <p>Movimiento</p>
                     </a>
                 </li>
-
-
-
             </ul>
-
-
         </nav>
         <!-- /.sidebar-menu -->
     </div>

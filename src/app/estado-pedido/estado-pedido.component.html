@@ -1,4 +1,5 @@
-<h3 mat-dialog-title>Crear Estado Pedido</h3>
+<h3 mat-dialog-title *ngIf="!ultimoEstado">Crear Estado Pedido</h3>
+<h3 mat-dialog-title *ngIf="ultimoEstado">Estado Pedido</h3>
 <!-- Formulario -->
 
 <div mat-dialog-content>
@@ -8,9 +9,9 @@
         <div class="container col-11">
             <h2 *ngIf="estadoActual != undefined">Estado Actual: <strong>{{estadoActual}}</strong></h2>
 
-            <div class="row align-items-center">
+            <div class="row align-items-center" *ngIf="!ultimoEstado">
                 <div class="col ">
-                    <h2 class="float-left pr-3 ">Estado Nuevo: <br><strong>{{estado}}</strong></h2>
+                    <h2 class="float-left pr-3 ">Estado Nuevo: <br><strong>{{estadoNuevo}}</strong></h2>
                 </div>
                 <div class="col">
                     <ng-container *ngIf="contador == 1 || contador == 3">
@@ -27,6 +28,14 @@
                             <mat-error>Debe digitar observaciones </mat-error>
                         </mat-form-field>
                     </ng-container>
+
+                </div>
+
+                <div class="col " *ngIf="contador == 2 || contador == 4">
+                    <mat-checkbox class="example-margin" [disabled]="camposFormularioDatoAdicionalEstado.invalid" (change)="FinProceso($event.checked)">
+                        <h4>Finalizar Proceso</h4>
+                    </mat-checkbox>
+                    <!-- <button mat-icon-button (click)="Fin()" color="primary" [disabled]="camposFormularioDatoAdicionalEstado.invalid">Fin del proceso</button> -->
                 </div>
                 <div class="col ">
                     <h4>Agregar Estado <button mat-icon-button color="basic" (click)="AgregarEstado()" [disabled]="camposFormularioDatoAdicionalEstado.invalid"><mat-icon>add_circle</mat-icon></button></h4>
@@ -35,12 +44,6 @@
         </div>
 
     </form>
-
-
-
-
-
-
     <!--Tabla Angular Material-->
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="datos" width="100%">
@@ -66,3 +69,7 @@
         </table>
     </div>
 </div>
+<mat-dialog-actions>
+    <button mat-button (click)="cancelarOperacion()" class="btn btn-outline-danger my-2 my-sm-0">Salir</button>
+</mat-dialog-actions>
+<!-- </div> -->

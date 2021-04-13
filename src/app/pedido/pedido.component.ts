@@ -23,8 +23,7 @@ import { PdfMakeWrapper, Stack, Table, QR, SVG} from 'pdfmake-wrapper';
 import { ITable} from 'pdfmake-wrapper/lib/interfaces';
 import { Logotipo } from './logo';
 import { ScannearPedidoComponent } from './scannear-pedido/scannear-pedido.component';
-
-
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-pedido',
@@ -41,6 +40,8 @@ export class PedidoComponent implements OnInit {
   public movimiento = new Movimiento();
   public listaEstadoPedido: EstadoPedido[];
   private logo = new Logotipo();
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   // Titulos de cada Columna
   columnasTabla: string[] = ['valorFinalVenta', 'cliente', 'acciones'];
@@ -55,20 +56,26 @@ export class PedidoComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) ordenadorRegistros: MatSort;
 
   constructor(public ventanaModal: MatDialog,
-    private cotizacionService: CotizacionService,
-    private clienteService: ClienteService,
-    private bodegaInventarioService: BodegaInventarioService,
-    private movimientoService: MovimientoService,
-    private estadoPedidoService: EstadoPedidoService,
-   /*  private envioCiudadService: EnviociudadService,
-    private router: Router, */
-    private pedidoService: PedidoService) { }
+              private cotizacionService: CotizacionService,
+              private clienteService: ClienteService,
+              private bodegaInventarioService: BodegaInventarioService,
+              private movimientoService: MovimientoService,
+              private estadoPedidoService: EstadoPedidoService,
+              private tokenService: TokenService,
+              private pedidoService: PedidoService) { }
 
   ngOnInit(): void {
     this.pedidoService.VerListaPedidos().subscribe(pedidos => {
       this.listaPedidos = pedidos;
     });
     this.listarPaginado();
+    this.Admin_Operador();
+  }
+
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
   // Abrir Ventana Modal De Scanear

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Movimiento } from '../movimiento';
 import { MovimientoService } from '../movimiento.service';
+import { TokenService } from '../../service/token.service';
 
 @Component({
   selector: 'app-detalle-movimientos',
@@ -10,8 +11,8 @@ import { MovimientoService } from '../movimiento.service';
 })
 export class DetalleMovimientosComponent implements OnInit {
 
-
   public movimiento: Movimiento;
+  
   constructor(private ventanaModalDetalle: MatDialogRef<DetalleMovimientosComponent>,
               private movimientoService: MovimientoService,
               @Inject(MAT_DIALOG_DATA) public idMovimiento: number) { }

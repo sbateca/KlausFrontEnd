@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import swal from 'sweetalert2'; // implementamos
@@ -17,7 +17,7 @@ import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '../service/token.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 
 
 @Component({
@@ -30,7 +30,9 @@ export class ClientesComponent implements OnInit {
   public ciudades: Ciudad[];
   public departamentos: Departamento[];
   public roles: string[];
+  public logged: boolean = false;
   public esAdmin: boolean;
+  public esOperador: boolean;
  
 
   // se declara donde quedará la información del resultado obtenido al cerrar la ventana
@@ -61,11 +63,10 @@ export class ClientesComponent implements OnInit {
 
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
-
     this.listarPaginado();
     this.cargarDepartamentos();
-    this.esAdmin = this.tokenService.isAdmin();
-    console.log("admin: "+this.esAdmin);
+    this.esAdmin = this.tokenService.isAdmin(); 
+    this.esOperador = this.tokenService.esOperador();
   }
 
 /*

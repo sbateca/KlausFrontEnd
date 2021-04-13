@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientesComponent } from '../clientes/clientes.component';
+import { TokenService } from '../service/token.service';
 
 
 @Component({
@@ -9,9 +9,13 @@ import { ClientesComponent } from '../clientes/clientes.component';
 })
 export class MenuComponent implements OnInit {
 
-  constructor() { }
+  public esAdmin: boolean   
+  public esPropietario: boolean;
+
+  constructor(private tokenService: TokenService) { }
 
   ngOnInit(): void {
+    this.esAdmin = this.tokenService.isAdmin();  // Se calcula si es admin
+    this.esPropietario = this.tokenService.esPropietario();
   }
-
 }

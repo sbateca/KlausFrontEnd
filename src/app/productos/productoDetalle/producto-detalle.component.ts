@@ -5,7 +5,7 @@ import { Producto } from '../producto';
 import { Pieza } from '../../piezas/pieza';
 
 // el archivo donde se encuentran variables comunes para la aplicación
-import { RUTA_BASE } from '../../config/app';
+/* import { RUTA_BASE } from '../../config/app'; */
 import { CommonService } from '../../common/common.service';
 
 
@@ -17,7 +17,7 @@ import { CommonService } from '../../common/common.service';
 export class ProductoDetalleComponent implements OnInit {
 
   // La ruta base
-  rutaBase = RUTA_BASE + '/producto';
+/*   rutaBase = RUTA_BASE + '/producto'; */
 
   producto: Producto;
   piezas: Pieza[];

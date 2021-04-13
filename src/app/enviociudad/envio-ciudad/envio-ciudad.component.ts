@@ -10,6 +10,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort} from '@angular/material/sort'; // Sort
 import { EmpresaTransportadoraComponent } from '../../EmpresaTransportadora/empresa-transportadora/empresa-transportadora.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '../../service/token.service';
 
 @Component({
   selector: 'app-envio-ciudad',
@@ -19,6 +20,8 @@ export class EnvioCiudadComponent implements OnInit {
 
   public listaenviociudad: Enviociudad[];
   public enviociudad: Enviociudad;
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   @ViewChild(EmpresaTransportadoraComponent) empresaTransportadora: EmpresaTransportadoraComponent;
 
@@ -34,6 +37,7 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
 
   constructor(public enviociudadService: EnviociudadService,
               private alertaSnackBar: MatSnackBar,
+              private tokenService: TokenService,
               public ventanaModal: MatDialog) { }
 
   // Tabla
@@ -48,6 +52,13 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
        console.log(this.listaenviociudad );
     });
     this.Paginado();
+    this.Admin_Operador();
+  }
+
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -109,7 +120,6 @@ reordenar(sort: Sort) {
   }
 // Formulario
 AbrirFormularioEnvioCiudad(): void {
-
   const VentanaModal = this.ventanaModal.open(FormenviociudadComponent,
  {
    width: '60%',
@@ -155,6 +165,7 @@ AbrirFormularioEditarEnvioCiudad(idEnvioCiudad) {
   public editarEnvioCiudad(): void {
     this.enviociudadService.ModificarEnvioCiudad(this.enviociudad).subscribe(respuesta => {
     swal.fire('Envio Ciudad Actializado', `Envio Ciudad ${this.enviociudad.ciudad.nombre} actualizado con éxito!`, 'success');
+    this.Paginado();
     });
   }
 

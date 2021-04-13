@@ -11,9 +11,7 @@ import { TipoTallaDetalleComponent } from './tipoTallaDetalle/tipo-talla-detalle
 
 // librería para el manejo de Tooltips
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-
-
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-tipo-talla',
@@ -24,6 +22,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 export class TipoTallaComponent implements OnInit {
+
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   // --------------- variables de clase ------------------------------- //
 
@@ -62,12 +63,14 @@ export class TipoTallaComponent implements OnInit {
 
   // constructor de la clase
   constructor(private tipoTallaService: TipoTallaService,
+              private tokenService: TokenService,
               public ventanaModal: MatDialog) { }
-
 
 
   ngOnInit(): void {
     this.listarTiposTallaPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -83,8 +86,8 @@ export class TipoTallaComponent implements OnInit {
 
         // establecimiento de datos del Sort
         this.datos.sort = this.ordenadorRegistros;
-        this.datos.sort.active = 'tipoTalla';
-        this.datos.sort.direction = 'asc';
+        /* this.datos.sort.active = 'tipoTalla';
+        this.datos.sort.direction = 'asc'; */
       }
     );
   }

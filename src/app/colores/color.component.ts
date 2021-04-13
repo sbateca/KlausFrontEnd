@@ -13,6 +13,7 @@ import { ColorDetalleComponent } from './detalleColor/color-detalle.component';
 
 // librería poar ael manejo de Tooltip
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TokenService } from '../service/token.service';
 
 
 
@@ -24,6 +25,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 export class ColorComponent implements OnInit {
+
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   // --------- variables de clase --------------------------------- //
 
@@ -71,6 +75,7 @@ export class ColorComponent implements OnInit {
   // -------------- constructor de la clase --------------------------- //
   constructor(colorService: ColorService,
               ventanaModalTalla: MatDialog,
+              private tokenService: TokenService,
               ventanaModalColor: MatDialog) {
     this.colorService = colorService;
     this.ventanaModalColor = ventanaModalColor;
@@ -79,6 +84,8 @@ export class ColorComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarColoresPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -100,8 +107,8 @@ export class ColorComponent implements OnInit {
         this.datosColor.paginator = this.paginadorColor;
 
         this.datosColor.sort = this.ordenadorRegistrosColor;
-        this.datosColor.sort.active = 'color';
-        this.datosColor.sort.direction = 'asc';
+        /* this.datosColor.sort.active = 'color';
+        this.datosColor.sort.direction = 'asc'; */
       }
    );
  }

@@ -16,6 +16,7 @@ import { PedidoService } from '../pedido/pedido.service';
 import { PdfMakeWrapper, QR, Table } from 'pdfmake-wrapper';
 import { ITable} from 'pdfmake-wrapper/lib/interfaces';
 import pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
+import { TokenService } from '../service/token.service';
 
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -33,6 +34,8 @@ export class BodegaInventarioComponent implements OnInit {
   public listaBodegaInventarioActualizada = new Array<BodegaInventario>();
   public total = 0;
   movimiento = new Movimiento();
+  public esAdmin: boolean   
+  public esOperador: boolean;
  
   // Tabla
   columnasTabla: string [] = ['producto', 'referencia', 'talla', 'cantidad', 'acciones'];
@@ -41,18 +44,24 @@ export class BodegaInventarioComponent implements OnInit {
               private movimientoService: MovimientoService,
               private alertaSnackBar: MatSnackBar,
               private pedidoService: PedidoService,
+              private tokenService: TokenService,
               private bodegaInventarioService: BodegaInventarioService) { }
 
   ngOnInit(): void {
-
     this.CargarBodegaInventario();
     this.ListarPaginado();
+    this.Admin_Operador();
   }
 
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
+  }
+
+  // Generar codigos de cada elemento de bodega
   GenaraCodigosQR(){
     this.bodegaInventarioService.ListaBodegaInventario().subscribe( listaBodegaInventario => {
-
-      
         const pdf = new PdfMakeWrapper();
         pdf.header('Codigos QR  Productos existentes en Bodega Inventario Empresa: Klaus Leather');
         pdf.pageMargins ( [  5 ,  10 ,  0 ,  0  ] );

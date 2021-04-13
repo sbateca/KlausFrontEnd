@@ -2,7 +2,6 @@ import { Cliente } from '../clientes/cliente';
 import { Cotizacion } from '../cotizacion/cotizacion';
 import { Enviociudad } from '../enviociudad/Enviociudad';
 import { Ciudad } from '../ciudades/ciudad';
-import { EstadoPedido } from '../estado-pedido/estado-pedido';
 export class Pedido {
     id: number;
     referencia: string;
@@ -16,4 +15,5 @@ export class Pedido {
     direccionEnvio: string;
     valorEnvio: number;
     listaEstadoPedido: Pedido[];
+    nombreUsuario: string;
 }

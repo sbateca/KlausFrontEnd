@@ -28,8 +28,8 @@ export class DetallePedidoComponent implements OnInit {
     if (idPedido) {
       this.pedidoService.VerPedidoPorId(idPedido).subscribe( pedido => {
         this.pedido = pedido;
-        console.log("pedido");
-        console.log(this.pedido);
+        /* console.log("pedido");
+        console.log(this.pedido); */
       });
     }
   }

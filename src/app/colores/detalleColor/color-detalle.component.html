@@ -8,18 +8,18 @@
         <tbody>
             <tr>
                 <th scope="row">Nombre</th>
-                <td>{{color.nombre}}</td>
+                <td>{{color?.nombre}}</td>
             </tr>
             <tr>
                 <th scope="row">Color</th>
-                <td>{{color.codigoColor}}</td>
+                <td>{{color?.codigoColor}}</td>
             </tr>
             <tr>
         </tbody>
     </table>
 
     <div style="width: 100%; text-align: center; margin-top: 50px;">
-        <mat-icon aria-hidden="true" [ngStyle]="{'color': color.codigoColor, 'font-size': '300px', 'margin-top':'50px'}" [inline]="true">stop</mat-icon>
+        <mat-icon aria-hidden="true" [ngStyle]="{'color': color?.codigoColor, 'font-size': '300px', 'margin-top':'50px'}" [inline]="true">stop</mat-icon>
     </div>
 
 </div>

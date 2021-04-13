@@ -3,7 +3,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="float-left pr-3">{{titulo}}</h1>
-                <button mat-mini-fab color="primary" matTooltip="Agregar Talla" (click)="abrirVentanaModalTalla()"><mat-icon>straighten</mat-icon></button>
+                <button mat-mini-fab color="primary" *ngIf="esAdmin || esOperador" matTooltip="Agregar Talla" (click)="abrirVentanaModalTalla()"><mat-icon>straighten</mat-icon></button>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -19,7 +19,7 @@
 
 <section class="content">
 
-    <div class="card">
+    <div class="card" *ngIf="listaTallas != null">
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
 
@@ -62,8 +62,8 @@
                                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                                 <td mat-cell *matCellDef="let talla">
                                     <button mat-icon-button color="basic" matTooltip="Ver detalle" (click)="abrirVentanaDetalleTalla(talla.id)"><mat-icon class="verde">search</mat-icon></button>
-                                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditarTalla(talla.id)"><mat-icon class="verde">edit</mat-icon></button>
-                                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarTalla(talla)"><mat-icon>delete</mat-icon></button>
+                                    <button mat-icon-button color="basic" *ngIf="esAdmin || esOperador" matTooltip="Editar" (click)="abrirVentanaEditarTalla(talla.id)"><mat-icon class="verde">edit</mat-icon></button>
+                                    <button mat-icon-button color="basic" *ngIf="esAdmin || esOperador" matTooltip="Eliminar" (click)="eliminarTalla(talla)"><mat-icon>delete</mat-icon></button>
                                 </td>
                             </ng-container>
 

@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MaterialFormComponent } from './materialForm/material-form.component';
 import { MaterialDetalleComponent } from './materialDetalle/material-detalle.component';
 import alertasSweet from 'sweetalert2';
+import { TokenService } from '../service/token.service';
 
 
 @Component({
@@ -21,6 +22,8 @@ import alertasSweet from 'sweetalert2';
 
 export class MaterialComponent implements OnInit {
 
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   /// variables de nombres y rutas de funcionalidades
   titulo = 'Materiales';
@@ -53,11 +56,14 @@ export class MaterialComponent implements OnInit {
 
 
   constructor(private materialService: MaterialService,
+              private tokenService: TokenService,
               public ventanaModal: MatDialog) { }
 
 
   ngOnInit(): void {
     this.listarMaterialPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -85,8 +91,8 @@ export class MaterialComponent implements OnInit {
 
       // Establecemos los valores de las variables relacionadas con Sort
       this.datos.sort = this.ordenadorRegistros;
-      this.datos.sort.active = 'nombre';
-      this.datos.sort.direction = 'asc';
+      /* this.datos.sort.active = 'nombre';
+      this.datos.sort.direction = 'asc'; */
 
     });
   }

@@ -1,10 +1,19 @@
-<div class="container">
+<div class="container" *ngIf="nombreUsuario">
     <div class="jumbotron">
-        <h1 *ngIf="!nombreUsuario" class="display-4">Hello, world!</h1>
-        <h1 *ngIf="nombreUsuario" class="display-4">Hello, {{nombreUsuario}}</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <h1 class="display-4">Hola, {{nombreUsuario}}</h1>
+        <p class="lead">Tenga un Bendecido día, muchos exitos todos los dias de tu vida, queremos que seas Feliz en nuestra Organizacion.</p>
+        <p>Eres importante</p>
         <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <p>{{rol}}</p>
+        <a class="btn btn-primary btn-lg" *ngIf="esAdmin" routerLink="/registro" role="button">Crear Cuenta</a>
+    </div>
+</div>
+<div class="container" *ngIf="!nombreUsuario">
+    <div class="jumbotron">
+        <h1 class="display-4">No se ha Iniciado Sesion</h1>
+        <p class="lead">Debes iniciar sesion, para continuar.</p>
+        <hr class="my-4">
+        <p>Puedes iniciar sesion aca.</p>
+        <a class="btn btn-primary btn-lg" routerLink="/login" role="button">Iniciar Sesion</a>
     </div>
 </div>

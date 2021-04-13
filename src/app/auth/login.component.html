@@ -1,31 +1,26 @@
-<div class="container d-flex justify-content-center">
-    <div class="card">
-        <!--Formulario-->
-        <div class="card-header">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" routerLink="/login">Iniciar Sesión</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/registro">Crear Cuenta</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
-                <div class="form-group">
-                    <label for="nombreUsuario">Nombre de Usuario</label>
-                    <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control" [(ngModel)]="nombreUsuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" name="password" id="password" class="form-control" [(ngModel)]="password" required>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-outline-success btn-block" [disabled]="!f.valid" type="submit">
-                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<mat-card>
+    <!--import { MatCardModule } from '@angular/material/card';-->
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+        <form [formGroup]="camposFormulario">
+            <p>
+                <mat-form-field class="full-width-input">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" name="nombreUsuario" matInput placeholder="nombreUsuario" formControlName="nombreUsuario">
+                    <mat-error>Debe Digitar el Nombre de Usuario </mat-error>
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field class="full-width-input separator">
+                    <mat-label>Contraseña</mat-label>
+                    <input type="text" *ngIf="eventoCheckbox" name="password" matInput placeholder="password" formControlName="password">
+                    <input type="password" *ngIf="!eventoCheckbox" name="password" matInput placeholder="password" formControlName="password">
+                    <mat-error>Debe digitar la contraseña</mat-error>
+                </mat-form-field>
+                <mat-checkbox (change)="EventoCheckboxPassword($event.checked)">Ver</mat-checkbox>
+            </p>
+            <button mat-button color="primary" class="btn btn-outline-success" (click)="Login()" [disabled]=camposFormulario.invalid type="submit"> <i class="fas fa-sign-in-alt"></i> Login</button>
+
+        </form>
+    </mat-card-content>
+</mat-card>

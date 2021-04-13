@@ -25,8 +25,23 @@
         </div>
     </form>
 
+    <ul class="navbar-nav ml-auto" *ngIf="!finSesion">
+        <h3 class="card-title"><strong>{{rol}} </strong></h3>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="isLogged && !finSesion">
+        <h3 class="card-title"><strong>{{nombreUsuario}}</strong></h3>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="esAdmin && pagina == 'login' && !finSesion">
+        <button class="btn btn-outline-warning my-2 my-sm-0" (click)="pagina='registro'" routerLink="/registro" type="submit">
+        <i class="fas fa-sign-in-alt"></i> Crear Cuenta</button>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="esAdmin && pagina== 'registro' && !finSesion">
+        <button class="btn btn-outline-warning my-2 my-sm-0" (click)="pagina='login'" routerLink="/login" type="submit">
+        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    </ul>
+
     <!-- Right navbar links -->
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav ml-auto">
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
@@ -117,15 +132,10 @@
             <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
                 <i class="fas fa-th-large"></i></a>
         </li>
-
-        <!-- <form class="d-flex">
-            <button *ngIf="!isLogged" class="btn btn-outline-success" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-            <button *ngIf="isLogged" class="btn btn-outline-danger" (click)="onLogOut()"><i class="fas fa-door-open" ></i> Cerrar Sesión</button>
-        </form> -->
         <form class="form-inline my-2 my-lg-0">
-            <button *ngIf="!isLogged" class="btn btn-outline-success my-2 my-sm-0" routerLink="/login" type="submit">
+            <button *ngIf="!isLogged " class="btn btn-outline-success my-2 my-sm-0" routerLink="/login" type="submit">
               <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-            <button *ngIf="isLogged" class="btn btn-outline-danger my-2 my-sm-0" (click)="onLogOut()" type="reset">
+            <button *ngIf="isLogged" class="btn btn-outline-danger my-2 my-sm-0" (click)="CerrarSesion()" type="reset">
                 <i class="fas fa-sign-in-alt"></i>
                 <i class="fas fa-door-open"></i> Cerrar Sesión</button>
         </form>

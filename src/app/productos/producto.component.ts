@@ -14,6 +14,7 @@ import { ProductoPiezaService } from '../productoPieza/producto-pieza.service';
 import { ProductoPieza } from '../productoPieza/ProductoPieza';
 import { Pieza } from '../piezas/pieza';
 import { CommonService } from '../common/common.service';
+import { TokenService } from '../service/token.service';
 
 
 
@@ -30,6 +31,8 @@ import { CommonService } from '../common/common.service';
 
 export class ProductoComponent implements OnInit {
 
+public esAdmin: boolean   
+public esOperador: boolean;
 
 /// variables de nombres y rutas de funcionalidades
 titulo = 'Productos';
@@ -71,11 +74,14 @@ piezasConID = new Array<Pieza>();
 
   constructor(protected productoService: ProductoService,
               private piezaService: PiezaService,
+              private tokenService: TokenService,
               private productoPiezaService: ProductoPiezaService,
               public ventanaModal: MatDialog) { }
 
   ngOnInit(): void {
     this.listarProductoPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -107,8 +113,8 @@ piezasConID = new Array<Pieza>();
 
     // Establecemos los valores de las variables relacionadas con Sort
     this.datos.sort = this.ordenadorRegistros;
-    this.datos.sort.active = 'nombre';
-    this.datos.sort.direction = 'asc';
+    /* this.datos.sort.active = 'nombre';
+    this.datos.sort.direction = 'asc'; */
 
   });
 }

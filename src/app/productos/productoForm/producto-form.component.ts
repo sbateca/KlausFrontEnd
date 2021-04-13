@@ -17,7 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { Pieza } from '../../piezas/pieza';
 import { PiezaService } from '../../piezas/pieza.service';
-import { RUTA_BASE } from '../../config/app';
+/* import { RUTA_BASE } from '../../config/app'; */
 import { Producto } from '../producto';
 import { CommonService } from '../../common/common.service';
 
@@ -34,7 +34,7 @@ import { CommonService } from '../../common/common.service';
 
 export class ProductoFormComponent implements OnInit {
 
-  rutaBase = RUTA_BASE + '/producto';
+ /*  rutaBase = RUTA_BASE + '/producto'; */
 
   formulario: FormGroup;
   formularioPiezasGeneral: FormGroup;
@@ -324,8 +324,8 @@ export class ProductoFormComponent implements OnInit {
     */
   filtrarAutoCompleteColor(): void {
     this.listaFiltradaColores = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map( valor => this.filtraArrayColor(valor) )
+      startWith('')/* ,
+      map( valor => this.filtraArrayColor(valor) ) */
     );
   }
 

@@ -8,26 +8,26 @@
         <tbody>
             <tr>
                 <th scope="row">Nombre</th>
-                <td>{{producto.nombre}}</td>
-                <th rowspan="5" *ngIf="producto.fotoHashCode">
-                    <img class="img-thumbnail" style="width: 200px; height: 200px;" [src]="rutaBase + '/productoFoto/' + producto.id">
+                <td>{{producto?.nombre}}</td>
+                <th rowspan="5" *ngIf="producto?.fotoHashCode">
+                    <!-- <img class="img-thumbnail" style="width: 200px; height: 200px;" [src]="rutaBase + '/productoFoto/' + producto.id"> -->
                 </th>
             </tr>
             <tr>
                 <th scope="row">Rererencia</th>
-                <td>{{producto.referencia}}</td>
+                <td>{{producto?.referencia}}</td>
             </tr>
             <tr>
                 <th scope="row">Costo</th>
-                <td>$ {{FormatoSeparadorDecimal(producto.costo)}}</td>
+                <td>$ {{(producto?.costo)|number}}</td>
             </tr>
             <tr>
                 <th scope="row">Precio de venta</th>
-                <td>$ {{FormatoSeparadorDecimal(producto.precioVenta)}}</td>
+                <td>$ {{(producto?.precioVenta)|number}}</td>
             </tr>
             <tr>
                 <th scope="row">Activo</th>
-                <td>{{producto.activo ? 'Activo': 'Inactivo'}}</td>
+                <td>{{producto?.activo ? 'Activo': 'Inactivo'}}</td>
             </tr>
         </tbody>
     </table>
@@ -45,12 +45,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let pieza of producto.piezas; let i = index">
+            <tr *ngFor="let pieza of producto?.piezas; let i = index">
                 <th scope="row">{{i+1}}</th>
-                <td>{{pieza.nombrePieza}}</td>
-                <td>{{pieza.material.nombre}}</td>
-                <td>{{pieza.color.nombre}}</td>
-                <td>{{pieza.observacion}}</td>
+                <td>{{pieza?.nombrePieza}}</td>
+                <td>{{pieza?.material.nombre}}</td>
+                <td>{{pieza?.color.nombre}}</td>
+                <td>{{pieza?.observacion}}</td>
             </tr>
         </tbody>
     </table>

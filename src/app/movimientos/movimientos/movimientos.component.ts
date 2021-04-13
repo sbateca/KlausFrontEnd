@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DetalleMovimientosComponent } from '../detalle-movimientos/detalle-movimientos.component';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BodegaInventario } from '../../bodega-inventario/bodega-inventario';
+import { TokenService } from '../../service/token.service';
 
 
 @Component({
@@ -21,8 +22,10 @@ export class MovimientosComponent implements OnInit {
   public listaMovimientos: Movimiento[];
   public listaPedido: Pedido[];
   public camposFormularioPorTipos: FormGroup;
-  fechaPorDefecto = new FormControl(new Date());
+  public fechaPorDefecto = new FormControl(new Date());
   public nuevaListaPorTipos:boolean = false;
+  public esAdmin: boolean;
+  public esPropietario: boolean;
 
   // Variables con valores iniciales para el paginador
   totalRegistros = 0;
@@ -45,11 +48,14 @@ export class MovimientosComponent implements OnInit {
 
   constructor(private movimientoService: MovimientoService,
               private constructorFormulario: FormBuilder,
+              private tokenService:TokenService,
               public ventanaModal: MatDialog) { }
 
   ngOnInit(): void {
     this.listarPaginado();
     this.FormularioMovimientosPorTipo();  
+    this.esAdmin = this.tokenService.isAdmin();
+    this.esPropietario = this.tokenService.esPropietario();
   }
 
   // Calcular Movimiento Por Tipo 

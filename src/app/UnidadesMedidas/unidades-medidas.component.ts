@@ -8,6 +8,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { UnidadMedidaFormComponent } from './unidadMedidaForm/unidadmedida-form.component';
 import alertasSweet from 'sweetalert2';
 import { UnidadMedidaDetalleComponent } from './unidadMediaDetalle/unidad-medida-detalle.component';
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-unidades-medidas',
@@ -16,6 +17,9 @@ import { UnidadMedidaDetalleComponent } from './unidadMediaDetalle/unidad-medida
 })
 
 export class UnidadesMedidasComponent implements OnInit {
+
+  public esAdmin: boolean   
+  public esOperador: boolean;  
 
   titulo = "Unidades de medida";
   rutaFuncionalidad = 'Inventario / Unidades de medida';
@@ -48,10 +52,13 @@ unidadMedida: UnidadMedida;
 
 
   constructor(protected unidadMedidaService: UnidadMedidaService,
+              private tokenService: TokenService,
               public ventanaModal: MatDialog) { }
 
   ngOnInit(): void {
     this.listarUnidadMedidaPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
     /*
@@ -77,8 +84,8 @@ unidadMedida: UnidadMedida;
   
       // Establecemos los valores de las variables relacionadas con Sort
       this.datos.sort = this.ordenadorRegistros;
-      this.datos.sort.active = 'categoria';
-      this.datos.sort.direction = 'asc';
+     /*  this.datos.sort.active = 'categoria';
+      this.datos.sort.direction = 'asc'; */
   
     });
   }
