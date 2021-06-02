@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { Talla } from './talla';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 
 
@@ -18,7 +19,8 @@ export class TallaService {
   // ---------------------- variables de clase ---------------------- //
 
   private httpCliente: HttpClient;
-  private rutaEndPointTallas = 'http://localhost:8080/api/tallas';
+  /* private rutaEndPointTallas = 'http://localhost:8080/api/tallas'; */
+  private rutaEndPointTallas = environment.rutaTallas;
   private enrutador: Router;
   private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type' : 'application/json'});
 

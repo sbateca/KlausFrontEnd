@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { JwtDto } from '../modeloAcceso/jwt-dto';
 import { LoginUsuario } from '../modeloAcceso/login-usuario';
-import { environment } from '../../environments/environment';
-import { TokenService } from './token.service';
+import { environment } from '../../environments/environment.prod';
+
 @Injectable({
   providedIn: 'root'
 })

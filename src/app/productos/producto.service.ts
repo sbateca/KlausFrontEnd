@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Producto } from './producto';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
 import { CommonService } from '../common/common.service';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ import { Router } from '@angular/router';
 export class ProductoService extends CommonService<Producto> {
 
   
-  protected rutaEndPoint = 'http://localhost:8080/api/producto';
+  /* protected rutaEndPoint = 'http://localhost:8080/api/producto'; */
+  protected rutaEndPoint = environment.rutaProducto;
   
 
   // esta variable se ubica acá para facilitar el trabajo entre los componentes producto y formularioProducto

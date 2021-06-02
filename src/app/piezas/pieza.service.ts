@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { Pieza } from './pieza';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ import alertasSweet from 'sweetalert2';
 export class PiezaService {
 
   // Variable de rutas para las peticiones
-  rutaEndPoint = 'http://localhost:8080/api/pieza';
+ /*  rutaEndPoint = 'http://localhost:8080/api/pieza'; */
+  rutaEndPoint = environment.rutaPieza;
 
   // Declaracion de cabecera para las peticiones que lo requieren
   cabeceraHttp: HttpHeaders = new HttpHeaders( {'Content-type' : 'application/json'} );

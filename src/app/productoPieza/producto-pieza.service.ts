@@ -4,13 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { ProductoPieza } from './ProductoPieza';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoPiezaService {
 
-  rutaEndPoint = 'http://localhost:8080/api/productoPieza';
+  /* rutaEndPoint = 'http://localhost:8080/api/productoPieza'; */
+  rutaEndPoint = environment.rutaProductoPieza;
   cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type' : 'application/json'});
 
   constructor(private httpCliente: HttpClient) { }

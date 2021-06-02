@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { TipoTalla } from './TipoTalla';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 
 
@@ -18,7 +19,8 @@ import alertasSweet from 'sweetalert2';
 export class TipoTallaService {
 
   // Esta variable almacena la ruta base donde se hacen las peticiones al servidor backend
-  private rutaEndPointTipoTalla = 'http://localhost:8080/api/tipoTalla';
+  /* private rutaEndPointTipoTalla = 'http://localhost:8080/api/tipoTalla'; */
+  private rutaEndPointTipoTalla = environment.rutaTipoTalla;
 
   // Esta variable instancia la cabecera de las peticiones HTTP
   private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type' : 'application/json'});

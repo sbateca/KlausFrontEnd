@@ -4,13 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CotizacionService {
 
-  private urlCotizacion = 'http://localhost:8080/api/Cotizacion';
+  /* private urlCotizacion = 'http://localhost:8080/api/Cotizacion'; */
+  private urlCotizacion = environment.urlCotizacion;
   private httpHeaders = new HttpHeaders ({'Content-Type': 'application/json'});
   constructor( private http: HttpClient) { }
 

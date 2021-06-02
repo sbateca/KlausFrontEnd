@@ -6,13 +6,15 @@ import swal from 'sweetalert2';
 import { catchError } from 'rxjs/operators';
 import { CommonService } from '../common/common.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BodegaInventarioService extends CommonService<BodegaInventario> {
 
-  private urlBodegaInventario = 'http://localhost:8080/api/BodegaInventario';
+  /* private urlBodegaInventario = 'http://localhost:8080/api/BodegaInventario'; */
+  urlBodegaInventario = environment.urlBodegaInventario;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
   
   constructor(enrutador: Router, http: HttpClient) {

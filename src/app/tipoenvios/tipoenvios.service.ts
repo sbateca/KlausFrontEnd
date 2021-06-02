@@ -4,6 +4,7 @@ import { TipoEnvio } from './tipoenvios';
 import { Observable, throwError } from 'rxjs'; // Validar
 import { catchError, map } from 'rxjs/operators'; // Validar
 import swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 
 
@@ -15,7 +16,8 @@ export class TipoenviosService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  private urlTipoenvios: string = 'http://localhost:8080/api/TipoEnvio';
+  /* private urlTipoenvios: string = 'http://localhost:8080/api/TipoEnvio'; */
+  private urlTipoenvios = environment.urlTipoEnvios ;
 
   constructor( private http: HttpClient) { }
 

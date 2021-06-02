@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { Material } from './Material';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -16,7 +17,8 @@ import alertasSweet from 'sweetalert2';
 export class MaterialService {
 
 
-  private rutaEndPoint = 'http://localhost:8080/api/material';
+  /* private rutaEndPoint = 'http://localhost:8080/api/material'; */
+  private rutaEndPoint = environment.rutaMateriales;
   private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type': 'application/json'});
 
 

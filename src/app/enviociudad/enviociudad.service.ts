@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Enviociudad } from './Enviociudad';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,9 @@ import { Enviociudad } from './Enviociudad';
 export class EnviociudadService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-  private urlEnviociudad = 'http://localhost:8080/api/EnvioCiudad';
-
+  /*  private urlEnviociudad = 'http://localhost:8080/api/EnvioCiudad'; */
+  private urlEnviociudad = environment.urlEnviociudad;
+  
   constructor(private http: HttpClient) { }
 
   verEnvioCiudad(): Observable <Enviociudad[]> {

@@ -4,13 +4,15 @@ import { Pedido } from './pedido';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
 
-  private urlPedido: string = 'http://localhost:8080/api/Pedido';
+  /* private urlPedido: string = 'http://localhost:8080/api/Pedido'; */
+  private urlPedido: string = environment.urlPedido;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient) { }

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 
 // librerías para la captura de errores
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -15,7 +16,8 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class DepartamentoService {
 
-  private url: string = 'http://localhost:8080/api/departamentos';
+  /* private url: string = 'http://localhost:8080/api/departamentos'; */
+  private url= environment.url;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
   
 
