@@ -13,15 +13,15 @@
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Referencia:</th>
-                    <th class="text-dark"><small>{{bodegaInventario?.producto.referencia}}</small></th>
+                    <th class="text-dark"><small>{{bodegaInventario?.referencia}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Costo(COP $):</th>
-                    <th class="text-dark"><small>{{FormatoSeparadorDecimal(bodegaInventario.producto.costo)}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario?.producto.costo) | number}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Precio de Venta(COP $):</th>
-                    <th class="text-dark"><small>{{FormatoSeparadorDecimal(bodegaInventario.producto.precioVenta)}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario?.producto.precioVenta) |number}}</small></th>
                 </tr>
                 <tr *ngIf="bodegaInventario?.producto.activo">
                     <th class="text-secondary font-weight-normal">Listado de Componentes del Producto:</th>
@@ -39,9 +39,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let pieza of bodegaInventario.producto.piezas; let i = index">
+                                <tr *ngFor="let pieza of bodegaInventario?.producto.piezas; let i = index">
                                     <th scope="row">{{i+1}}</th>
-                                    <td>{{pieza.nombre}}</td>
+                                    <td>{{pieza.nombrePieza}}</td>
                                     <td>{{pieza.material.nombre}}</td>
                                     <td>{{pieza.color.nombre}}</td>
                                     <td>{{pieza.observacion}}</td>
@@ -56,7 +56,7 @@
             <div>
                 <tr>
                     <th class="text-secondary font-weight-normal">Cantidad:</th>
-                    <th class="text-dark"><small>{{bodegaInventario?.cantidad}}</small></th>
+                    <th class="text-dark"><small>{{(bodegaInventario?.cantidad) |number}}</small></th>
                 </tr>
                 <tr>
                     <th class="text-secondary font-weight-normal">Talla:</th>

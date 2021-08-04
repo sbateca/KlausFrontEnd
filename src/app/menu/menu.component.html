@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-danger elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="#" class="brand-link">
         <img src="../../assets/img/klausLogo.png" alt="Klaus Leather" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Klaus Leather</span>
     </a>
@@ -10,10 +10,10 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <!--  <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image"> -->
             </div>
             <div class="info">
-                <a href="#" class="d-block">Sergio Bateca</a>
+                <a href="#" class="d-block">Hermanos Bateca</a>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
                 </li>
                 <li class="nav-item">
                     <a [routerLink]="['/pedido']" class="nav-link">
-                        <i class="fa fa-shopping-cart nav-icon"></i>
+                        <i class="fa fa-box-open nav-icon"></i>
                         <p>Pedido</p>
                     </a>
                 </li>
@@ -57,12 +57,12 @@
                         <p>Tipo Envio</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!--  <li class="nav-item">
                     <a [routerLink]="['/EstadoEnvioCiudad']" class="nav-link">
                         <i class="fa fa-key nav-icon"></i>
                         <p>Estado Envío Ciudad</p>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a [routerLink]="['/bodegaInventario']" class="nav-link">
                         <i class="fa fa-store-alt nav-icon"></i>
@@ -71,8 +71,8 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" routerLinkActive="active">
-                        <i class="fa fa-suitcase nav-icon"></i>
-                        <p>Productos</p>
+                        <i class="fa fa-archive nav-icon"></i>
+                        <p>Inventario</p>
                         <span class="pull-right-container">
                             <i class="right fas fa-angle-left fijarDerecha"></i>
                           </span>
@@ -116,29 +116,21 @@
                         </li>
 
                         <li class="nav-item">
-                            <a routerLink="costoMaterial" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-white"></i>
-                                <p>Costos Materiales</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
                             <a routerLink="productos" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon text-green"></i>
                                 <p>Productos</p>
                             </a>
                         </li>
-
-
-
                     </ul>
                 </li>
 
-
-
+                <li class="nav-item" *ngIf="esAdmin || esPropietario">
+                    <a [routerLink]="['/movimiento']" class="nav-link">
+                        <i class="fa fa-chart-line nav-icon"></i>
+                        <p>Movimiento</p>
+                    </a>
+                </li>
             </ul>
-
-
         </nav>
         <!-- /.sidebar-menu -->
     </div>

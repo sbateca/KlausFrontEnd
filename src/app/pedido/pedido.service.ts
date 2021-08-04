@@ -4,13 +4,15 @@ import { Pedido } from './pedido';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
 
-  private urlPedido: string = 'http://localhost:8080/api/Pedido';
+  /* private urlPedido: string = 'http://localhost:8080/api/Pedido'; */
+  private urlPedido: string = environment.urlPedido;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient) { }
@@ -29,7 +31,7 @@ export class PedidoService {
   }
 
   // Buscar Pedido Por Id
-  VerPedidoPorId(id): Observable <Pedido> {
+  VerPedidoPorId(id): Observable <any> {
     return this.http.get<Pedido>(`${this.urlPedido}/${id}`).pipe(
       catchError(e => { // Optenemos el error status
         swal.fire('Error al editar', e.error.mensaje, 'error');
@@ -49,7 +51,7 @@ export class PedidoService {
   }
 
   // Actualizar Pedido
-  ActualizarPedido(pedido: Pedido): Observable <Pedido> {
+  ActualizarPedido(pedido: Pedido): Observable <any> {
     return this.http.put<Pedido>(`${this.urlPedido}/${pedido.id}`, pedido, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         swal.fire(e.error.mensaje, e.error.error, 'error');

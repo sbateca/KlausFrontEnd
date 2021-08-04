@@ -73,9 +73,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { EstadoEnvioCiudadComponent } from './estado-envio-ciudad/estado-envio-ciudad.component';
-import { FormEstadoEnvioCiudadComponent } from './estado-envio-ciudad/form-estado-envio-ciudad/form-estado-envio-ciudad.component';
-import { DetalleEstadoEnvioCiudadComponent } from './estado-envio-ciudad/detalle-estado-envio-ciudad/detalle-estado-envio-ciudad.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UnidadesMedidasComponent } from './UnidadesMedidas/unidades-medidas.component';
 import { UnidadMedidaFormComponent } from './UnidadesMedidas/unidadMedidaForm/unidadmedida-form.component';
@@ -86,6 +83,30 @@ import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bo
 import { CostoMaterialComponent } from './costoMaterial/costo-material.component';
 import { FormCostoMaterialComponent } from './costoMaterial/costoMaterialForm/form-costo-material.component';
 import { GastoMaterialProductoComponent } from './gastoMaterialProducto/gasto-material-producto.component';
+
+
+
+import { MovimientosComponent } from './movimientos/movimientos/movimientos.component';
+import { DetalleMovimientosComponent } from './movimientos/detalle-movimientos/detalle-movimientos.component';
+import { EstadoPedidoComponent } from './estado-pedido/estado-pedido.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { PdfMakeWrapper } from 'pdfmake-wrapper';
+import { NgQrScannerModule } from 'angular2-qrscanner';
+
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { ScannearPedidoComponent } from './pedido/scannear-pedido/scannear-pedido.component';
+import { AccesoComponent } from './acceso/acceso.component';
+import { CerrarSesionComponent } from './cerrar-sesion/cerrar-sesion.component';
+import { RegistroComponent } from './auth/registro.component';
+import { IndexComponent } from './index/index.component'; // fuentes
+import { LoginComponent } from './auth/login.component';
+import { interceptorProvider } from './interceptors/pro-interceptor.service';
+import { ToastrModule } from 'ngx-toastr';
+
+
+
+// fuentes a usar
+PdfMakeWrapper.setFonts(pdfFonts);
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -104,10 +125,13 @@ const routes: Routes = [
     {path: 'enviociudad', component: EnvioCiudadComponent},
     {path: 'EmpresaTransportadora', component: EmpresaTransportadoraComponent},
     {path: 'pedido', component: PedidoComponent},
-    {path: 'EstadoEnvioCiudad', component: EstadoEnvioCiudadComponent},
     {path: 'UnidadMedida', component: UnidadesMedidasComponent},
     {path: 'bodegaInventario', component: BodegaInventarioComponent},
-    {path: 'costoMaterial', component: CostoMaterialComponent}
+    {path: 'costoMaterial', component: CostoMaterialComponent},   
+    {path: 'login', component: LoginComponent},
+    {path: 'registro', component: RegistroComponent},
+    {path: 'movimiento', component: MovimientosComponent},
+    {path: '', component: AccesoComponent}
 ];
 
 @NgModule({
@@ -150,10 +174,6 @@ const routes: Routes = [
     PedidoComponent,
     FormPedidoComponent,
     DetallePedidoComponent,
-    EstadoEnvioCiudadComponent,
-    FormEstadoEnvioCiudadComponent,
-    DetalleEstadoEnvioCiudadComponent,
-    EstadoEnvioCiudadComponent,
     UnidadesMedidasComponent,
     UnidadMedidaFormComponent,
     UnidadMedidaDetalleComponent,
@@ -170,6 +190,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
+    ToastrModule.forRoot(),
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -193,7 +214,9 @@ const routes: Routes = [
     MatSnackBarModule
     ],
   entryComponents: [ FormProveedoresComponent ],
-  providers: [],
+  providers: [interceptorProvider],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule { }

@@ -1,0 +1,19 @@
+<div class="container" *ngIf="nombreUsuario">
+    <div class="jumbotron">
+        <h1 class="display-4">Hola, {{nombreUsuario}}</h1>
+        <p class="lead">Tenga un Bendecido día, muchos exitos todos los dias de tu vida, queremos que seas Feliz en nuestra Organizacion.</p>
+        <p>Eres importante</p>
+        <hr class="my-4">
+        <p>{{rol}}</p>
+        <a class="btn btn-primary btn-lg" *ngIf="esAdmin" routerLink="/registro" role="button">Crear Cuenta</a>
+    </div>
+</div>
+<div class="container" *ngIf="!nombreUsuario">
+    <div class="jumbotron">
+        <h1 class="display-4">No se ha Iniciado Sesion</h1>
+        <p class="lead">Debes iniciar sesion, para continuar.</p>
+        <hr class="my-4">
+        <p>Puedes iniciar sesion aca.</p>
+        <a class="btn btn-primary btn-lg" routerLink="/login" role="button">Iniciar Sesion</a>
+    </div>
+</div>

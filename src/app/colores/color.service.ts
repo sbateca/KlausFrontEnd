@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { Color } from './color';
 import { catchError } from 'rxjs/operators';
 import alertasSweet from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -18,7 +19,8 @@ export class ColorService {
   // ---------------------- variables de clase ---------------------- //
 
   private httpCliente: HttpClient;
-  private rutaEndPointColores = 'http://localhost:8080/api/colores';
+  /* private rutaEndPointColores = 'http://localhost:8080/api/colores'; */
+  private rutaEndPointColores = environment.urlCiuDept;
   private enrutador: Router;
   private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type' : 'application/json'});
 

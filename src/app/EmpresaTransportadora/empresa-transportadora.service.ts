@@ -4,6 +4,7 @@ import { EmpresaTransportadora } from './empresa-transportadora';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -12,7 +13,8 @@ import swal from 'sweetalert2';
 export class EmpresaTransportadoraService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-  private urlEmpresaTransportadora: string = 'http://localhost:8080/api/EmpresaTransportadora';
+  /* private urlEmpresaTransportadora: string = 'http://localhost:8080/api/EmpresaTransportadora'; */
+  urlEmpresaTransportadora = environment.urlEmpresaTransportadora;
 
   constructor(private http: HttpClient) { }
 

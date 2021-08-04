@@ -1,0 +1,52 @@
+<div class="card-body" *ngIf="esAdmin">
+    <mat-card>
+        <!--import { MatCardModule } from '@angular/material/card';-->
+        <mat-card-title>Nuevo Usuario</mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="camposFormulario">
+                <p>
+                    <mat-form-field class="full-width-input">
+                        <mat-label>Nombre</mat-label>
+                        <input type="text" name="nombre" matInput placeholder="Nombre" formControlName="nombre">
+                        <mat-error>Debe Digitar el Nombre</mat-error>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field class="full-width-input">
+                        <mat-label>Usuario</mat-label>
+                        <input type="text" name="nombreUsuario" matInput placeholder="Nombre Usuario" formControlName="nombreUsuario">
+                        <mat-error>Debe Digitar el Nombre de Usuario </mat-error>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field class="full-width-input separator">
+                        <mat-label>Contraseña</mat-label>
+                        <input type="text" *ngIf="eventoCheckbox" name="password" matInput placeholder="Contraseña" formControlName="password">
+                        <input type="password" *ngIf="!eventoCheckbox" name="password" matInput placeholder="Contraseña" formControlName="password">
+                        <mat-error>Debe digitar la contraseña</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox (change)="EventoCheckboxPassword($event.checked)">Ver</mat-checkbox>
+                </p>
+                <p>
+                    <mat-form-field class="full-width-input separator">
+                        <mat-label>Correo</mat-label>
+                        <input type="email" name="correo" matInput placeholder="Correo" formControlName="correo">
+                        <mat-error>Debe digitar el correo</mat-error>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field>
+                        <mat-label>Roles</mat-label>
+                        <mat-select formControlName="roles">
+                            <mat-option [value]="rol" *ngFor="let rol of listaRoles">{{rol}}</mat-option>
+                        </mat-select>
+                        <mat-error>Debe seleccionar el rol</mat-error>
+                    </mat-form-field>
+                </p>
+                <button mat-button color="primary" class="btn btn-outline-success btn-block" (click)="Registrar()" [disabled]=camposFormulario.invalid type="submit"><i class="fas fa-sign-in-alt"></i>Nuevo Usuario</button>
+
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
+<!-- </div> -->

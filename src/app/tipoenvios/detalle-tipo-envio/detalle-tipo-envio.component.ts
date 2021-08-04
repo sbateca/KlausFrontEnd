@@ -24,7 +24,6 @@ export class DetalleTipoEnvioComponent implements OnInit {
   public tipoenvioporId(idTipoEnvio): void {
     this.tipoenvioservicio.verTipoEnvioPorId(idTipoEnvio).subscribe(respuesta => {
       this.tipoenvio = respuesta;
-      console.log(this.tipoenvio);
     });
   }
   cerrarVentana(): void {

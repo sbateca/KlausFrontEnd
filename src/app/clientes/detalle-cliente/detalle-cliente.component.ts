@@ -3,8 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Ciudad } from '../../ciudades/ciudad';
-import { Departamento } from '../../departamentos/departamento';
+
 
 @Component({
   selector: 'app-detalle-cliente',

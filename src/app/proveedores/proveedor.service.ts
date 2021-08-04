@@ -8,6 +8,7 @@ import alertasSweet from 'sweetalert2';
 // catchError se usa para interceptar el Observable en busca de fallas
 // En caso de existir un falla se puede obtener el objeto dentro del operador
 import {map, catchError} from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 
 
@@ -22,7 +23,8 @@ export class ProveedorService {
 
     // Variables de clase
     private httpCliente: HttpClient;
-    private rutaEndPoint = 'http://localhost:8080/api/proveedores';
+    /* private rutaEndPoint = 'http://localhost:8080/api/proveedores'; */
+    private rutaEndPoint = environment.rutaProveedores;
     private enrutador: Router;
     private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type': 'application/json'});
 

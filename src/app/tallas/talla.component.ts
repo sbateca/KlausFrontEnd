@@ -14,6 +14,7 @@ import { TallaDetalleComponent } from './detalleTalla/talla-detalle.component';
 
 // Librería para el uso de tooltips
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TokenService } from '../service/token.service';
 
 
 
@@ -25,6 +26,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 export class TallaComponent implements OnInit {
+
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
   // --------- variables de clase --------------------------------- //
 
@@ -71,6 +75,7 @@ export class TallaComponent implements OnInit {
 
   // -------------- constructor de la clase --------------------------- //
   constructor(tallaService: TallaService,
+              private tokenService: TokenService,
               ventanaModalTalla: MatDialog) {
     this.tallaService = tallaService;
     this.ventanaModalTalla = ventanaModalTalla;
@@ -79,6 +84,8 @@ export class TallaComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarTallasPaginado();
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
   }
 
 
@@ -123,8 +130,8 @@ export class TallaComponent implements OnInit {
 
         // asigno la vista a la propiedad sorting de los datos
         this.datosTalla.sort = this.ordenadorRegistros;
-        this.datosTalla.sort.active = 'talla';
-        this.datosTalla.sort.direction = 'asc';
+        /* this.datosTalla.sort.active = 'talla';
+        this.datosTalla.sort.direction = 'asc'; */
       });
   }
 

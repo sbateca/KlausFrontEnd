@@ -9,7 +9,7 @@ import alertasSweet from 'sweetalert2';
 import { DetalleTipoEnvioComponent } from './detalle-tipo-envio/detalle-tipo-envio.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort} from '@angular/material/sort'; // Sort
-
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-tipoenvios',
@@ -20,6 +20,8 @@ export class TipoenviosComponent implements OnInit {
 
   public listaTipoEnvios: TipoEnvio[];
   public tipoEnvio: TipoEnvio;
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
 // Tabla
 columnasTabla: string [] = ['nombre', 'acciones'];
@@ -34,8 +36,8 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
 @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
 @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort; // Sort
 
-
 constructor(public ventanaModal: MatDialog,
+  private tokenService: TokenService,
             public tipoenviosService: TipoenviosService) { }
 
   ngOnInit(): void {
@@ -44,7 +46,15 @@ constructor(public ventanaModal: MatDialog,
          this.listaTipoEnvios = tipoenvio;
       });
     this.Paginado();
+    this.Admin_Operador();
   }
+
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
+  }
+
 // Buscador
 AplicarFiltro(event: Event) {
   const textoFiltr = (event.target as HTMLInputElement).value;

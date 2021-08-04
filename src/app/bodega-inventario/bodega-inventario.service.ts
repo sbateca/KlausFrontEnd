@@ -6,13 +6,15 @@ import swal from 'sweetalert2';
 import { catchError } from 'rxjs/operators';
 import { CommonService } from '../common/common.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BodegaInventarioService extends CommonService<BodegaInventario> {
 
-  private urlBodegaInventario = 'http://localhost:8080/api/BodegaInventario';
+  /* private urlBodegaInventario = 'http://localhost:8080/api/BodegaInventario'; */
+  urlBodegaInventario = environment.urlBodegaInventario;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
   
   constructor(enrutador: Router, http: HttpClient) {
@@ -30,6 +32,12 @@ export class BodegaInventarioService extends CommonService<BodegaInventario> {
     .set('size', tamanoPagina);
     return this.httpCliente.get<any>(`${this.urlBodegaInventario}/pagina`, { params: params });
   }
+
+  // Consulta Bodega Por Feferencia
+  ObtenerBodegaInventarioPorReferencia(referencia: number): Observable<any> {
+    return this.httpCliente.get(this.urlBodegaInventario + '/bodega' + '/' + referencia);
+  }
+
   // Obtener Bodega Inventario Por Id
   VerBodegaInventarioPorId(id): Observable<BodegaInventario> {
     return this.httpCliente.get<BodegaInventario>(`${this.urlBodegaInventario}/${id}`).pipe(
@@ -40,7 +48,7 @@ export class BodegaInventarioService extends CommonService<BodegaInventario> {
     );
   }
   // Guardar Bodega Inventario
-  CrearBodegaInventario(bodegaInventario: BodegaInventario): Observable<BodegaInventario> {
+  CrearBodegaInventario(bodegaInventario: BodegaInventario): Observable<any> {
     return this.httpCliente.post<BodegaInventario>(`${this.urlBodegaInventario}`, bodegaInventario, {headers: this.httpHeaders}).pipe(
       catchError(e => {
       swal.fire(e.error.mensaje, e.error.error, 'error');

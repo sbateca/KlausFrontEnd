@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
-// import swal from 'sweetalert2';
 import swal from 'sweetalert2'; // implementamos
 import alertasSweet from 'sweetalert2';
 import { Ciudad } from '../ciudades/ciudad';
@@ -12,19 +11,14 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort} from '@angular/material/sort';
 
-
-import { MatTooltipModule } from '@angular/material/tooltip'; // Tooltips
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-
-/*
-  Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog)
-*/
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+/* Importamos las librerías necesarias para la implementación de ventanas modales (MatDialog) */
+import { MatDialog} from '@angular/material/dialog';
 import { FormClientesComponent } from './form.component';
 import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
-import { Pedido } from '../pedido/pedido';
-import { PedidoComponent } from '../pedido/pedido.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '../service/token.service';
+
+
 
 @Component({
   selector: 'app-clientes',
@@ -35,6 +29,10 @@ export class ClientesComponent implements OnInit {
   public cliente: Cliente[];
   public ciudades: Ciudad[];
   public departamentos: Departamento[];
+  public roles: string[];
+  public logged: boolean = false;
+  public esAdmin: boolean;
+  public esOperador: boolean;
  
 
   // se declara donde quedará la información del resultado obtenido al cerrar la ventana
@@ -58,14 +56,17 @@ export class ClientesComponent implements OnInit {
 // Instanciamos
   constructor(public clienteService: ClienteService,
               public ciudadService: CiudadService,
+              private alertaSnackBar: MatSnackBar,
               public departamentoservice: DepartamentoService,
-              public ventanaModal: MatDialog) { }
+              public ventanaModal: MatDialog,
+              private tokenService: TokenService) { }
 
 // Al inicializar el componente se ejecuta listar Cliente y Paginador, cargar Departamentos.
   ngOnInit() {
-
     this.listarPaginado();
     this.cargarDepartamentos();
+    this.esAdmin = this.tokenService.isAdmin(); 
+    this.esOperador = this.tokenService.esOperador();
   }
 
 /*
@@ -92,7 +93,7 @@ aplicarFiltro(event: Event) {
 
 
 // Listar paginado : Realiza el get deacuerdo a los valores actualizados de cada pagina
-private listarPaginado() {
+public listarPaginado() {
 
     this.clienteService.listarClientesPaginado(this.paginaActual.toString(), this.totalPorPaginas.toString())
     .subscribe(paginacion => {
@@ -180,7 +181,7 @@ reordenar(sort: Sort) {
 
  // Ejecuta el metodo eliminar cliente, retorna- nada
 
-  delete(cliente: Cliente): void {
+delete(cliente: Cliente): void {
     swal.fire ({
 
       title: '¿Estas seguro?',
@@ -192,14 +193,21 @@ reordenar(sort: Sort) {
     cancelButtonText: 'No, cancelar!',
     confirmButtonText: 'Si, eliminar!'
 
-     }).then((result) => {
-       if (result.value) {
-         this.clienteService.delete(cliente.id).subscribe(respuesta => {
-         this.listarPaginado();
-         alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
-          });
-       }
-      });
+    }).then((result) => {
+        
+        if (result.value) {
+          // Si este Cliente fue utilizado en Pedido no lo deja Eliminar
+          if(cliente.listaPedido.length !=0 ) {
+            this.alertaSnackBar.open("No se puede Eliminar este Cliente, Hay al menos un Pedido del mismo!!", 'Cerrar', {
+            duration: 8000 });
+          } else {
+              this.clienteService.delete(cliente.id).subscribe(respuesta => {
+                this.listarPaginado();
+                alertasSweet.fire('Cliente Eliminado!', 'Cliente <strong>' + cliente.nombres + '</strong> Eliminado con éxito.', 'success');
+              });
+          }
+        }
+     });
 }
 /*
     El método abrirVentana implementa acciones sobre la ventana modal:
@@ -255,9 +263,11 @@ abrirVentanaEditarCliente(idCliente): void {
     data: idCliente
   });
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
-    this.cli = resultado;
-    this.cli.id = idCliente;
-    this.actualizarCliente();
+    if(resultado){
+      this.cli = resultado;
+      this.cli.id = idCliente;
+      this.actualizarCliente();
+    }
   });
 }
 
@@ -268,17 +278,14 @@ abrirVentanaEditarCliente(idCliente): void {
       - Retorna: nada
 */
   actualizarCliente(): void {
-    this.clienteService.update(this.cli)
-    .subscribe(respuesta => {
+    this.clienteService.update(this.cli).subscribe(respuesta => {
       this.listarPaginado();
       swal.fire('Cliente Actializado', `Cliente ${this.cli.nombres} actualizado con éxito!`, 'success');
     });
   }
 
-/*
-  La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
-  donde se observa el detalle del proveedor seleccionado
-*/
+/* La función abrirVentanaVer() permite abrir una ventana modal la cual carga la vista
+  donde se observa el detalle del proveedor seleccionado */
 
 abrirVentanaVer(idCliente): void {
   this.ventanaModal.open(DetalleClienteComponent, {

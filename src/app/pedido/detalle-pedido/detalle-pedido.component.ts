@@ -2,6 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { PedidoService } from '../pedido.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Pedido } from '../pedido';
+import { Cotizacion } from '../../cotizacion/cotizacion';
+
+
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -11,8 +14,9 @@ import { Pedido } from '../pedido';
 export class DetallePedidoComponent implements OnInit {
 
   public pedido: Pedido;
+  public listaCotizacion: Cotizacion;
   constructor(public ventanaModalDetalle: MatDialogRef<DetallePedidoComponent>,
-              public pedidoService: PedidoService,
+              private pedidoService: PedidoService,
               @Inject(MAT_DIALOG_DATA) public idPedido: number) { }
 
   ngOnInit(): void {
@@ -24,6 +28,8 @@ export class DetallePedidoComponent implements OnInit {
     if (idPedido) {
       this.pedidoService.VerPedidoPorId(idPedido).subscribe( pedido => {
         this.pedido = pedido;
+        /* console.log("pedido");
+        console.log(this.pedido); */
       });
     }
   }

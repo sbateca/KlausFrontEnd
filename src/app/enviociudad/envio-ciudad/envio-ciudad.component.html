@@ -1,27 +1,16 @@
-<!--<app-empresa-transportadora></app-empresa-transportadora>
-<button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="empresaTransportadora?.AbrirFormularioEmpresaTransportadora()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
--->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="float-left pr-3">Envío Ciudad</h1>
-                <button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="AbrirFormularioEnvioCiudad()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
+                <button mat-mini-fab color="primary" [disabled]="!(esAdmin || esOperador)" matTooltip="Agregar Envío Ciudad" (click)="AbrirFormularioEnvioCiudad()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
             </div>
-
-
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item active">Envío Ciudad/Listar Envío Ciudad</li>
                 </ol>
             </div>
         </div>
-        <!--<div class="row mb-3">
-            <div class="col-sm-6">
-                <app-empresa-transportadora></app-empresa-transportadora>
-                <button mat-mini-fab color="primary" matTooltip="Agregar Envío Ciudad" (click)="empresaTransportadora?.AbrirFormularioEmpresaTransportadora()"><mat-icon><i class="fa fa-map-marked-alt nav-icon"></i></mat-icon></button>
-            </div>
-        </div>-->
     </div>
 </section>
 
@@ -59,8 +48,8 @@
             <ng-container matColumnDef="acciones">
                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button color="basic" matTooltip="Editar" (click)="AbrirFormularioEditarEnvioCiudad(element.id)"><mat-icon>edit</mat-icon></button>
-                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="Eliminar(element)"><mat-icon>delete</mat-icon></button>
+                    <button mat-icon-button color="basic" [disabled]="!(esAdmin || esOperador)" matTooltip="Editar" (click)="AbrirFormularioEditarEnvioCiudad(element.id)"><mat-icon>edit</mat-icon></button>
+                    <button mat-icon-button color="basic" [disabled]="!(esAdmin || esOperador)" matTooltip="Eliminar" (click)="Eliminar(element)"><mat-icon>delete</mat-icon></button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>

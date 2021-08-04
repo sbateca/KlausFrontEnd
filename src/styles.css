@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+/*Se importa los estilos de toastr*/
+
+@import '~../node_modules/ngx-toastr/toastr.css';
 html,
 body {
     height: 100%;
@@ -27,3 +31,5 @@ body {
 .timepicker-backdrop-overlay {
     z-index: 10000000 !important;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

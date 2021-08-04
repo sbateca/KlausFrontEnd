@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Enviociudad } from './Enviociudad';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,9 @@ import { Enviociudad } from './Enviociudad';
 export class EnviociudadService {
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-  private urlEnviociudad = 'http://localhost:8080/api/EnvioCiudad';
-
+  /*  private urlEnviociudad = 'http://localhost:8080/api/EnvioCiudad'; */
+  private urlEnviociudad = environment.urlEnviociudad;
+  
   constructor(private http: HttpClient) { }
 
   verEnvioCiudad(): Observable <Enviociudad[]> {
@@ -27,7 +29,7 @@ export class EnviociudadService {
       })
     );
   }
-  crearEnviociudad(enviociudad: Enviociudad): Observable<Enviociudad> {
+  crearEnviociudad(enviociudad: Enviociudad): Observable<any> {
     return this.http.post<Enviociudad>(`${this.urlEnviociudad}`, enviociudad, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);
@@ -36,7 +38,7 @@ export class EnviociudadService {
       })
     );
   }
-  ModificarEnvioCiudad(enviociudad: Enviociudad): Observable<Enviociudad> {
+  ModificarEnvioCiudad(enviociudad: Enviociudad): Observable<any> {
     return this.http.put<Enviociudad>(`${this.urlEnviociudad}/${enviociudad.id}`, enviociudad, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.error(e.error.mensaje);

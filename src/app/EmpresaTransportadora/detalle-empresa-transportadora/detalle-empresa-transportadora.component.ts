@@ -21,7 +21,6 @@ export class DetalleEmpresaTransportadoraComponent implements OnInit {
   public EmpresaTransportadoraPorId(idEmpresaTransportadora): void {
     this.empresaTransportadoraService.verEmpresaTransportadoraPorId(idEmpresaTransportadora).subscribe(respuesta => {
       this.empresaTransportadora = respuesta;
-      console.log(this.empresaTransportadora);
     });
   }
 

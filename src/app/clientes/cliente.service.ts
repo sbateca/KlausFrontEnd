@@ -6,6 +6,7 @@ import { Ciudad } from '../ciudades/ciudad';
 import { catchError, map} from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 
 
@@ -13,8 +14,11 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class ClienteService {
-  private urlEndPoint: string = 'http://localhost:8080/api/clientes';
-  private urlporciudad: string = 'http://localhost:8080/api/clientesciud';
+
+/*   private urlEndPoint: string = 'http://localhost:8080/api/clientes';
+  private urlporciudad: string = 'http://localhost:8080/api/clientesciud'; */
+  urlEndPoint = environment.urlEndPoint;
+  urlporciudad = environment.urlporciudad;
 
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -34,12 +38,19 @@ export class ClienteService {
             - Un observable de tipo genérico <any>. Debe ser genérico porque el json que retorna
               además del contenido (Proveedor) tiene también información del paginador
     */
+
    listarClientesPaginado(pagina: string, tamanoPagina: string): Observable<any> {
     const params = new HttpParams() // debe llamarse "params"
     .set('page', pagina)
     .set('size', tamanoPagina);
     return this.http.get<any>(`${this.urlEndPoint}/pagina`, { params: params });
   }
+
+  // Consulta Cliente Por Documento
+  ObtenerClientePorDocumento(documento: number): Observable<any> {
+    return this.http.get(this.urlEndPoint + '/cliente' + '/' + documento);
+  }
+
   create(cliente: Cliente, IdCiudadSelecc: Number): Observable<Cliente> {// recibe el onjeto cliente en json
     return this.http.post<Cliente>(`${this.urlEndPoint}/ciudad/${IdCiudadSelecc}`, cliente, {headers: this.httpHeaders}).pipe(
     catchError(e => {

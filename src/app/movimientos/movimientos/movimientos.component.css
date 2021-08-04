@@ -1,0 +1,22 @@
+.rojo {
+    color: rgb(255, 0, 0);
+}
+
+.verde {
+    color: rgba(0, 187, 0, 0.796);
+}
+
+.amarillo {
+    color: rgb(194, 188, 0);
+    text-decoration: line-through;
+}
+
+.cuatroPartes {
+    width: 20%;
+    padding: 4px;
+}
+
+.tresPartes {
+    width: 33%;
+    padding: 4px;
+}

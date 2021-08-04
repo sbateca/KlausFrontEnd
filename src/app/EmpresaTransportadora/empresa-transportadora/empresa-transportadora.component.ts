@@ -9,10 +9,7 @@ import alertasSweet from 'sweetalert2';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Sort, MatSort } from '@angular/material/sort';
-
-
-
-
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-empresa-transportadora',
@@ -22,6 +19,8 @@ export class EmpresaTransportadoraComponent implements OnInit {
 
   public empresaTransportadora: EmpresaTransportadora;
   public listaEmpresaTransportadora: EmpresaTransportadora[];
+  public esAdmin: boolean   
+  public esOperador: boolean;
 
 // Tabla
 columnasTabla: string [] = ['nombre', 'acciones'];
@@ -35,6 +34,7 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
 @ViewChild(MatPaginator, {static: true}) paginador: MatPaginator;
 @ViewChild(MatSort, {static: true}) ordenadorRegistros: MatSort;
   constructor(public ventanaModal: MatDialog,
+              private tokenService: TokenService,
               public empresaTransportadoraService: EmpresaTransportadoraService) { }
 
   ngOnInit(): void {
@@ -43,7 +43,14 @@ pageSizeOptions: number[] = [3, 5, 10, 25, 100];
          this.listaEmpresaTransportadora = empresaTransportadora;
       });
     this.ListarPaginado();
+    this. Admin_Operador();
   }
+  // Se calcula si es admin o operador
+  Admin_Operador(){
+    this.esAdmin = this.tokenService.isAdmin();  
+    this.esOperador = this.tokenService.esOperador();
+  }
+
 
 // Buscador
 AplicarFiltro(event: Event) {
@@ -114,7 +121,7 @@ AbrirFormularioEmpresaTransportadora(): void {
   if (resultado != null) {
       // el resultado es que se ha llenado en el formulario
       this.empresaTransportadora = resultado;
-      console.log(resultado);
+      /* console.log(resultado); */
       this.CrearEmpresaTransportadora();
   }
 });
@@ -162,7 +169,7 @@ public EditarEmpresaTransportadora(): void {
     this.empresaTransportadoraService.ModificarEmpresaTransportadora(this.empresaTransportadora).subscribe(respuesta => {
       swal.fire('Empresa Transportadora Actializado', `Empresa Transportadora ${this.empresaTransportadora.nombre} actualizado con éxito!`, 'success');
       this.ListarPaginado();
-  });
+    });
   }
 
 // Eliminar

@@ -1,0 +1,215 @@
+<!-- Cuando el Movimiento es de tipo Bodega y Bodega Eliminado (manual)-->
+<div *ngIf="movimiento?.tipo == 1 || movimiento?.tipo == 4 || movimiento?.tipo == 5 || movimiento?.tipo == 6">
+
+
+    <!--Tabla Detalle Bodega Inventrario- Producto -->
+    <div mat-dialog-title>
+        <h1 mat-mini-fab color="primary">Producto en Bodega Inventario </h1>
+    </div>
+
+    <div mat-dialog-content>
+        <div>
+            <table class="table table-sm">
+                <div>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Nombre:</th>
+                        <th class="text-dark"><small>{{movimiento.bodegaInventario?.producto.nombre}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Referencia:</th>
+                        <th class="text-dark"><small>{{movimiento.bodegaInventario?.referencia}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Costo(COP $):</th>
+                        <th class="text-dark"><small>{{(movimiento?.bodegaInventario.producto.costo) | number}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Precio de Venta(COP $):</th>
+                        <th class="text-dark"><small>{{(movimiento?.bodegaInventario.producto.precioVenta) |number}}</small></th>
+                    </tr>
+                    <tr *ngIf="movimiento.bodegaInventario?.producto.activo">
+                        <th class="text-secondary font-weight-normal">Listado de Componentes del Producto:</th>
+                        <th class="text-dark">
+                            <small>
+                    <div >
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr class="thead-light">
+                                    <th>Número</th>
+                                    <th>Nombre</th>
+                                    <th>Material</th>
+                                    <th>Color</th>
+                                    <th>Observación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let pieza of movimiento?.bodegaInventario.producto.piezas; let i = index">
+                                    <th scope="row">{{i+1}}</th>
+                                    <td>{{pieza.nombrePieza}}</td>
+                                    <td>{{pieza.material.nombre}}</td>
+                                    <td>{{pieza.color.nombre}}</td>
+                                    <td>{{pieza.observacion}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </small>
+                        </th>
+                    </tr>
+                </div>
+                <div>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Cantidad:</th>
+                        <th class="text-dark"><small>{{(movimiento.bodegaInventario?.cantidad) |number}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Talla:</th>
+                        <th class="text-dark"><small>{{movimiento.bodegaInventario?.talla.talla}}</small></th>
+                    </tr>
+                </div>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Cuando el Movimiento es de Tipo Pedido y Pedido Eliminado (manual)-->
+<div *ngIf="movimiento?.tipo == 2 || movimiento?.tipo == 3">
+
+    <!--Tabla Detalle Pedido-->
+    <div mat-dialog-title>
+        <h1 mat-mini-fab color="primary">Pedido</h1>
+    </div>
+
+    <div mat-dialog-content>
+        <div>
+            <table class="table table-sm">
+                <div>
+
+
+
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr class="thead-light">
+                                <th>No.</th>
+                                <th>Producto</th>
+                                <th>Referencia</th>
+                                <th>Talla</th>
+                                <th>Precio <br> Inicial</th>
+                                <th>Descuento <br> (%)</th>
+                                <th>Precio <br> Unitario</th>
+                                <th>Iva</th>
+                                <th>Precio <br> (IVA incluído)</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cotizacion of movimiento.pedido.listaCotizacion; let i = index">
+                                <th scope="row">{{i+1}}</th>
+                                <td>{{cotizacion?.bodegaInventario.producto.nombre}}</td>
+                                <td>{{cotizacion?.bodegaInventario.producto.referencia}}</td>
+                                <td>{{cotizacion?.bodegaInventario.talla.talla}}</td>
+                                <td>$ {{(cotizacion?.bodegaInventario.producto.precioVenta)|number}}</td>
+                                <td>{{cotizacion?.descuento}}</td>
+                                <td>$ {{ ((cotizacion?.bodegaInventario.producto.precioVenta - (cotizacion?.bodegaInventario.producto.precioVenta*(cotizacion?.descuento/100)))-((cotizacion?.bodegaInventario.producto.precioVenta - (cotizacion?.bodegaInventario.producto.precioVenta*(cotizacion?.descuento/100)))*movimiento?.pedido.valorIva/100))|number}}</td>
+                                <td>$ {{((cotizacion?.bodegaInventario.producto.precioVenta - (cotizacion?.bodegaInventario.producto.precioVenta*(cotizacion?.descuento/100)))*movimiento?.pedido.valorIva/100) | number}}</td>
+                                <td>$ {{ (cotizacion?.bodegaInventario.producto.precioVenta - (cotizacion?.bodegaInventario.producto.precioVenta*(cotizacion?.descuento/100))) |number}}</td>
+                                <td>{{ cotizacion?.cantidad }}</td>
+                                <td>$ {{ ((cotizacion?.bodegaInventario.producto.precioVenta - (cotizacion?.bodegaInventario.producto.precioVenta*(cotizacion?.descuento/100)))*cotizacion?.cantidad) | number:'0.2-5' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <tr>
+                        <th class="text-secondary font-weight-normal">SubTotal <br> Valor Unitario:</th>
+                        <th class="text-dark"><small><strong>$  {{ (movimiento.pedido?.valorFinalVenta - movimiento?.pedido.valorEnvio) - (movimiento.pedido?.valorIva/100*(movimiento.pedido?.valorFinalVenta - movimiento?.pedido.valorEnvio)) | number }}</strong></small></th>
+                    </tr>
+
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Iva:</th>
+                        <th class="text-dark"><small><strong>$  {{ (movimiento.pedido?.valorIva/100*(movimiento.pedido?.valorFinalVenta - movimiento?.pedido.valorEnvio))|number }}</strong></small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Valor General:</th>
+                        <th class="text-dark"><small><strong>$  {{ (movimiento.pedido?.valorFinalVenta - movimiento?.pedido.valorEnvio)|number }}</strong></small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Valor Envío:</th>
+                        <th class="text-dark"><small><strong>$ {{ (movimiento?.pedido.valorEnvio)|number }}</strong></small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Valor General Total:</th>
+                        <th class="text-dark"><small><strong>$  {{ (movimiento.pedido?.valorFinalVenta)|number }}</strong></small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Observaciones:</th>
+                        <th class="text-dark"><small>{{ movimiento.pedido?.observaciones }}</small></th>
+                    </tr>
+                </div>
+                <br>
+                <br>
+                <div>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Cliente:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.cliente.nombres}} {{movimiento.pedido?.cliente.apellidos}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">NIT:</th>
+                        <th class="text-dark"><small>{{ (movimiento.pedido?.cliente.documento)|number}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Ciudad:</th>
+                        <th class="text-dark"><small>{{ (movimiento?.pedido.cliente.ciudad.nombre)}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Departamento:</th>
+                        <th class="text-dark"><small>{{ (movimiento.pedido?.cliente.ciudad.departamento.nombre)}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Dirección:</th>
+                        <th class="text-dark"><small>{{movimiento?.pedido.cliente.direccion}}<!-- , {{pedido.cliente.ciudad.nombre}}, {{pedido.cliente.ciudad.departamento.nombre}} --> </small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Numero De Contacto:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.cliente.numero_contacto}}</small></th>
+                    </tr>
+                </div>
+                <br>
+                <br>
+                <div>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Tipo De Envio:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.envioCiudad.tipoEnvio.nombre}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Ciudad:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.ciudadEnvio.nombre}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Departamento:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.ciudadEnvio.departamento.nombre}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Dirección:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.direccionEnvio}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Empresa Transportadora:</th>
+                        <th class="text-dark"><small>{{movimiento?.pedido.envioCiudad.empresaTransportadora.nombre}}</small></th>
+                    </tr>
+                    <tr>
+                        <th class="text-secondary font-weight-normal">Valor Envío:</th>
+                        <th class="text-dark"><small>{{movimiento.pedido?.valorEnvio}}</small></th>
+                    </tr>
+
+                </div>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!--Boton de Cerrar Ventana Modal-->
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" (click)="CerrarVentanDetalle()">Cerrar</button>
+</mat-dialog-actions>

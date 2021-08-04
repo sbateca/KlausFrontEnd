@@ -1,5 +1,5 @@
-.cuatroPartes {
-    width: 23%;
+.dosPartes {
+    width: 45%;
     padding-right: 4px;
 }
 
@@ -8,11 +8,47 @@
     padding-right: 4px;
 }
 
-.dosPartes {
-    width: 45%;
+.cuatroPartes {
+    width: 23%;
     padding-right: 4px;
+}
+
+.cincoPartes {
+    width: 17%;
+    padding-right: 4px;
+}
+
+.seisPartes {
+    width: 15%;
+    padding-right: 4px;
+}
+
+.sietePartes {
+    width: 14%;
+    padding-right: 4px;
+}
+
+.noventa {
+    width: 90%;
+}
+
+.ochenta {
+    width: 80%;
+}
+
+.setenta {
+    width: 70%;
 }
 
 .ng-tns-c147-20 {
     z-index: 500 !important;
 }
+
+
+/* .h3 {
+    color: #a3a3a3;
+    font-weight: normal;
+    font-size: 20px;
+    font-family: Arial;
+    text-transform: lowercase;
+} */

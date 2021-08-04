@@ -6,7 +6,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Home</a>
+            <!-- <a href="index3.html" class="nav-link">Home</a> -->
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Contact</a>
@@ -25,6 +25,21 @@
         </div>
     </form>
 
+    <ul class="navbar-nav ml-auto" *ngIf="!finSesion">
+        <h3 class="card-title"><strong>{{rol}} </strong></h3>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="isLogged && !finSesion">
+        <h3 class="card-title"><strong>{{nombreUsuario}}</strong></h3>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="esAdmin && pagina == 'login' && !finSesion">
+        <button class="btn btn-outline-warning my-2 my-sm-0" (click)="pagina='registro'" routerLink="/registro" type="submit">
+        <i class="fas fa-sign-in-alt"></i> Crear Cuenta</button>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="esAdmin && pagina== 'registro' && !finSesion">
+        <button class="btn btn-outline-warning my-2 my-sm-0" (click)="pagina='login'" routerLink="/login" type="submit">
+        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    </ul>
+
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Messages Dropdown Menu -->
@@ -37,7 +52,7 @@
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <!--   <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle"> -->
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 Brad Diesel
@@ -53,7 +68,7 @@
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
-                        <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <!-- <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3"> -->
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 John Pierce
@@ -69,7 +84,7 @@
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
-                        <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <!-- <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3"> -->
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 Nora Silvester
@@ -85,6 +100,7 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
             </div>
         </li>
+
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
@@ -116,5 +132,12 @@
             <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
                 <i class="fas fa-th-large"></i></a>
         </li>
+        <form class="form-inline my-2 my-lg-0">
+            <button *ngIf="!isLogged " class="btn btn-outline-success my-2 my-sm-0" routerLink="/login" type="submit">
+              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+            <button *ngIf="isLogged" class="btn btn-outline-danger my-2 my-sm-0" (click)="CerrarSesion()" type="reset">
+                <i class="fas fa-sign-in-alt"></i>
+                <i class="fas fa-door-open"></i> Cerrar Sesión</button>
+        </form>
     </ul>
 </nav>
