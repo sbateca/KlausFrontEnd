@@ -7,22 +7,23 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { FormCostoMaterialComponent } from './costoMaterialForm/form-costo-material.component';
 import alertasSweet from 'sweetalert2';
+import { MatSlideToggleModule, MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { Material } from '../materiales/Material';
+
 
 @Component({
   selector: 'app-costo-material',
   templateUrl: './costo-material.component.html',
   styleUrls: ['./costo-material.component.css']
 })
+
+
+
+
 export class CostoMaterialComponent implements OnInit {
 
   
-  constructor(protected costoMaterialService: CostoMaterialService,
-              public ventanaModal: MatDialog) { }
-
-
-  ngOnInit(): void {
-    this.listarCostoMaterialPaginado();
-  }
 
   /// variables de nombres y rutas de funcionalidades
   titulo = 'Costos materiales';
@@ -55,6 +56,48 @@ export class CostoMaterialComponent implements OnInit {
 
   // esta variable recibe el costoMaterial del Formulario de editar
   costoMaterialEditar: CostoMaterial;
+
+  //esta variable es un formulario el cual permite controlar los slideToogle
+  formularioTabla: FormGroup;
+  listaCostos: FormArray;
+
+  arrayCostoMateriales: CostoMaterial[] = new Array();
+
+  constructor(protected costoMaterialService: CostoMaterialService,
+              public ventanaModal: MatDialog,
+              private constructorFormulario: FormBuilder) { }
+
+
+  ngOnInit(): void {
+    //this.crearFormularioTabla();
+    this.listarCostoMaterialPaginado();
+  }
+
+  // ----------------- métodos para el control de formulario --------------------- //
+
+  /*crearFormularioTabla(): void {
+    this.formularioTabla = this.constructorFormulario.group({
+      listaCostos: this.constructorFormulario.array([])
+    });
+  }
+
+  obtenerArrayFormularioTabla(): FormArray {
+    return this.formularioTabla.get('listaCostos') as FormArray;
+  }
+
+  llenarFormulario(): void {
+
+      // eliminamos todos los controles del Array porque cada vez que se pagina se agregan más elementos
+      // y debe evitarse eso
+      this.obtenerArrayFormularioTabla().clear();
+
+  }
+*/
+  
+
+// --------------------------------------------------------------------------------- //
+
+
   /*
     El método listarCostoMaterialPaginado() invoca el método del service que
     realiza una petición tipo GET al backend y se suscribe al observador
@@ -78,8 +121,9 @@ export class CostoMaterialComponent implements OnInit {
 
       // Establecemos los valores de las variables relacionadas con Sort
       this.datos.sort = this.ordenadorRegistros;
-      this.datos.sort.active = 'Material';
-      this.datos.sort.direction = 'asc';
+
+      // ejecuta el llenado del formulario
+     // this.llenarFormulario();
 
     });
   }
@@ -127,11 +171,25 @@ aplicarFiltro(event: Event) {
     this.listarCostoMaterialPaginado();
   }
 
+  /**
+   * Este método obtiene la cantidad de Materiales del array de datos del MatTable
+   * de acuerdo al ID especificado y que se encuentran activos
+   * @param id corresponde al ID del material a buscar en el Array de datos del MatTable
+   * @returns La cantidad de materiales que se encuentran activos (number)
+  
+  extraerCantidadMaterialesPorID(id: number): number {
+    let listaCostosMateriales: CostoMaterial[] = this.datos.data;
+    let listafiltrada = listaCostosMateriales.filter( costoMaterial => costoMaterial.material.id === id);
 
+    let contador = 0;
+    listafiltrada.forEach( elemento => {
+      if(elemento.activo)contador ++;
+    });
 
+    return contador;
+  }
 
-
-
+ */
 
   // ----------------- funciones para el control de ventanas modales --------------- //
 
@@ -160,11 +218,13 @@ aplicarFiltro(event: Event) {
     });
 
     referenciaVentanamodal.afterClosed().subscribe(resultado => {
-      this.costoMaterialEditar = resultado;
-      this.costoMaterialEditar.id = idCostoMaterial;
-      console.log(this.costoMaterialEditar);
-      
-      this.editarCostoMaterial();
+
+      if(resultado != null){
+        this.costoMaterialEditar = resultado;        
+        this.costoMaterialEditar.id = idCostoMaterial; 
+        this.editarCostoMaterial();
+      }
+
     });
   }
 

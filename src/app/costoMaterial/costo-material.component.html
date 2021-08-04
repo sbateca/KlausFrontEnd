@@ -23,18 +23,21 @@
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
 
-                <div class="alert alert-danger" *ngIf="listaCostoMaterial.length == 0">
+                <div class="alert alert-danger" *ngIf="listaCostoMaterial != undefined && listaCostoMaterial.length == 0">
                     No existen costos de materiales registrados
                 </div>
 
 
-                <div class="row" *ngIf="listaCostoMaterial.length>0">
+                <div class="row" *ngIf="listaCostoMaterial != undefined && listaCostoMaterial.length>0">
                     <div class="col-sm-12">
 
                         <mat-form-field>
                             <mat-label>Buscar</mat-label>
                             <input matInput placeholder="¿Qué desea buscar?" (keyup)="aplicarFiltro($event)">
                         </mat-form-field>
+
+
+
 
                         <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
@@ -48,7 +51,7 @@
                             <!-- Columna unidad de medida -->
                             <ng-container matColumnDef="Unidad de medida">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Unidad de medida</th>
-                                <td mat-cell *matCellDef="let costoMaterial"> {{costoMaterial.unidadMedida.nombre}} ({{costoMaterial.unidadMedida.abreviatura}}) </td>
+                                <td mat-cell *matCellDef="let costoMaterial"> {{costoMaterial.material.unidadMedida.nombre}} ({{costoMaterial.material.unidadMedida.abreviatura}}) </td>
                             </ng-container>
 
                             <!-- Columna unidad de medida -->
@@ -65,7 +68,7 @@
 
                             <ng-container matColumnDef="acciones">
                                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                <td mat-cell *matCellDef="let costoMaterial">
+                                <td mat-cell *matCellDef="let costoMaterial; let index = index;">
                                     <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditar(costoMaterial.id)"><mat-icon>edit</mat-icon></button>
                                     <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarMaterial(costoMaterial)"><mat-icon>delete</mat-icon></button>
                                 </td>
@@ -74,6 +77,9 @@
                             <tr mat-header-row *matHeaderRowDef="columnasTabla"> </tr>
                             <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
                         </table>
+
+
+
 
                         <mat-paginator [length]="totalRegistros" [pageSize]="tamanoPagina" [pageIndex]="paginaIndex" [pageSizeOptions]="tamanosPagina" (page)="paginar($event)">
                         </mat-paginator>

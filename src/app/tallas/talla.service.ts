@@ -168,4 +168,15 @@ export class TallaService {
    }
 
 
+
+   obtenerTallasNoAsignadasGastoMaterial(idTipoTalla: number, idProducto: number): Observable<any> {
+    return this.httpCliente.get(this.rutaEndPointTallas + '/tipo/' + idTipoTalla + '/producto/'+ idProducto).pipe(
+      catchError(error =>{
+        alertasSweet.fire('Error', error.error.mensaje + ' : ' + error.error.error);
+        return throwError(error);
+      })
+    );
+  }
+
+
 }

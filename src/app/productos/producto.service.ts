@@ -52,6 +52,7 @@ export class ProductoService extends CommonService<Producto> {
 
   agregarProductoConfoto(producto: Producto, archivo: File): Observable<any> {
     const datosFormulario = new FormData();
+
     datosFormulario.append('archivo', archivo);
     datosFormulario.append('nombre', producto.nombre);
     datosFormulario.append('referencia', producto.referencia);
@@ -117,6 +118,16 @@ export class ProductoService extends CommonService<Producto> {
 
   get getEstadoEliminarFoto(): boolean {
     return this.eliminarFoto;
+  }
+
+
+  eliminaProducto(idElemento: number): Observable<any> {
+    return this.httpCliente.delete(this.rutaEndPoint + '/producto/' + idElemento, {headers: this.cabeceraHttp}).pipe(
+      catchError(e => {
+        alertasSweet.fire('Error', e.error.mensaje + ' : ' + e.Error.error);
+        return throwError(e);
+      })
+    );
   }
 
 

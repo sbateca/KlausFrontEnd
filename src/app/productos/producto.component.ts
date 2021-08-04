@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ɵConsole } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ɵConsole } from '@angular/core';
 import { Producto } from './producto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -14,6 +14,9 @@ import { ProductoPiezaService } from '../productoPieza/producto-pieza.service';
 import { ProductoPieza } from '../productoPieza/ProductoPieza';
 import { Pieza } from '../piezas/pieza';
 import { CommonService } from '../common/common.service';
+import { GastoMaterialProductoComponent } from '../gastoMaterialProducto/gasto-material-producto.component';
+import { GastoMaterialProductoService } from '../gastoMaterialProducto/gasto-material-producto.service';
+import { GastoMaterialProducto } from '../gastoMaterialProducto/gastoMaterialProducto';
 
 
 
@@ -69,8 +72,13 @@ foto: File;
 productoPieza: ProductoPieza = new ProductoPieza();
 piezasConID = new Array<Pieza>();
 
+
+// lista de tallas del formulario gasto
+listaTallasFormularioGasto = new Array();
+
   constructor(protected productoService: ProductoService,
               private piezaService: PiezaService,
+              protected gastoMaterialProductoService: GastoMaterialProductoService,
               private productoPiezaService: ProductoPiezaService,
               public ventanaModal: MatDialog) { }
 
@@ -207,7 +215,79 @@ abrirVentanaDetalle(idProducto: number): void {
 
 
 
+abrirVentanaGastoMaterialProducto(idProducto: number): void {
+  const referenciaVentanaModal = this.ventanaModal.open(GastoMaterialProductoComponent, {
+    width: '60%',
+    height: 'auto',
+    position: {left: '30%', top: '60px'},
+    data: idProducto
+  });
+
+  referenciaVentanaModal.afterClosed().subscribe(resultado => {
+    this.listaTallasFormularioGasto = resultado;
+    this.agregarGastoProducto();
+  });
+}
+
+
+
+
+
+
 // --------------- funciones para el CRUD -------------------------------- //
+
+
+
+
+
+agregarGastoProducto(): void {
+  /*
+  listaGastoTalla tiene dos variables:
+  listaGastoMaterial ---> un array
+   valorTotal ---> un number
+  */
+  this.listaTallasFormularioGasto.forEach( listaGastoTalla => {
+    listaGastoTalla.listaGastoMaterial.forEach( (gastoMaterial) => {
+      
+      let gastoMat = new GastoMaterialProducto();
+      
+      gastoMat.id = gastoMaterial.id;
+      gastoMat.cantidad = gastoMaterial.cantidad;
+      gastoMat.producto = gastoMaterial.producto;
+      gastoMaterial.tipoTalla.tallas = [];// importante para evitar bucle infinito en el JSON
+      gastoMat.talla = gastoMaterial.talla;
+      gastoMat.talla.tipoTalla = gastoMaterial.tipoTalla;
+      gastoMat.pieza = gastoMaterial.pieza;
+      gastoMat.unidadMedida = gastoMaterial.unidadMedida;
+      gastoMat.valor = gastoMaterial.valor;
+      
+      console.log("El gasto Material que va a ser registrado");
+      console.log(gastoMat);
+
+      /*
+        se comprueba si el gasto material ya se encuentra registrado.
+        Para ello se hace la consulta al backend. Dependiendo de ello se hace un POST o un PUT
+      */
+      this.gastoMaterialProductoService.obtenerGastoPorTallaTipoTalla(gastoMat.talla.id, gastoMat.talla.tipoTalla.id, gastoMat.pieza.id).subscribe(resultado =>{
+        
+        if(resultado.gastoMaterial == null){ // nuevo gasto, debe hacerse un POST
+          this.gastoMaterialProductoService.agregarElemento(gastoMat).subscribe( resultado => {
+            alertasSweet.fire('Gasto de material registrado', resultado.mensaje, 'success');
+          });
+        }else{
+
+          gastoMat.id = resultado.gastoMaterial.id; // se debe agregar el id para que no se vaya null, pues es un editar
+          this.gastoMaterialProductoService.editarElemento(gastoMat).subscribe( resultado => {
+            alertasSweet.fire('Gasto de material registrado', resultado.mensaje, 'success');
+          });
+        }
+
+      });
+    });
+  });
+
+}
+
 
 
 
@@ -221,11 +301,11 @@ agregarProducto(): void {
       es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
       componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
       */
+
+      console.log("producto desde el front");
+      console.log(this.producto);
+
        this.productoService.agregarElemento(this.producto).subscribe( resultado => {
-
-
-        console.log("resultado de insertar producto: ");
-        console.log(resultado);
 
         this.productoConID = resultado.elemento; // sobreescribo el producto porque el que viene del backend tiene el ID
       /*
@@ -386,7 +466,7 @@ eliminarProducto(producto: Producto): void {
         this.piezaService.eliminarPieza(pieza).subscribe();
       });
 
-      this.productoService.eliminaElemento(producto.id).subscribe(respuesta => {
+      this.productoService.eliminaProducto(producto.id).subscribe(respuesta => {
         alertasSweet.fire(
           'Eliminado!',
           'El producto <strong>' + producto.nombre + '</strong> ha sido eliminado exitosamente',

@@ -23,12 +23,12 @@
         <div class="card-body">
             <div class="dataTables_wrapper dt-bootstrap4">
 
-                <div class="alert alert-danger" *ngIf="listaProductos.length == 0">
+                <div class="alert alert-danger" *ngIf="listaProductos == undefined || listaProductos.length == 0">
                     No existen productos registrados
                 </div>
 
 
-                <div class="row" *ngIf="listaProductos.length>0">
+                <div class="row" *ngIf="listaProductos != undefined && listaProductos.length>0">
                     <div class="col-sm-12">
 
                         <mat-form-field>
@@ -63,7 +63,8 @@
                                 <td mat-cell *matCellDef="let producto">
                                     <button mat-icon-button color="basic" matTooltip="Ver detalle" (click)="abrirVentanaDetalle(producto.id)"><mat-icon class="verde">search</mat-icon></button>
                                     <button mat-icon-button color="basic" matTooltip="Editar" (click)="abrirVentanaEditar(producto.id)"><mat-icon class="verde">edit</mat-icon></button>
-                                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarProducto(producto)"><mat-icon>delete</mat-icon></button>
+                                    <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarProducto(producto)"><mat-icon>delete</mat-icon></button> |
+                                    <button mat-icon-button color="basic" matTooltip="Agregar cantidad de material por producto" (click)="abrirVentanaGastoMaterialProducto(producto.id)"><mat-icon>style</mat-icon></button>
                                 </td>
                             </ng-container>
 

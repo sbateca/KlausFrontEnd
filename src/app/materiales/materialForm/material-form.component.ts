@@ -4,6 +4,8 @@ import { MaterialService } from '../material.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Material } from '../Material';
 import { MatInputModule } from '@angular/material/input';
+import { UnidadMedidaService } from '../../UnidadesMedidas/unidad-medida.service';
+import { UnidadMedida } from '../../UnidadesMedidas/UnidadMedida';
 
 
 
@@ -26,14 +28,18 @@ export class MaterialFormComponent implements OnInit {
   // en esta variable quedará almacenado el material diligenciado en el formulario
   materialFormulario: Material = new Material();
 
+  // en esta variable se almacenará el listado de unidades de medida
+  listaUnidadesMedida: UnidadMedida[];
 
   constructor(public referenciaVentana: MatDialogRef<MaterialFormComponent>,
               @Inject(MAT_DIALOG_DATA)public idMaterial,
               private materialService: MaterialService,
+              private unidadMedidaService: UnidadMedidaService,
               private constructorformularios: FormBuilder) { }
 
   ngOnInit(): void {
     this.crearFormulario();
+    this.obtenerUnidadesMedida();
     this.cargarDatosEnFormulario();
     this.cargarNombreFuncionalidad();
   }
@@ -43,23 +49,38 @@ export class MaterialFormComponent implements OnInit {
   crearFormulario(): void {
     this.formulario = this.constructorformularios.group({
       nombre:      ['', Validators.required],
-      descripcion: ['']
+      descripcion: [''],
+      unidadMedida: ['', Validators.required],
+      cantidad: ['0', Validators.required]
     });
   }
 
   cargarDatosEnFormulario(): void {
     if (this.idMaterial) {
       this.materialService.obtenerMaterialPorID(this.idMaterial).subscribe( resultado => {
+
+        console.log(resultado);
+
         this.formulario.setValue({
           nombre: resultado.nombre,
-          descripcion: resultado.descripcion
+          descripcion: resultado.descripcion,
+          unidadMedida: resultado.unidadMedida,
+          cantidad: resultado.cantidad
         });
+
+        console.log(this.formulario);
       });
     }
   }
 
   cargarNombreFuncionalidad(): void {
     this.funcionalidad = this.idMaterial ? 'Editar Material' : 'Agregar Material';
+  }
+
+  obtenerUnidadesMedida(): void {
+    this.unidadMedidaService.listarElementos().subscribe( resultado => {
+      this.listaUnidadesMedida = resultado;
+    });
   }
 
 
@@ -72,6 +93,11 @@ export class MaterialFormComponent implements OnInit {
   cancelarOperacion(): void {
       this.referenciaVentana.close();
   }
+
+  compararUnidadesMedidaSelect(unidad1: UnidadMedida, unidad2: UnidadMedida): boolean {
+    return unidad1 && unidad2 ? unidad1.id === unidad2.id : unidad1 === unidad2;
+  }
+
 
 
 

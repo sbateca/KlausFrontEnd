@@ -29,7 +29,7 @@ export class MaterialComponent implements OnInit {
 
   // variables para el MatTableDatasource<Material>
   datos: MatTableDataSource<Material>;
-  columnasTabla: string[] = ['nombre', 'descripcion', 'acciones'];
+  columnasTabla: string[] = ['nombre', 'cantidad', 'unidadMedida','descripcion','acciones'];
 
 
   // variables para el paginador
@@ -108,6 +108,8 @@ export class MaterialComponent implements OnInit {
       switch (sort.active) { // sort.active obtiene el id (string) de la columna seleccionada
         case 'nombre': return this.comparar( a.nombre, b.nombre, esAscendente);
         case 'descripcion': return this.comparar(a.descripcion, b.descripcion, esAscendente);
+        case 'unidadMedida': return this.comparar(a.unidadMedida.nombre, b.unidadMedida.nombre, esAscendente);
+        case 'cantidad': return this.comparar(a.cantidad, b.cantidad, esAscendente);
       }
     }));
 }

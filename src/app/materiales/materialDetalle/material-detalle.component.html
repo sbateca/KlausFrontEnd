@@ -8,12 +8,21 @@
         <tbody>
             <tr>
                 <th scope="row">Nombre</th>
-                <td>{{material.nombre}}</td>
+                <td>{{material?.nombre}}</td>
             </tr>
             <tr>
                 <th scope="row">Descripcion</th>
-                <td>{{material.descripcion}}</td>
+                <td>{{material?.descripcion}}</td>
             </tr>
+            <tr>
+                <th scope="row">Cantidad</th>
+                <td>{{material?.cantidad}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Unidad de medida</th>
+                <td>{{material?.unidadMedida.nombre}}</td>
+            </tr>
+
         </tbody>
     </table>
 

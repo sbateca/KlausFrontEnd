@@ -67,7 +67,7 @@ export class ProductoFormComponent implements OnInit {
   producto: Producto = new Producto();
 
   // esta variable se utiliza como una bandera para controlar la aparición o no del campo de typo File en el formulario
-  cambiarFoto = false;
+  habilitarIconoEliminarFoto = false;
 
   constructor(public referenciaVentanaModal: MatDialogRef<ProductoFormComponent>,
               @Inject(MAT_DIALOG_DATA) public idProducto,
@@ -84,8 +84,8 @@ export class ProductoFormComponent implements OnInit {
     this.crearFormulario();
     this.obtenerColores();
     this.obtenerMateriales();
-    this.filtrarAutoCompleteColor();
-    this.filtrarAutoCompleteMaterial();
+    //this.filtrarAutoCompleteColor();
+    //this.filtrarAutoCompleteMaterial();
     if (this.idProducto) {
       this.cargarInformacionFormulario();
     }
@@ -159,7 +159,10 @@ export class ProductoFormComponent implements OnInit {
 
         // revisamos si tiene foto registrada para obtenerla, pues necesitamos mostrar el nombre y usar el archivo
 
-        if (this.producto.fotoHashCode) {
+        if (this.producto.nombreFoto) {
+
+          // ajusto el estado de la variable que controla la visualización del ícono que permite ver u ocultar el botón de eliminar foto
+          this.habilitarIconoEliminarFoto = true;
 
           this.productoService.obtenerFotoProductoPorID(this.idProducto).subscribe( res => {
             
@@ -302,7 +305,7 @@ export class ProductoFormComponent implements OnInit {
     });
 
     // obtenemos la lista de Observable<Color[]>
-    this.listaFiltradaColores = this.colorService.getColores();
+    //this.listaFiltradaColores = this.colorService.getColores();
   }
 
 
@@ -311,8 +314,6 @@ export class ProductoFormComponent implements OnInit {
     this.materialService.obtenerMateriales().subscribe(resultado => {
       this.listaMateriales = resultado;
     });
-
-    this.listaFiltradaMateriales = this.materialService.obtenerMateriales();
   }
 
 
@@ -322,12 +323,12 @@ export class ProductoFormComponent implements OnInit {
           - startWith('') --> agrega un vacío al inicio del flujo
           - con map() modifica el valor del flujo
     */
-  filtrarAutoCompleteColor(): void {
+  /*filtrarAutoCompleteColor(): void {
     this.listaFiltradaColores = this.myControl.valueChanges.pipe(
       startWith(''),
       map( valor => this.filtraArrayColor(valor) )
     );
-  }
+  }*/
 
   filtrarAutoCompleteMaterial(): void {
     this.listaFiltradaMateriales = this.campoMaterialAutoComplete.valueChanges.pipe(
@@ -337,10 +338,10 @@ export class ProductoFormComponent implements OnInit {
   }
 
 
-  private filtraArrayColor(nombre: string): Color[] {
+  /*private filtraArrayColor(nombre: string): Color[] {
     const nombreAFiltrar = nombre.toLowerCase().replace(/\s/g, ''); // paso el string a minúscula y quito espacios
     return this.listaColores.filter(resultado => resultado.nombre.toLowerCase().replace(/\s/g, '').includes(nombreAFiltrar));
-  }
+  }*/
 
   private filtrarArrayMaterial(nombre: string): Material[] {
     const nombreAFiltrarMaterial = nombre.toLowerCase().replace(/\s/g, ''); // paso el string a minúscula y quito espacios
@@ -356,18 +357,17 @@ export class ProductoFormComponent implements OnInit {
   }
 
 
-  asignarSeleccionado(evento: MatOptionSelectionChange): void {
+  asignarColorSeleccionado(evento: MatOptionSelectionChange): void {
 
-    const color = evento.source.value as Color;
+   /*  const color = evento.source.value as Color;
 
     this.formularioPiezasGeneral.get('colorGeneral').patchValue({
       id: color.id,
       nombre: color.nombre,
       codigoColor: color.codigoColor
-    });
+    }); */
 
-    this.obtenerColores();
-    this.filtrarAutoCompleteColor();
+    console.log(this.formularioPiezasGeneral.value);
   }
 
 
@@ -380,8 +380,6 @@ export class ProductoFormComponent implements OnInit {
       nombre: material.nombre,
       descripcion: material.descripcion
     });
-    this.obtenerMateriales();
-    this.filtrarAutoCompleteMaterial();
   }
 
 
@@ -444,7 +442,7 @@ export class ProductoFormComponent implements OnInit {
 
 
   resetearCampoImagen(): void {
-    this.cambiarFoto = true;
+    this.habilitarIconoEliminarFoto = false;
     this.productoService.setEstadoEliminarFoto(true);
     this.productoService.setFoto(null);
   }
@@ -460,6 +458,7 @@ export class ProductoFormComponent implements OnInit {
     //Cast to a File() type
     return <File>theBlob;
 }
+
 
 
 }

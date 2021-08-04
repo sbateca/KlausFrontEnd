@@ -39,13 +39,25 @@
                         <table mat-table [dataSource]="datos" matSort (matSortChange)="reordenar($event)" width="100%">
 
 
-                            <!-- Columna talla -->
+                            <!-- Columna nombre -->
                             <ng-container matColumnDef="nombre">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombre</th>
                                 <td mat-cell *matCellDef="let material"> {{material.nombre}} </td>
                             </ng-container>
 
-                            <!-- Columna nombres -->
+                            <!-- Columna cantidad -->
+                            <ng-container matColumnDef="cantidad">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Cantidad</th>
+                                <td mat-cell *matCellDef="let material"> {{material.cantidad}} </td>
+                            </ng-container>
+
+                            <!-- Columna unidad de medida -->
+                            <ng-container matColumnDef="unidadMedida">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef>Unidad de medida</th>
+                                <td mat-cell *matCellDef="let material"> {{material.unidadMedida.nombre}} </td>
+                            </ng-container>
+
+                            <!-- Columna unidad de descripción -->
                             <ng-container matColumnDef="descripcion">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Descripción</th>
                                 <td mat-cell *matCellDef="let material"> {{material.descripcion}} </td>

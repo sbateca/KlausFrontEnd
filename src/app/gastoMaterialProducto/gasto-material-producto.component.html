@@ -1,0 +1,124 @@
+<h2 mat-dialog-title>Asignar cantidad de material a: <span *ngIf="this.productoBD != undefined">{{this.productoBD.nombre}} - Ref. {{this.productoBD.referencia}}</span></h2>
+
+
+
+<div mat-dialog-content>
+
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="card-body">
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Tipo de talla</mat-label>
+                <mat-select formControlName="tipoTallaGeneral" (selectionChange)="cargarTallasPorTipo($event)">
+                    <mat-option [value]="tipoTalla" *ngFor="let tipoTalla of listaTipoTallas">{{tipoTalla.tipoTalla}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.campoNoValido('tipoTallaGeneral')">Debe seleccionar el tipo de talla</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="dosPartes">
+                <mat-label>Talla</mat-label>
+                <mat-select formControlName="tallaGeneral">
+                    <mat-option [value]="talla" *ngFor="let talla of listaTallas">{{talla.talla}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.campoNoValido('tallaGeneral')">Debe seleccionar la talla</mat-error>
+            </mat-form-field>
+
+            <hr>
+            <h3 class="bd-callout">Listado de piezas</h3>
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Pieza</th>
+                        <th>Material</th>
+                        <th>Cantidad - Unidad de medida</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="this.productoBD != undefined" formArrayName="listaPiezasFormGeneral">
+                    <tr *ngFor="let pieza of this.obtenerFormArray('listaPiezasFormGeneral').controls; let i = index;" [formGroupName]="i">
+                        <td>{{(pieza.get('piezaGeneral').value).nombrePieza}}</td>
+                        <td>{{(pieza.get('piezaGeneral').value).material.nombre}}</td>
+                        <td>
+                            <mat-form-field [style.width.px]=80>
+                                <input matInput name="cantidad" type="number" min="0" formControlName="cantidadGeneral" (keyup)="calcularValor(i, pieza.get('piezaGeneral').value)">
+                                <mat-error *ngIf="campoCantidadNoValido(i)">Cantidad no válida</mat-error>
+                            </mat-form-field>
+
+                            &nbsp; - {{this.obtenerCostoPorIdMaterial( (pieza.get('piezaGeneral').value).material.id ) != undefined ? this.obtenerCostoPorIdMaterial( (pieza.get('piezaGeneral').value).material.id ).material.unidadMedida.nombre + ' ('+ this.obtenerCostoPorIdMaterial(
+                            (pieza.get('piezaGeneral').value).material.id ).material.unidadMedida.abreviatura +')': 'No registrado'}}
+                        </td>
+
+                        <td><strong>$ {{pieza.get('valorGeneral').value | number}}</strong></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div *ngIf="this.productoBD === undefined || this.productoBD.piezas.length === 0" class="alert alert-danger w-100 text-center mt-2">No hay piezas registradas</div>
+
+
+            <div class="w-100 clearfix">
+                <div class="alert alert-light w-40 text-center float-left mr-1">Total: <strong>$ {{calcularValorTotal() | number}}</strong></div>
+                <div>
+                    <button mat-icon-button class="align-right" color="primary" matTooltip="Agregar gasto material" (click)="agregarGasto()" [disabled]="this.formGeneralNoValido()">
+                        Agregar gasto material <mat-icon>add_circle</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <hr>
+            <h3>Gasto de material por talla</h3>
+
+            <div formArrayName="listaTallasForm">
+                <table class="table table-sm table-hover" *ngFor="let formTalla of obtenerArrayListaTallas().controls; let i = index;" [formGroupName]="i">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Tipo de talla</th>
+                            <th>Talla</th>
+                            <th>Pieza</th>
+                            <th>Material</th>
+                            <th>Cantidad</th>
+                            <th>Unidad medida</th>
+                            <th>Valor pieza</th>
+                        </tr>
+                    </thead>
+
+                    <tbody formArrayName="listaGastoMaterial">
+                        <tr *ngFor="let gasto of convertirAFormArray(formTalla.get('listaGastoMaterial')).controls; let j=index;" [formGroupName]="j">
+                            <td>{{ (gasto.get('tipoTalla').value).tipoTalla }}</td>
+                            <td>{{ (gasto.get('talla').value).talla }}</td>
+                            <td>{{ (gasto.get('pieza').value).nombrePieza}}</td>
+                            <td>{{ (gasto.get('material').value).nombre }}</td>
+                            <td>{{ gasto.get('cantidad').value }}</td>
+                            <td>{{ (gasto.get('unidadMedida').value)?.nombre }} ({{ (gasto.get('unidadMedida').value)?.abreviatura }})</td>
+                            <td>$ {{ gasto.get('valor').value | number }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><kbd style="background-color:rgb(20, 121, 0);">Valor total: $ <strong>{{formTalla.get('valorTotal').value | number}}</strong></kbd>
+                                <button mat-icon-button color="basic" matTooltip="Eliminar" (click)="eliminarGastoMaterial(i)"><mat-icon>delete</mat-icon></button>
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+            </div>
+
+
+        </div>
+    </form>
+</div>
+
+
+
+<!-- botones de acciones -->
+<mat-dialog-actions>
+    <button mat-stroked-button (click)="cerrarVentana()">Cerrar</button>
+    <button mat-stroked-button color="primary" (click)="enviarFormulario()">Guardar</button>
+</mat-dialog-actions>
+
+
+<!-- /fin botones de acciones -->

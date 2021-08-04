@@ -29,6 +29,7 @@ export class MaterialDetalleComponent implements OnInit {
       this.materialService.obtenerMaterialPorID(this.idMaterial).subscribe( resultado => {
         if (resultado) {
           this.material = resultado;
+          console.log(resultado);
         }
       });
     }

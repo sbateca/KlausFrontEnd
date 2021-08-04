@@ -85,6 +85,7 @@ import { FormBodegaInventarioComponent } from './bodega-inventario/form-bodega-i
 import { DetalleBodegaInventarioComponent } from './bodega-inventario/detalle-bodega-inventario/detalle-bodega-inventario.component';
 import { CostoMaterialComponent } from './costoMaterial/costo-material.component';
 import { FormCostoMaterialComponent } from './costoMaterial/costoMaterialForm/form-costo-material.component';
+import { GastoMaterialProductoComponent } from './gastoMaterialProducto/gasto-material-producto.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -160,7 +161,8 @@ const routes: Routes = [
     FormBodegaInventarioComponent,
     DetalleBodegaInventarioComponent,
     CostoMaterialComponent,
-    FormCostoMaterialComponent
+    FormCostoMaterialComponent,
+    GastoMaterialProductoComponent
   ],
   imports: [
     BrowserModule,

@@ -36,6 +36,9 @@ export class FormCostoMaterialComponent implements OnInit {
   // variable que almacenará el listado de costos de material agregados a través del formulario
   listaCostosFormulario: FormArray;
 
+  materialRegistradoCosto: Material[];
+  listaMaterialFiltrado: Material[] = new Array();
+
   constructor(private referenciaVentanaModal: MatDialogRef<FormCostoMaterialComponent>,
               @Inject(MAT_DIALOG_DATA) public idCostoMaterial: number,
               protected costoMaterialService: CostoMaterialService,
@@ -46,7 +49,6 @@ export class FormCostoMaterialComponent implements OnInit {
 
   ngOnInit(): void {
     this.crearFormulario();
-    this.cargarUnidadesMedida();
     this.cargarMateriales();
     this.cargarInformacionFormulario();
     this.asignarNombreFuncionalidad();
@@ -56,38 +58,77 @@ export class FormCostoMaterialComponent implements OnInit {
   crearFormulario(): void {
     this.formulario = this.constructorFormulario.group({
       cantidadGeneral: ['', [Validators.required, Validators.min(0)]],
-      unidadMedidaGeneral: ['', Validators.required],
       materialGeneral: ['', Validators.required],
       costoGeneral: ['', [Validators.required, Validators.min(0)]],
       listaCostoMaterial: this.constructorFormulario.array([])
     });
   }
 
-  // este método obtiene el listado de unidades de medida registradas y las asigna a una variable de clase
-  cargarUnidadesMedida(): void {
-    this.unidadMedidaService.listarElementos().subscribe( resultado => {
-      this.listaUnidadMedida = resultado;
+
+
+
+  /**
+   * Este método obtiene el listado de materiales registrados en la tabla MATERIALES y las asigna a una variable de clase.
+   * También llama al método que determina cual de los materiales de la lista no se encuentran registrados en costos
+   * para generar una lista con estos elementos.
+   * */ 
+  cargarMateriales(): void {
+    this.materialService.obtenerMateriales().subscribe( resultado => {
+    this.listaMaterial = resultado;
+
+    this.listaMaterial.forEach(elemento => {
+      this.buscarMaterialEnListaRegistradosCostos(elemento);
+    });
+      
     });
   }
 
-  // este método obtiene el listado de unidades de medida registradas y las asigna a una variable de clase
-  cargarMateriales(): void {
-    this.materialService.obtenerMateriales().subscribe( resultado => {
-      this.listaMaterial = resultado;
+
+  
+ /**
+  * Este método busca un material en la lista de materiales registrados en los costos de materiales.
+  * Si no se encuentra, quiere decir que el material no ha sido registrado
+  * en la tabla de costos materiales, lo que significa que este debe pertenecer a la lista de materiales que
+  * deben estar disponibles para ser seleccionados
+  * @param material -> el material que se desea buscar en la lista de materiales registrados en costos.
+  */
+  buscarMaterialEnListaRegistradosCostos(material: Material): void {
+   
+    let encontrar: Material;
+    
+    this.costoMaterialService.obtenerMaterialRegistrado().subscribe( res => {
+
+      this.materialRegistradoCosto = res;
+
+      encontrar = this.materialRegistradoCosto.find( mat => mat.id == material.id);
+
+      if(encontrar == undefined) this.listaMaterialFiltrado.push(material);
+
     });
   }
+
+
 
   // este método agrega los campos del FormGroup creado al FormArray del formulario
   agregarCostoMaterialFormulario(): void {
     this.listaCostosFormulario = this.formulario.get('listaCostoMaterial') as FormArray;
     this.listaCostosFormulario.push(this.crearCostoForm());
+
+    // en esta parte se elimina el elemento material de la lista filtrada para evitar agregar elementos repetidos
+    // también se limpia el formulario general
+    let mate: Material = this.formulario.get('materialGeneral').value as Material;
+    this.listaMaterialFiltrado = this.listaMaterialFiltrado.filter(mater => mater.id != mate.id);
+    this.formulario.patchValue({
+      cantidadGeneral: '',
+      materialGeneral: '',
+      costoGeneral: ''
+    });
   }
   
   // este método crea un formGroup con los valores del formulario general
   crearCostoForm(): FormGroup {
     return this.constructorFormulario.group({
       cantidad: this.formulario.get('cantidadGeneral').value,
-      unidadMedida: this.formulario.get('unidadMedidaGeneral').value,
       material: this.formulario.get('materialGeneral').value,
       costo: this.formulario.get('costoGeneral').value
     });
@@ -103,6 +144,17 @@ export class FormCostoMaterialComponent implements OnInit {
     return this.formulario.get('listaCostoMaterial') as FormArray;
   }
 
+  elemento: Material;
+
+  extraerMaterialEliminarformulario(i:number): void {
+    let lista = this.formulario.get('listaCostoMaterial') as FormArray;
+    this.elemento = lista.value[i].material;
+    this.listaMaterialFiltrado.push(this.elemento);
+    lista.removeAt(i);
+    
+    //this.eliminarCostoMaterialFormulario(i);
+  }
+
   // este método elimina el FormGroup que se encuentra en la posición "i" del FormArray
   eliminarCostoMaterialFormulario(i: number): void {
     let lista = this.formulario.get('listaCostoMaterial') as FormArray;
@@ -111,8 +163,6 @@ export class FormCostoMaterialComponent implements OnInit {
 
 
   cargarInformacionFormulario(): void {
-
-    console.log("carga información en formulario");
     
     
     if(this.idCostoMaterial != null){
@@ -121,20 +171,16 @@ export class FormCostoMaterialComponent implements OnInit {
         
         this.costoMaterial = resultado;
 
-        console.log(this.obtenerUnidadMedidaDeArray(this.costoMaterial.unidadMedida.id));
-        console.log(this.obtenerMaterialDeArray(this.costoMaterial.material.id));
+        // agrego el material que ya ha sido registrado a la lista de los materiales que no han sido registrados con la finalidad de poder verlo
+        // en caso que se requiera seleccionar otro 
+        this.listaMaterialFiltrado.push(resultado.material);
 
         this.formulario.patchValue({
           cantidadGeneral: this.costoMaterial.cantidad,
-          unidadMedidaGeneral: this.obtenerUnidadMedidaDeArray(this.costoMaterial.unidadMedida.id),
-          materialGeneral: this.obtenerMaterialDeArray(this.costoMaterial.material.id),
+          materialGeneral: this.costoMaterial.material,
           costoGeneral: this.costoMaterial.costo,
           listaCostoMaterial: ['']
         }); 
-
-        console.log("formulario nuevo");
-        console.log(this.formulario.value);
-
         
       });
     }
@@ -148,11 +194,9 @@ export class FormCostoMaterialComponent implements OnInit {
       if(this.obtenerFormArrayFormulario().controls.length == 0){
         this.abrirNotificacion('Debe agregar costos para los materiales', 'Cerrar');
       }else{
-        if(this.formulario.invalid){
-          this.formulario.markAllAsTouched();
-        }else{
+          console.log("costo material enviado al otro componente");
+          console.log(this.listaCostosFormulario.value);
           this.referenciaVentanaModal.close(this.listaCostosFormulario.value);
-          }
       }
     }else{
       if(this.formulario.invalid){
@@ -164,7 +208,6 @@ export class FormCostoMaterialComponent implements OnInit {
           diferentes
         */
         this.costoMaterial.cantidad = this.formulario.get('cantidadGeneral').value;
-        this.costoMaterial.unidadMedida = this.formulario.get('unidadMedidaGeneral').value;
         this.costoMaterial.material = this.formulario.get('materialGeneral').value;
         this.costoMaterial.costo = this.formulario.get('costoGeneral').value;
 
@@ -198,10 +241,14 @@ export class FormCostoMaterialComponent implements OnInit {
     return mat;
   }
 
-  obtenerUnidadMedidaDeArray(id:number): UnidadMedida {
-    let unid: UnidadMedida = this.listaUnidadMedida.find(unidad => unidad.id === id);
-    return unid;
+
+
+
+  compararMateriales(material1: Material, material2: Material): boolean {
+    return material1 && material2 ? material1.id === material2.id : material1 === material2;
   }
+
+
 
   // ------------------- validaciones de formulario ----------------------- //
 

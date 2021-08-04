@@ -8,13 +8,26 @@
     <form autocomplete="off" [formGroup]="formulario">
         <div class="card-body">
 
-            <mat-form-field class="dosPartes">
+            <mat-form-field class="tresPartes">
                 <mat-label>Nombre</mat-label>
                 <input matInput name="nombre" placeholder="Nombre" type="text" formControlName="nombre">
                 <mat-error *ngIf="nombreNoValido">Debe digitar el nombre del material</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="dosPartes">
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Cantidad</mat-label>
+                <input matInput name="cantidad" placeholder="Cantidad" type="number" formControlName="cantidad">
+            </mat-form-field>
+
+            <mat-form-field class="tresPartes">
+                <mat-label>Unidad de medida</mat-label>
+                <mat-select formControlName="unidadMedida" [compareWith]="compararUnidadesMedidaSelect">
+                    <mat-option [value]="unidad" *ngFor="let unidad of listaUnidadesMedida">{{unidad.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="unaParte">
                 <mat-label>Descripción</mat-label>
                 <input matInput name="descripcion" placeholder="Descripción" type="text" formControlName="descripcion">
             </mat-form-field>
@@ -24,8 +37,6 @@
     </form>
 
 </div>
-
-
 
 <mat-dialog-actions>
 

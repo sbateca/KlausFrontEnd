@@ -8,52 +8,125 @@
         <tbody>
             <tr>
                 <th scope="row">Nombre</th>
-                <td>{{producto.nombre}}</td>
-                <th rowspan="5" *ngIf="producto.fotoHashCode">
+                <td>{{producto?.nombre}}</td>
+                <th rowspan="5" *ngIf="producto?.nombreFoto">
                     <img class="img-thumbnail" style="width: 200px; height: 200px;" [src]="rutaBase + '/productoFoto/' + producto.id">
                 </th>
             </tr>
             <tr>
                 <th scope="row">Rererencia</th>
-                <td>{{producto.referencia}}</td>
+                <td>{{producto?.referencia}}</td>
             </tr>
             <tr>
                 <th scope="row">Costo</th>
-                <td>$ {{FormatoSeparadorDecimal(producto.costo)}}</td>
+                <td>$ {{producto?.costo | number}}</td>
             </tr>
             <tr>
                 <th scope="row">Precio de venta</th>
-                <td>$ {{FormatoSeparadorDecimal(producto.precioVenta)}}</td>
+                <td>$ {{producto?.precioVenta | number}}</td>
             </tr>
             <tr>
                 <th scope="row">Activo</th>
-                <td>{{producto.activo ? 'Activo': 'Inactivo'}}</td>
+                <td>{{producto?.activo ? 'Activo': 'Inactivo'}}</td>
             </tr>
         </tbody>
     </table>
 
-    <span>Listado de piezas</span>
 
-    <table class="table table-sm table-hover">
-        <thead>
-            <tr class="thead-light">
-                <th>Número</th>
-                <th>Nombre</th>
-                <th>Material</th>
-                <th>Color</th>
-                <th>Observación</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let pieza of producto.piezas; let i = index">
-                <th scope="row">{{i+1}}</th>
-                <td>{{pieza.nombrePieza}}</td>
-                <td>{{pieza.material.nombre}}</td>
-                <td>{{pieza.color.nombre}}</td>
-                <td>{{pieza.observacion}}</td>
-            </tr>
-        </tbody>
-    </table>
+
+
+    <mat-accordion>
+
+        <mat-expansion-panel [expanded]="1">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Listado de piezas
+                </mat-panel-title>
+                <mat-panel-description>
+                    Haga clic para ver las piezas registradas
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <br>
+
+            <div class="alert alert-danger" *ngIf="this.producto?.piezas.length == 0">No hay piezas registradas</div>
+
+            <table class="table table-sm table-hover" *ngIf="this.producto?.piezas.length > 0">
+                <thead>
+                    <tr class="thead-light">
+                        <th>Número</th>
+                        <th>Nombre</th>
+                        <th>Material</th>
+                        <th>Color</th>
+                        <th>Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pieza of producto.piezas; let i = index">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{pieza.nombrePieza}}</td>
+                        <td>{{pieza.material.nombre}}</td>
+                        <td>{{pieza.color.nombre}}</td>
+                        <td>{{pieza.observacion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </mat-expansion-panel>
+
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Gastos calculados por talla
+                </mat-panel-title>
+                <mat-panel-description>
+                    Clic para ver los gastos calculados por talla
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div *ngFor="let talla of this.listaTallasFiltrada">
+
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr class="thead-light">
+                            <th>Tipo de talla</th>
+                            <th>Talla</th>
+                            <th>Pieza</th>
+                            <th>Material</th>
+                            <th>Cantidad</th>
+                            <th>Unidad medida</th>
+                            <th>Valor pieza</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let gasto of talla.listaGastoMaterialProducto; let i = index">
+                            <td>{{talla.tipoTalla.tipoTalla}}</td>
+                            <td>{{talla.talla}}</td>
+                            <td>{{gasto.pieza.nombrePieza}}</td>
+                            <td>{{gasto.pieza.material.nombre}}</td>
+                            <td>{{gasto.cantidad}}</td>
+                            <td>{{gasto.unidadMedida.nombre}} ({{gasto.unidadMedida.abreviatura}})</td>
+                            <td>{{gasto.valor}}</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+                                <kbd style="background-color:rgb(20, 121, 0);">
+                                    Valor total: $ <strong>{{this.calcularTotal(talla.listaGastoMaterialProducto) | number}}</strong>
+                                </kbd>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="my-3"></div>
 
 </div>
 
