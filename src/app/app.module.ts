@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 
+
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ClienteService } from './clientes/cliente.service';
-import { AppComponent } from './app.component';
+import { AppComponent} from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
@@ -31,6 +32,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatOptionModule } from '@angular/material/core';
+
 
 
 import { DetalleComponent } from './proveedores/detalle/detalle.component';
@@ -182,7 +186,15 @@ const routes: Routes = [
     DetalleBodegaInventarioComponent,
     CostoMaterialComponent,
     FormCostoMaterialComponent,
-    GastoMaterialProductoComponent
+    GastoMaterialProductoComponent,
+    MovimientosComponent,
+    DetalleMovimientosComponent,
+    EstadoPedidoComponent,
+    ScannearPedidoComponent,
+    CerrarSesionComponent,
+    IndexComponent,
+    RegistroComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -211,12 +223,14 @@ const routes: Routes = [
     NgxMaterialTimepickerModule,
     MatSnackBarModule,
     MatSlideToggleModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule,
+    MatNativeDateModule,
+    NgQrScannerModule,
+    MatOptionModule
     ],
-  entryComponents: [ FormProveedoresComponent ],
+  entryComponents: [ FormProveedoresComponent  ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]
 })
-
-
 export class AppModule { }

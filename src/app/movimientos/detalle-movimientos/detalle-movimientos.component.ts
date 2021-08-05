@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Movimiento } from '../movimiento';
 import { MovimientoService } from '../movimiento.service';
 import { TokenService } from '../../service/token.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-detalle-movimientos',
