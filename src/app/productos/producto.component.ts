@@ -296,7 +296,7 @@ agregarProducto(): void {
   if (this.productoService.obtenerFoto == null) {
 
       /*
-      En el Backend el producto está relacionado con PiezaProducto y NO con las piezas.
+      En el Backend el producto está relacionado con Piezas.
       Al realizar el POST de producto, el resultado es un producto sin las piezas,
       es decir, estas se pierden por lo tanto, se hace necesario guardar el producto que se recibe del
       componente anterior en una variable auxiliar y luego asignar al producto el ID para seguirlo usando
@@ -306,6 +306,9 @@ agregarProducto(): void {
       console.log(this.producto);
 
        this.productoService.agregarElemento(this.producto).subscribe( resultado => {
+
+        console.log("resultado de insertar producto:");
+        console.log(resultado);
 
         this.productoConID = resultado.elemento; // sobreescribo el producto porque el que viene del backend tiene el ID
       /*
@@ -319,7 +322,10 @@ agregarProducto(): void {
 
           // limpio la lista de piezas del atributo Producto para evitar bucle infinito en el JSON
           pieza.producto.piezas = [];
-          this.piezaService.agregarPieza(pieza).subscribe(r => {});
+          this.piezaService.agregarPieza(pieza).subscribe(r => {
+            console.log('resultado de registrar pieza');
+            console.log(r);
+          });
 
       });
 

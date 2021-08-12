@@ -10,8 +10,8 @@ import { environment } from '../../environments/environment.prod';
   providedIn: 'root'
 })
 export class AuthService {
-  /* authURL = 'http://localhost:8080/auth/'; */
-  authURL = environment.authURL;
+   authURL = 'http://localhost:8080/auth/'; 
+  //authURL = environment.authURL; ----> producción
   constructor(private httpClient: HttpClient){}
   public nuevo(nuevoUsuario: NuevoUsuario): Observable<any> {
     return this.httpClient.post<any>(this.authURL + 'nuevo', nuevoUsuario);

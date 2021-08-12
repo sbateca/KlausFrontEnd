@@ -19,8 +19,8 @@ export class ColorService {
   // ---------------------- variables de clase ---------------------- //
 
   private httpCliente: HttpClient;
-  /* private rutaEndPointColores = 'http://localhost:8080/api/colores'; */
-  private rutaEndPointColores = environment.urlCiuDept;
+  //private rutaEndPointColores = 'http://localhost:8080/api/colores';
+  private rutaEndPointColores = environment.rutaEndPointColores;
   private enrutador: Router;
   private cabeceraHttp: HttpHeaders = new HttpHeaders({'Content-type' : 'application/json'});
 
