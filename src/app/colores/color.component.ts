@@ -15,7 +15,8 @@ import { ColorDetalleComponent } from './detalleColor/color-detalle.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TokenService } from '../service/token.service';
 
-
+// importanción de variables para las etiquetas del MatTable
+import { etiquetasTabla } from '../../environments/environment';
 
 @Component({
   selector: 'app-tallas-colores',
@@ -105,6 +106,11 @@ export class ColorComponent implements OnInit {
         this.listaColor = resultado.content as Color[];
         this.datosColor = new MatTableDataSource<Color>(this.listaColor);
         this.datosColor.paginator = this.paginadorColor;
+        
+        //etiquetas de la tabla
+        this.datosColor.paginator._intl.firstPageLabel = etiquetasTabla.labelPrimeraPagina;
+        this.datosColor.paginator._intl.lastPageLabel = etiquetasTabla.labelUltimaPagina;
+        this.paginadorColor._intl
 
         this.datosColor.sort = this.ordenadorRegistrosColor;
         /* this.datosColor.sort.active = 'color';

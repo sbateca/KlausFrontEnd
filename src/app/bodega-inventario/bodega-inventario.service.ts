@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import { catchError } from 'rxjs/operators';
 import { CommonService } from '../common/common.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

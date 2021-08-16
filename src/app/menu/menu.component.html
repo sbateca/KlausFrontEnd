@@ -22,6 +22,68 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
+                    <a href="#" class="nav-link" routerLinkActive="active">
+                        <i class="fa fa-archive nav-icon"></i>
+                        <p>Producto</p>
+                        <span class="pull-right-container">
+                            <i class="right fas fa-angle-left fijarDerecha"></i>
+                          </span>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none;">
+
+                        <li class="nav-item">
+                            <a routerLink="colores" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-blue"></i>
+                                <p>Colores</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="tiposTallas" routerLinkActive="active" class="nav-link">
+                                <i class="far fa-circle nav-icon text-white"></i>
+                                <p>Tipo de Talla</p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a routerLink="tallas" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-red"></i>
+                                <p>Tallas</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="UnidadMedida" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-yellow"></i>
+                                <p>Unidades de medida</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="materiales" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-purple"></i>
+                                <p>Inventario de Material</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="costoMaterial" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-blue"></i>
+                                <p>Tarifas Materiales</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a routerLink="productos" class="nav-link" routerLinkActive="active">
+                                <i class="far fa-circle nav-icon text-green"></i>
+                                <p>Diseño de productos</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
                     <a [routerLink]="['/clientes']" class="nav-link" routerLinkActive="active">
                         <i class="fa fa-users nav-icon"></i>
                         <p>Clientes</p>
@@ -68,67 +130,6 @@
                         <i class="fa fa-store-alt nav-icon"></i>
                         <p>Bodega Inventario</p>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" routerLinkActive="active">
-                        <i class="fa fa-archive nav-icon"></i>
-                        <p>Inventario</p>
-                        <span class="pull-right-container">
-                            <i class="right fas fa-angle-left fijarDerecha"></i>
-                          </span>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: none;">
-
-                        <li class="nav-item">
-                            <a routerLink="colores" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-blue"></i>
-                                <p>Colores</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="tiposTallas" routerLinkActive="active" class="nav-link">
-                                <i class="far fa-circle nav-icon text-white"></i>
-                                <p>Tipo de Talla</p>
-                            </a>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a routerLink="tallas" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-red"></i>
-                                <p>Tallas</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="UnidadMedida" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-yellow"></i>
-                                <p>Unidad de medida</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="materiales" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-purple"></i>
-                                <p>Materiales</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="costoMaterial" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-blue"></i>
-                                <p>Costos Materiales</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a routerLink="productos" class="nav-link" routerLinkActive="active">
-                                <i class="far fa-circle nav-icon text-green"></i>
-                                <p>Productos</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <li class="nav-item" *ngIf="esAdmin || esPropietario">

@@ -63,6 +63,19 @@ export const environment = {
 
 };
 
+/**
+   * Variables donde se almacenan los valores de las etiquetas usadas en los MatTable
+   */
+export const etiquetasTabla = {
+
+   labelRegistrosPorPagina : "Registros por página",
+   labelPrimeraPagina : "Primera página",
+   labelUltimaPagina : "Última página",
+   labelSiguientePagina :"Siguiente página",
+   labelAnteriorPagina : "Anterior página",
+   labelDe : "de"
+};
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

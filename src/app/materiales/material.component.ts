@@ -23,7 +23,7 @@ export class MaterialComponent implements OnInit {
 
 
   /// variables de nombres y rutas de funcionalidades
-  titulo = 'Materiales';
+  titulo = 'Inventario de Material';
   rutaFuncionalidad = 'Inventario / Listar materiales';
 
 

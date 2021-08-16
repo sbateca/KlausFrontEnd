@@ -49,6 +49,7 @@ export class ProductoDetalleComponent implements OnInit {
     if (this.idProducto) {
       this.productoService.obtenerElementoPorID(this.idProducto).subscribe(resultado => {
         this.producto = resultado;
+        console.log(this.producto);
       });
     }
   }

@@ -35,8 +35,8 @@ export class ProductoComponent implements OnInit {
 
 
 /// variables de nombres y rutas de funcionalidades
-titulo = 'Productos';
-rutaFuncionalidad = 'Inventario / Listar productos';
+titulo = 'Diseño productos';
+rutaFuncionalidad = 'Productos / Listar productos';
 
 
 // variables para el MatTableDatasource<Material>

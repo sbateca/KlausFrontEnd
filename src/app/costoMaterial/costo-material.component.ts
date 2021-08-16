@@ -26,8 +26,8 @@ export class CostoMaterialComponent implements OnInit {
   
 
   /// variables de nombres y rutas de funcionalidades
-  titulo = 'Costos materiales';
-  rutaFuncionalidad = 'Inventario / Costos materiales';
+  titulo = 'Tarifas materiales';
+  rutaFuncionalidad = 'Inventario / Tarifas materiales';
 
 
   // variables para el MatTableDatasource<Material>
