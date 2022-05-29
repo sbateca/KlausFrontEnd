@@ -17,6 +17,7 @@ export class AccesoService {
   constructor(private http: HttpClient) { }
 
   authenticationService(username: String, password: String) {
+    console.log("entra a esta mierda");
     return this.http.get(`http://localhost:8080/api/usuario/autenticacion`,
       { headers: { authorization: this.createBasicAuthToken(username, password) } }).pipe(map((res) => {
         this.username = username;

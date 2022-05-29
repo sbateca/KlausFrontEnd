@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 
 
 
+
 @NgModule({
     imports: [
         MatTableModule,
@@ -13,7 +14,8 @@ import { MatPaginator } from '@angular/material/paginator';
     exports: [
         MatTableModule,
         MatTableDataSource
-    ]
+    ],
+    declarations: []
 })
 
 

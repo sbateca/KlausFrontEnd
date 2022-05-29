@@ -11,7 +11,7 @@
 
             <mat-form-field class="dosPartes">
                 <mat-label>Tipo de talla</mat-label>
-                <input matInput name="tipoTalla" placeholder="Tipo de talla" type="text" formControlName="tipoTalla">
+                <input matInput name="tipoTalla" placeholder="Tipo de talla" (focusout)=" limpiarEspaciosEnBlanco($event, 'tipoTalla');" type="text" formControlName="tipoTalla">
                 <mat-error *ngIf="tipoTallaNoValido">Debe digitar el tipo de talla</mat-error>
             </mat-form-field>
 

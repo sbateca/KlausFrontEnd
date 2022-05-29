@@ -11,13 +11,13 @@
 
             <mat-form-field class="dosPartes">
                 <mat-label>Nombre</mat-label>
-                <input matInput name="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+                <input matInput name="nombre" placeholder="Nombre" type="text" (focusout)="limpiarEspaciosEnBlanco($event, 'nombre')" formControlName="nombre">
                 <mat-error *ngIf="nombreColorNoValido">Debe digitar el nombre</mat-error>
             </mat-form-field>
 
             <mat-form-field class="dosPartes">
                 <mat-label>Color</mat-label>
-                <input matInput name="codigoColor" placeholder="Código de color" [(colorPicker)]="colorSeleccionado" [cpPosition]="posicion" (colorPickerChange)="asignarColor()" formControlName="codigoColor">
+                <input matInput name="codigoColor" placeholder="Código de color" [(colorPicker)]="colorSeleccionado" [cpPosition]="posicion" (colorPickerChange)="asignarColor()" (focusout)="limpiarEspaciosEnBlanco($event, 'codigoColor')" formControlName="codigoColor">
                 <mat-error *ngIf="codigoColorNoValido">
                     Debe insertar el color
                 </mat-error>

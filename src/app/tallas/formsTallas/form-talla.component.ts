@@ -174,6 +174,12 @@ export class FormTallaComponent implements OnInit {
     this.forma.get('tipoTalla').touched;
   }
 
+  limpiarEspaciosEnBlanco(evento: any, nombreCampo: string) {
+    this.forma.get(nombreCampo).setValue(
+      String(evento.target.value).trim()
+    );
+}
+
   // -------------------------------------------------------------------------------------------- //
 
 

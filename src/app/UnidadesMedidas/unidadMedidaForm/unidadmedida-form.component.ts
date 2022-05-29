@@ -26,9 +26,9 @@ export class UnidadMedidaFormComponent implements OnInit {
   unidadMedida = new UnidadMedida();
 
   constructor(public referenciaVentanaModal: MatDialogRef<UnidadMedidaFormComponent>,
-              protected unidadMedidaService: UnidadMedidaService,
-              @Inject(MAT_DIALOG_DATA) public idUnidadMedida,
-              private contructorFormulario: FormBuilder) { }
+    protected unidadMedidaService: UnidadMedidaService,
+    @Inject(MAT_DIALOG_DATA) public idUnidadMedida,
+    private contructorFormulario: FormBuilder) { }
 
   ngOnInit(): void {
     this.asignarNombreFuncionalidad();
@@ -42,21 +42,21 @@ export class UnidadMedidaFormComponent implements OnInit {
 
   construirFormulario(): void {
     this.formulario = this.contructorFormulario.group({
-      categoria:   ['',Validators.required],
-      nombre:      ['', Validators.required],
+      categoria: ['', Validators.required],
+      nombre: ['', Validators.required],
       abreviatura: ['', Validators.required]
     });
   }
 
   cargarInformacionEnFormulario(): void {
-    
-    if(this.idUnidadMedida){
+
+    if (this.idUnidadMedida) {
 
       this.unidadMedidaService.obtenerElementoPorID(this.idUnidadMedida).subscribe(resultado => {
         this.unidadMedida = resultado as UnidadMedida;
         this.formulario.setValue({
-          nombre:      this.unidadMedida.nombre,
-          categoria:   this.unidadMedida.categoria,
+          nombre: this.unidadMedida.nombre,
+          categoria: this.unidadMedida.categoria,
           abreviatura: this.unidadMedida.abreviatura
         });
       });
@@ -67,14 +67,13 @@ export class UnidadMedidaFormComponent implements OnInit {
 
   asignarCategoria(evento: MatSelectChange): void {
     this.formulario.get('categoria').setValue(evento.value);
-    console.log(this.formulario);
   }
 
 
   guardar(): void {
-    if(this.formulario.invalid){
+    if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
-    }else{
+    } else {
       this.referenciaVentanaModal.close(this.formulario.value);
     }
   }
@@ -88,9 +87,15 @@ export class UnidadMedidaFormComponent implements OnInit {
   /************** validaciones ****************/
 
   campoNoValido(nombreCampo: string): boolean {
-    return  this.formulario.get(nombreCampo).invalid &&
-            this.formulario.get(nombreCampo).touched &&
-            this.formulario.get(nombreCampo).errors.required;
+    return this.formulario.get(nombreCampo).invalid &&
+      this.formulario.get(nombreCampo).touched &&
+      this.formulario.get(nombreCampo).errors.required;
+  }
+
+  limpiarEspaciosEnBlanco(evento: any, nombreCampo: string) {
+    this.formulario.get(nombreCampo).setValue(
+      String(evento.target.value).trim()
+    );
   }
 
 }

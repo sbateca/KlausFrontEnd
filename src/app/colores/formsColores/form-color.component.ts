@@ -33,9 +33,9 @@ export class FormColorComponent implements OnInit {
 
 
   constructor(public referenciaVentanaModal: MatDialogRef<FormColorComponent>,
-              @Inject(MAT_DIALOG_DATA) public idColor: number,
-              private colorService: ColorService,
-              private constructorFormulario: FormBuilder) { }
+    @Inject(MAT_DIALOG_DATA) public idColor: number,
+    private colorService: ColorService,
+    private constructorFormulario: FormBuilder) { }
 
   ngOnInit(): void {
     this.crearFormulario();
@@ -71,7 +71,7 @@ export class FormColorComponent implements OnInit {
 
 
   guardar() {
-    if ( this.formulario.invalid) {
+    if (this.formulario.invalid) {
       return this.formulario.markAllAsTouched;
     } else {
       this.referenciaVentanaModal.close(this.formulario.value);
@@ -79,7 +79,7 @@ export class FormColorComponent implements OnInit {
   }
 
   cancelarOperacion(): void {
-      this.referenciaVentanaModal.close();
+    this.referenciaVentanaModal.close();
   }
 
 
@@ -88,13 +88,19 @@ export class FormColorComponent implements OnInit {
   // -------- métodos de validación de campos del formulario
 
   get nombreColorNoValido() {
-    return  this.formulario.get('nombre').invalid &&
-            this.formulario.get('nombre').touched;
+    return this.formulario.get('nombre').invalid &&
+      this.formulario.get('nombre').touched;
   }
 
   get codigoColorNoValido() {
-    return  this.formulario.get('codigoColor').invalid &&
-            this.formulario.get('codigoColor').touched;
+    return this.formulario.get('codigoColor').invalid &&
+      this.formulario.get('codigoColor').touched;
+  }
+
+  limpiarEspaciosEnBlanco(evento: any, nombreCampo: string) {
+    this.formulario.get(nombreCampo).setValue(
+      String(evento.target.value).trim()
+    );
   }
 
 }

@@ -8,7 +8,7 @@
     <form autocomplete="off" [formGroup]="forma">
         <div class="card-body">
 
-            <mat-form-field class="dosPartes">
+            <mat-form-field class="dosPartes" *ngIf="listaTipoTalla?.length > 0">
                 <mat-label>Tipo de talla</mat-label>
                 <mat-select name="tipoTalla" formControlName="tipoTalla" [compareWith]="compararTiposTalla">
                     <mat-option *ngFor="let tipoTalla of listaTipoTalla" [value]="tipoTalla">{{tipoTalla.tipoTalla}}</mat-option>
@@ -18,19 +18,27 @@
 
             <mat-form-field class="dosPartes">
                 <mat-label>Talla</mat-label>
-                <input matInput name="nombre" placeholder="Talla" type="text" formControlName="talla">
+                <input matInput name="nombre" placeholder="Talla" type="text" (focusout)=" limpiarEspaciosEnBlanco($event, 'talla');" formControlName="talla">
                 <mat-error *ngIf="tallaNoValida">Debe digitar la talla</mat-error>
                 <mat-error *ngIf="tallaNumeroNoValido">La talla debe tener máximo dos cifras</mat-error>
             </mat-form-field>
 
             <mat-form-field class="dosPartes">
                 <mat-label>Descripción</mat-label>
-                <input matInput name="descripcion" placeholder="Descripción" type="text" formControlName="descripcion">
+                <input matInput name="descripcion" placeholder="Descripción" type="text" (focusout)=" limpiarEspaciosEnBlanco($event, 'descripcion');" formControlName="descripcion">
             </mat-form-field>
 
         </div>
 
     </form>
+
+    <!--mensaje de advertencia de tipos de talla vacíos-->
+    <div *ngIf="listaTipoTalla?.length == 0" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Advertencia:</strong> Para poder crear una talla debe registrar primero un <strong>tipo de talla</strong>.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
 </div>
 

@@ -95,4 +95,10 @@ export class TipoTallaFormComponent implements OnInit {
     return this.formulario.get('descripcion').invalid && this.formulario.touched;
   }
 
+  limpiarEspaciosEnBlanco(evento: any, nombreCampo: string) {
+    this.formulario.get(nombreCampo).setValue(
+      String(evento.target.value).trim()
+    );
+  }
+
 }

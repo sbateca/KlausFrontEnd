@@ -51,7 +51,7 @@ export class MaterialFormComponent implements OnInit {
       nombre:      ['', Validators.required],
       descripcion: [''],
       unidadMedida: ['', Validators.required],
-      cantidad: ['0', Validators.required]
+      cantidad: ['', [Validators.required, Validators.min(0.000000000001)]]
     });
   }
 
@@ -107,6 +107,30 @@ export class MaterialFormComponent implements OnInit {
     return  this.formulario.get('nombre').invalid &&
             this.formulario.get('nombre').touched;
   }
+
+
+  get cantidadNoValida(): number {
+    
+    let validar:number = -1;
+    
+    if(this.formulario.get('cantidad').value <= 0) validar = 1;
+
+    if(this.formulario.get('cantidad').value == '' || 
+      this.formulario.get('cantidad').value == null ||
+      this.formulario.get('cantidad').value == undefined) validar = 0;
+
+      console.log(validar);
+
+    return  validar;
+  }
+
+
+
+  limpiarEspaciosEnBlanco(evento: any, nombreCampo: string) {
+    this.formulario.get(nombreCampo).setValue(
+      String(evento.target.value).trim()
+    );
+}
 
 
 }

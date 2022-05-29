@@ -85,8 +85,13 @@ export class MaterialComponent implements OnInit {
 
       // Establecemos los valores de las variables relacionadas con Sort
       this.datos.sort = this.ordenadorRegistros;
-      this.datos.sort.active = 'nombre';
-      this.datos.sort.direction = 'asc';
+      
+      // esta validación se agregó por un error que muestra por un error que muestra la consola pero en realidad no lo es
+      if(this.datos.sort != undefined){
+        this.datos.sort.active = 'nombre';
+        this.datos.sort.direction = 'asc';
+      }
+      
 
     });
   }

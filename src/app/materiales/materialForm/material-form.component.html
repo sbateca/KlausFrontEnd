@@ -10,14 +10,16 @@
 
             <mat-form-field class="tresPartes">
                 <mat-label>Nombre</mat-label>
-                <input matInput name="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+                <input matInput name="nombre" placeholder="Nombre" type="text" (focusout)="limpiarEspaciosEnBlanco($event, 'nombre')" formControlName="nombre">
                 <mat-error *ngIf="nombreNoValido">Debe digitar el nombre del material</mat-error>
             </mat-form-field>
 
 
             <mat-form-field class="tresPartes">
                 <mat-label>Cantidad</mat-label>
-                <input matInput name="cantidad" placeholder="Cantidad" type="number" formControlName="cantidad">
+                <input matInput name="cantidad" placeholder="Cantidad" type="number" (focusout)="limpiarEspaciosEnBlanco($event, 'cantidad')" formControlName="cantidad">
+                <mat-error *ngIf="cantidadNoValida == 0">Debe digitar la cantidad</mat-error>
+                <mat-error *ngIf="cantidadNoValida == 1">Debe digitar un valor mayor a cero</mat-error>
             </mat-form-field>
 
             <mat-form-field class="tresPartes">
@@ -29,12 +31,22 @@
 
             <mat-form-field class="unaParte">
                 <mat-label>Descripción</mat-label>
-                <input matInput name="descripcion" placeholder="Descripción" type="text" formControlName="descripcion">
+                <input matInput name="descripcion" placeholder="Descripción" type="text" (focusout)="limpiarEspaciosEnBlanco($event, 'descripcion')" formControlName="descripcion">
             </mat-form-field>
 
         </div>
 
     </form>
+
+
+
+    <!--mensaje de advertencia de tipos de talla vacíos-->
+    <div *ngIf="listaUnidadesMedida?.length == 0" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Mensaje:</strong> Para poder agregar material debe registrar primero una <strong>unidad de medida</strong>.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
 
 </div>
 

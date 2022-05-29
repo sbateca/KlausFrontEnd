@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
   
     // Usamos el loginUsuario
     this.authService.login(this.loginUsuario).subscribe(data => {
+      console.log("este es el data ");
       console.log(data);
         this.tokenService.setToken(data.token);// Objeto tipo Dwt
         window.location.reload(); // Se carga la pagina

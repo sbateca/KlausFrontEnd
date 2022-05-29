@@ -147,7 +147,6 @@ abrirVentanaModalAgregar(): void {
   });
 
   referenciaVentanaModal.afterClosed().subscribe( resultado => {
-    console.log(resultado);
     if (resultado) {
       this.tipoTalla = resultado;
       this.agregarTipoTalla();
